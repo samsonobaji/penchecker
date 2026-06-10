@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Scan History — PenChecker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--black:#060608;--black2:#0d0d12;--black3:#13131a;--surface:#1a1a24;--surface2:#22222f;--border:rgba(255,255,255,0.07);--border2:rgba(0,229,255,0.2);--cyan:#00e5ff;--cyan2:#00b4cc;--green:#00ff87;--red:#ff3b5c;--orange:#ff8c42;--yellow:#ffd60a;--purple:#a855f7;--white:#f0f0f8;--muted:#6b6b85;--muted2:#9090a8;--font-display:'Plus Jakarta Sans',sans-serif;--font-body:'Plus Jakarta Sans',sans-serif;--font-mono:'JetBrains Mono',monospace;--glow-cyan:0 0 40px rgba(0,229,255,0.25);--radius:12px;--radius2:20px;--sidebar-w:240px;--topbar-h:60px;}
+body{transition:background 0.25s,color 0.25s;}
+.light-theme{--black:#f8f9fc;--black2:#e8eaf2;--black3:#ffffff;--surface:#ffffff;--surface2:#f2f4f9;--border:rgba(13,23,44,0.12);--border2:rgba(0,149,212,0.25);--cyan:#007fbc;--cyan2:#005f91;--green:#0f9d58;--red:#d93025;--orange:#e37400;--yellow:#f1c232;--purple:#6a1b9a;--white:#0b0d13;--muted:#4b5d79;--muted2:#6b7790;}
+.light-theme .topbar{background:rgba(248,249,252,0.96);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:15px;line-height:1.6;overflow-x:hidden;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--black2);}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px;}
+/* Shared sidebar */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--black2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:200;transition:transform 0.3s ease;}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:18px 20px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sb-logo-icon{width:32px;height:32px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;font-size:0.8rem;color:var(--black);}
+.sb-logo-text{font-size:1.05rem;font-weight:700;letter-spacing:-0.02em;}
+.sb-logo-text span{color:var(--cyan);}
+.sb-nav{flex:1;padding:12px 10px;overflow-y:auto;}
+.sb-section{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;padding:8px 10px 4px;margin-top:8px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius);font-size:0.85rem;font-weight:500;color:var(--muted2);transition:all 0.18s;position:relative;margin-bottom:1px;cursor:pointer;}
+.sb-link:hover{background:var(--surface);color:var(--white);}
+.sb-link.active{background:rgba(0,229,255,0.08);color:var(--cyan);font-weight:600;}
+.sb-link.active::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--cyan);border-radius:0 2px 2px 0;}
+.sb-icon{font-size:1rem;flex-shrink:0;width:20px;text-align:center;}
+.sb-badge{margin-left:auto;background:rgba(0,229,255,0.15);color:var(--cyan);font-family:var(--font-mono);font-size:0.6rem;font-weight:700;border-radius:10px;padding:1px 6px;}
+.sb-bottom{padding:12px 10px;border-top:1px solid var(--border);flex-shrink:0;}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:all 0.2s;}
+.sb-user:hover{border-color:var(--border2);}
+.sb-avatar{width:30px;height:30px;border-radius:50%;background:rgba(0,229,255,0.15);border:1px solid rgba(0,229,255,0.3);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:var(--cyan);flex-shrink:0;}
+.sb-uname{font-size:0.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-uplan{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);}
+/* Topbar */
+.topbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--topbar-h);background:rgba(6,6,8,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;z-index:100;transition:left 0.3s;}
+.tb-breadcrumb{flex:1;font-size:0.82rem;color:var(--muted2);display:flex;align-items:center;gap:6px;}
+.tb-cur{color:var(--white);font-weight:600;}
+.tb-sep{opacity:0.4;}
+.tb-actions{display:flex;align-items:center;gap:8px;}
+.tb-btn{width:36px;height:36px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.9rem;cursor:pointer;transition:all 0.2s;color:var(--muted2);}
+.tb-btn:hover{border-color:var(--border2);color:var(--white);}
+.scan-btn{display:flex;align-items:center;gap:7px;padding:8px 16px;background:var(--cyan);color:var(--black);border-radius:var(--radius);font-weight:700;font-size:0.82rem;cursor:pointer;transition:all 0.2s;border:none;}
+.scan-btn:hover{box-shadow:var(--glow-cyan);}
+.mob-toggle{display:none;width:36px;height:36px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);align-items:center;justify-content:center;font-size:1rem;cursor:pointer;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;}
+.overlay.open{display:block;}
+/* Main */
+.main{margin-left:var(--sidebar-w);padding-top:var(--topbar-h);}
+.content{padding:28px 28px 60px;}
+/* Page header */
+.page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.ph-left h1{font-size:1.4rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:4px;}
+.ph-left p{font-size:0.84rem;color:var(--muted2);}
+/* Filter bar */
+.filter-bar{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.search-box{display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;flex:1;min-width:200px;max-width:300px;transition:border-color 0.2s;}
+.search-box:focus-within{border-color:var(--cyan);}
+.search-input{background:none;border:none;outline:none;font-family:var(--font-body);font-size:0.84rem;color:var(--white);width:100%;}
+.search-input::placeholder{color:var(--muted);}
+.filter-select{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;font-family:var(--font-body);font-size:0.82rem;color:var(--muted2);outline:none;cursor:pointer;transition:border-color 0.2s;}
+.filter-select:focus{border-color:var(--cyan);}
+.filter-select option{background:var(--black3);}
+.filter-count{margin-left:auto;font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);}
+/* Stats summary */
+.summary-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.sum-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;}
+.sum-num{font-size:1.4rem;font-weight:800;letter-spacing:-0.03em;margin-bottom:2px;}
+.sum-lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);}
+/* Table */
+.table-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;}
+.scan-table{width:100%;border-collapse:collapse;}
+.scan-table th{padding:10px 16px;background:var(--surface);font-family:var(--font-mono);font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:600;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;}
+.scan-table th.sortable{cursor:pointer;user-select:none;}
+.scan-table th.sortable:hover{color:var(--white);}
+.scan-table td{padding:13px 16px;border-bottom:1px solid var(--border);font-size:0.83rem;vertical-align:middle;}
+.scan-table tr:last-child td{border-bottom:none;}
+.scan-table tbody tr{cursor:pointer;transition:background 0.15s;}
+.scan-table tbody tr:hover td{background:rgba(255,255,255,0.025);}
+.status-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:100px;font-family:var(--font-mono);font-size:0.63rem;font-weight:600;}
+.st-completed{background:rgba(0,255,135,0.1);color:var(--green);border:1px solid rgba(0,255,135,0.2);}
+.st-running{background:rgba(0,229,255,0.1);color:var(--cyan);border:1px solid rgba(0,229,255,0.2);}
+.st-failed{background:rgba(255,59,92,0.1);color:var(--red);border:1px solid rgba(255,59,92,0.2);}
+.st-dot{width:5px;height:5px;border-radius:50%;background:currentColor;}
+.st-running .st-dot{animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.score-pill{font-family:var(--font-mono);font-size:0.78rem;font-weight:700;}
+.score-g{color:var(--green);}
+.score-y{color:var(--yellow);}
+.score-r{color:var(--red);}
+.domain-cell{font-family:var(--font-mono);font-size:0.75rem;color:var(--cyan);}
+.type-badge{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted2);background:var(--surface2);padding:2px 7px;border-radius:5px;}
+.row-actions{display:flex;gap:6px;opacity:0;transition:opacity 0.2s;}
+.scan-table tbody tr:hover .row-actions{opacity:1;}
+.action-btn{padding:4px 10px;border-radius:6px;font-size:0.72rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:1px solid var(--border);background:none;color:var(--muted2);}
+.action-btn:hover{border-color:var(--border2);color:var(--white);}
+/* Empty */
+.empty-table{padding:60px;text-align:center;color:var(--muted2);}
+.empty-icon{font-size:3rem;margin-bottom:12px;}
+/* Pagination */
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-top:1px solid var(--border);}
+.pg-info{font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);}
+.pg-btns{display:flex;gap:6px;}
+.pg-btn{width:32px;height:32px;border-radius:7px;background:var(--surface);border:1px solid var(--border);font-family:var(--font-mono);font-size:0.75rem;color:var(--muted2);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
+.pg-btn:hover{border-color:var(--border2);color:var(--white);}
+.pg-btn.active{background:var(--cyan);color:var(--black);border-color:var(--cyan);}
+.pg-btn:disabled{opacity:0.3;cursor:not-allowed;}
+/* Delete confirm */
+.del-confirm{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:center;justify-content:center;}
+.del-confirm.open{display:flex;}
+.del-modal{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);padding:28px;max-width:360px;width:90%;text-align:center;}
+.del-modal h3{font-size:1.05rem;font-weight:700;margin-bottom:10px;}
+.del-modal p{font-size:0.84rem;color:var(--muted2);margin-bottom:20px;}
+.del-btns{display:flex;gap:10px;justify-content:center;}
+.del-btn{padding:10px 22px;border-radius:var(--radius);font-family:var(--font-display);font-weight:600;font-size:0.88rem;cursor:pointer;}
+.del-cancel{background:transparent;border:1px solid var(--border);color:var(--muted2);}
+.del-cancel:hover{border-color:var(--border2);color:var(--white);}
+.del-ok{background:var(--red);color:#fff;border:none;}
+.del-ok:hover{opacity:0.85;}
+/* Responsive */
+@media(max-width:900px){.sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.overlay.open{display:block;}.main{margin-left:0;}.topbar{left:0;}.mob-toggle{display:flex;}.summary-row{grid-template-columns:repeat(2,1fr);}.scan-table .hide-mobile{display:none;}}
+@media(max-width:480px){.content{padding:16px;}.filter-bar{flex-direction:column;align-items:stretch;}.search-box{max-width:100%;}.filter-count{margin-left:0;}.summary-row{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo" onclick="window.location.href='dashboard.html'" style="cursor:pointer">
+    <div class="sb-logo-icon">PC</div>
+    <div class="sb-logo-text">Pen<span>Checker</span></div>
+  </div>
+  <nav class="sb-nav" id="sbNav"></nav>
+  <div class="sb-bottom">
+    <div class="sb-user" onclick="window.location.href='dashboard-settings.html'">
+      <div class="sb-avatar" id="sbAvatar">?</div>
+      <div style="overflow:hidden;">
+        <div class="sb-uname" id="sbName">Loading...</div>
+        <div class="sb-uplan" id="sbPlan">Free Plan</div>
+      </div>
+      <div style="margin-left:auto;color:var(--muted);font-size:0.7rem;">&rsaquo;</div>
+    </div>
+  </div>
+</aside>
+<!-- Topbar -->
+<header class="topbar">
+  <button class="mob-toggle" onclick="openSidebar()"></button>
+  <div class="tb-breadcrumb"><span style="cursor:pointer;" onclick="nav('dashboard.html')">Dashboard</span><span class="tb-sep">/</span><span class="tb-cur">Scan History</span></div>
+  <div class="tb-actions">
+    <button class="tb-btn" id="themeToggle"></button>
+    <button class="scan-btn" onclick="nav('dashboard-scan.html')"> New Scan</button>
+  </div>
+</header>
+
+<!-- Delete confirm modal -->
+<div class="del-confirm" id="delConfirm">
+  <div class="del-modal">
+    <h3>Delete this scan?</h3>
+    <p>This will permanently delete the scan report and all findings. This cannot be undone.</p>
+    <div class="del-btns">
+      <button class="del-btn del-cancel" onclick="closeDelConfirm()">Cancel</button>
+      <button class="del-btn del-ok" id="delOkBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<main class="main">
+  <div class="content">
+    <div class="page-hdr">
+      <div class="ph-left">
+        <h1>Scan History</h1>
+        <p>View, filter, and manage all past security scans</p>
+      </div>
+      <button class="scan-btn" onclick="nav('dashboard-scan.html')"> New Scan</button>
+    </div>
+
+    <!-- Summary stats -->
+    <div class="summary-row">
+      <div class="sum-card"><div class="sum-num" id="sumTotal">—</div><div class="sum-lbl">Total Scans</div></div>
+      <div class="sum-card"><div class="sum-num" id="sumCompleted" style="color:var(--green)">—</div><div class="sum-lbl">Completed</div></div>
+      <div class="sum-card"><div class="sum-num" id="sumAvg" style="color:var(--cyan)">—</div><div class="sum-lbl">Avg Score</div></div>
+      <div class="sum-card"><div class="sum-num" id="sumFinds" style="color:var(--orange)">—</div><div class="sum-lbl">Total Findings</div></div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.3"/><path d="M9 9l2.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search domain or type..."/>
+      </div>
+      <select class="filter-select" id="filterStatus">
+        <option value="">All statuses</option>
+        <option value="completed">Completed</option>
+        <option value="running">Running</option>
+        <option value="failed">Failed</option>
+      </select>
+      <select class="filter-select" id="filterType">
+        <option value="">All scan types</option>
+        <option value="quick">Quick</option>
+        <option value="standard">Standard</option>
+        <option value="deep">Deep</option>
+      </select>
+      <select class="filter-select" id="filterSort">
+        <option value="desc">Newest first</option>
+        <option value="asc">Oldest first</option>
+        <option value="score-desc">Best score first</option>
+        <option value="score-asc">Worst score first</option>
+      </select>
+      <div class="filter-count" id="filterCount">Loading...</div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-card">
+      <table class="scan-table">
+        <thead>
+          <tr>
+            <th class="sortable" onclick="sortBy('domain')">Domain ↕</th>
+            <th class="sortable hide-mobile" onclick="sortBy('date')">Date ↕</th>
+            <th>Status</th>
+            <th class="sortable" onclick="sortBy('score')">Score ↕</th>
+            <th class="hide-mobile">Type</th>
+            <th class="hide-mobile">Findings</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="scanTbody">
+          <tr><td colspan="7" style="padding:40px;text-align:center;color:var(--muted2);">Loading scans...</td></tr>
+        </tbody>
+      </table>
+      <div class="pagination" id="pagination" style="display:none;">
+        <div class="pg-info" id="pgInfo"></div>
+        <div class="pg-btns" id="pgBtns"></div>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="/js/api.js"></script>
+<script src="/js/sidebar.js"></script>
+<script>
+'use strict';
+function nav(url){ window.location.href=url; }
+
+PC.requireAuth();
+
+// Theme
+const tBtn=document.getElementById('themeToggle');
+function setTheme(l){ document.body.classList.toggle('light-theme',l); localStorage.setItem('pencheckerTheme',l?'light':'dark'); tBtn.innerHTML=l?"<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"5\"></circle><line x1=\"12\" y1=\"1\" x2=\"12\" y2=\"3\"></line><line x1=\"12\" y1=\"21\" x2=\"12\" y2=\"23\"></line><line x1=\"4.22\" y1=\"4.22\" x2=\"5.64\" y2=\"5.64\"></line><line x1=\"18.36\" y1=\"18.36\" x2=\"19.78\" y2=\"19.78\"></line><line x1=\"1\" y1=\"12\" x2=\"3\" y2=\"12\"></line><line x1=\"21\" y1=\"12\" x2=\"23\" y2=\"12\"></line><line x1=\"4.22\" y1=\"19.78\" x2=\"5.64\" y2=\"18.36\"></line><line x1=\"18.36\" y1=\"5.64\" x2=\"19.78\" y2=\"4.22\"></svg>":"<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"></path></svg>"; }
+tBtn.addEventListener('click',()=>setTheme(!document.body.classList.contains('light-theme')));
+(function(){ const s=localStorage.getItem('pencheckerTheme'); const p=window.matchMedia('(prefers-color-scheme: light)').matches; setTheme(s==='light'||(!s&&p)); })();
+function openSidebar(){ document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('open'); }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
+(function(){
+  const user = PC.getUser();
+  const email = user?.email || localStorage.getItem('pc_user_email') || '';
+  const fullName = user?.full_name || email.split('@')[0];
+  const firstName = fullName.split(' ')[0] || 'User';
+  const disp = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+  document.getElementById('sbName').textContent = user?.full_name || disp;
+  document.getElementById('sbAvatar').textContent = disp.charAt(0);
+  const plan = user?.plan || 'free';
+  document.getElementById('sbPlan').textContent = plan.charAt(0).toUpperCase() + plan.slice(1) + ' Plan';
+})();
+
+// State
+let allScans=[];
+let filteredScans=[];
+let currentPage=1;
+const PER_PAGE=15;
+let deleteScanId=null;
+
+// Load
+async function loadScans(){
+  try {
+    const res = await PC.listScans(100);
+    allScans = res.scans || [];
+    renderSummary();
+    applyFilters();
+  } catch{ renderEmpty('Connection error. Please refresh.'); }
+}
+
+function renderSummary(){
+  const done=allScans.filter(s=>s.status==='completed');
+  const scores=done.map(s=>s.security_score).filter(Boolean);
+  const avg=scores.length?(scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1):'—';
+  const totalFinds=done.reduce((acc,s)=>{ return acc+(s.critical_count||0)+(s.high_count||0)+(s.medium_count||0)+(s.low_count||0); },0);
+  document.getElementById('sumTotal').textContent=allScans.length;
+  document.getElementById('sumCompleted').textContent=done.length;
+  document.getElementById('sumAvg').textContent=avg;
+  document.getElementById('sumFinds').textContent=totalFinds;
+}
+
+function applyFilters(){
+  const search=document.getElementById('searchInput').value.toLowerCase();
+  const status=document.getElementById('filterStatus').value;
+  const type=document.getElementById('filterType').value;
+  const sort=document.getElementById('filterSort').value;
+
+  filteredScans=allScans.filter(s=>{
+    const matchSearch=!search||(s.target_url||'').toLowerCase().includes(search)||(s.scan_type||'').toLowerCase().includes(search);
+    const matchStatus=!status||s.status===status;
+    const matchType=!type||s.scan_type===type;
+    return matchSearch&&matchStatus&&matchType;
+  });
+
+  // Sort
+  filteredScans.sort((a,b)=>{
+    if(sort==='asc') return new Date(a.created_at)-new Date(b.created_at);
+    if(sort==='score-desc') return (b.security_score||0)-(a.security_score||0);
+    if(sort==='score-asc') return (a.security_score||0)-(b.security_score||0);
+    return new Date(b.created_at)-new Date(a.created_at);
+  });
+
+  document.getElementById('filterCount').textContent=`${filteredScans.length} scan${filteredScans.length!==1?'s':''}`;
+  currentPage=1;
+  renderTable();
+}
+
+function renderTable(){
+  const tbody=document.getElementById('scanTbody');
+  if(!filteredScans.length){ renderEmpty('No scans match your filters.'); renderPagination(0); return; }
+  const start=(currentPage-1)*PER_PAGE;
+  const page=filteredScans.slice(start,start+PER_PAGE);
+
+  tbody.innerHTML=page.map(s=>{
+    const sc=s.security_score;
+    const scCls=sc>=8?'score-g':sc>=6?'score-y':'score-r';
+    const stCls=s.status==='completed'?'st-completed':s.status==='running'?'st-running':'st-failed';
+    const totalV=(s.critical_count||0)+(s.high_count||0)+(s.medium_count||0)+(s.low_count||0);
+    const date=new Date(s.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    return `<tr onclick="nav('dashboard-report.html?id=${s.id}')">
+      <td><div class="domain-cell">${s.target_url||'—'}</div></td>
+      <td class="hide-mobile" style="font-family:var(--font-mono);font-size:0.72rem;color:var(--muted2);">${date}</td>
+      <td><span class="status-badge ${stCls}"><div class="st-dot"></div>${s.status||'unknown'}</span></td>
+      <td><span class="score-pill ${scCls}">${sc !== null && sc !== undefined ? sc.toFixed(1)+'/10':'—'}</span></td>
+      <td class="hide-mobile"><span class="type-badge">${(s.scan_type||'quick').toUpperCase()}</span></td>
+      <td class="hide-mobile" style="font-family:var(--font-mono);font-size:0.72rem;">${s.status==='completed'?totalV:'—'}</td>
+      <td>
+        <div class="row-actions" onclick="event.stopPropagation()">
+          <button class="action-btn" onclick="nav('dashboard-report.html?id=${s.id}')">View</button>
+          <button class="action-btn" onclick="confirmDelete('${s.id}')"></button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  renderPagination(filteredScans.length);
+}
+
+function renderEmpty(msg='No scans yet.'){
+  document.getElementById('scanTbody').innerHTML=`<tr><td colspan="7"><div class="empty-table"><div class="empty-icon"></div><div>${msg}</div><a href="dashboard-scan.html" style="color:var(--cyan);font-size:0.82rem;margin-top:8px;display:inline-block;">Run a new scan →</a></div></td></tr>`;
+}
+
+function renderPagination(total){
+  const pg=document.getElementById('pagination');
+  const totalPages=Math.ceil(total/PER_PAGE);
+  if(totalPages<=1){ pg.style.display='none'; return; }
+  pg.style.display='flex';
+  document.getElementById('pgInfo').textContent=`Page ${currentPage} of ${totalPages} · ${total} scans`;
+  const btns=document.getElementById('pgBtns');
+  let html=`<button class="pg-btn" ${currentPage===1?'disabled':''} onclick="goPage(${currentPage-1})">‹</button>`;
+  for(let i=1;i<=Math.min(totalPages,7);i++){
+    html+=`<button class="pg-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  }
+  if(totalPages>7) html+=`<span style="color:var(--muted);align-self:center;padding:0 4px;">...</span>`;
+  html+=`<button class="pg-btn" ${currentPage===totalPages?'disabled':''} onclick="goPage(${currentPage+1})">›</button>`;
+  btns.innerHTML=html;
+}
+
+function goPage(p){ currentPage=p; renderTable(); window.scrollTo({top:0,behavior:'smooth'}); }
+function sortBy(field){ const s=document.getElementById('filterSort'); s.value=field==='score'?'score-desc':field==='date'?'desc':'desc'; applyFilters(); }
+
+// Delete
+function confirmDelete(id){ deleteScanId=id; document.getElementById('delConfirm').classList.add('open'); }
+function closeDelConfirm(){ document.getElementById('delConfirm').classList.remove('open'); deleteScanId=null; }
+document.getElementById('delOkBtn').addEventListener('click', async()=>{
+  if(!deleteScanId) return;
+  try {
+    await PC.deleteScan(deleteScanId);
+    allScans=allScans.filter(s=>s.id!==deleteScanId);
+    closeDelConfirm();
+    renderSummary();
+    applyFilters();
+  } catch{ closeDelConfirm(); alert('Could not delete. Please try again.'); }
+});
+
+// Filters
+['searchInput','filterStatus','filterType','filterSort'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('change',applyFilters);
+});
+document.getElementById('searchInput').addEventListener('input',applyFilters);
+
+loadScans();
+</script>
+</body>
+</html>

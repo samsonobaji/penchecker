@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>AI Assistant — PenChecker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--black:#060608;--black2:#0d0d12;--black3:#13131a;--surface:#1a1a24;--surface2:#22222f;--border:rgba(255,255,255,0.07);--border2:rgba(0,229,255,0.2);--cyan:#00e5ff;--cyan2:#00b4cc;--green:#00ff87;--red:#ff3b5c;--orange:#ff8c42;--yellow:#ffd60a;--purple:#a855f7;--white:#f0f0f8;--muted:#6b6b85;--muted2:#9090a8;--font-display:'Plus Jakarta Sans',sans-serif;--font-body:'Plus Jakarta Sans',sans-serif;--font-mono:'JetBrains Mono',monospace;--glow-cyan:0 0 40px rgba(0,229,255,0.25);--radius:12px;--radius2:20px;--sidebar-w:240px;--topbar-h:60px;}
+body{transition:background 0.25s,color 0.25s;}
+.light-theme{--black:#f8f9fc;--black2:#e8eaf2;--black3:#ffffff;--surface:#ffffff;--surface2:#f2f4f9;--border:rgba(13,23,44,0.12);--border2:rgba(0,149,212,0.25);--cyan:#007fbc;--cyan2:#005f91;--green:#0f9d58;--red:#d93025;--orange:#e37400;--yellow:#f1c232;--purple:#6a1b9a;--white:#0b0d13;--muted:#4b5d79;--muted2:#6b7790;}
+.light-theme .topbar{background:rgba(248,249,252,0.96);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:15px;line-height:1.6;overflow-x:hidden;min-height:100vh;}
+a{color:inherit;text-decoration:none;}button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--black2);}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px;}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--black2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:200;transition:transform 0.3s;}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:18px 20px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sb-logo-icon{width:32px;height:32px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;font-size:0.8rem;color:var(--black);}
+.sb-logo-text{font-size:1.05rem;font-weight:700;letter-spacing:-0.02em;}
+.sb-logo-text span{color:var(--cyan);}
+.sb-nav{flex:1;padding:12px 10px;overflow-y:auto;}
+.sb-section{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;padding:8px 10px 4px;margin-top:8px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius);font-size:0.85rem;font-weight:500;color:var(--muted2);transition:all 0.18s;position:relative;margin-bottom:1px;cursor:pointer;}
+.sb-link:hover{background:var(--surface);color:var(--white);}
+.sb-link.active{background:rgba(0,229,255,0.08);color:var(--cyan);font-weight:600;}
+.sb-link.active::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--cyan);border-radius:0 2px 2px 0;}
+.sb-icon{font-size:1rem;flex-shrink:0;width:20px;text-align:center;}
+.sb-badge{margin-left:auto;background:rgba(0,229,255,0.15);color:var(--cyan);font-family:var(--font-mono);font-size:0.6rem;font-weight:700;border-radius:10px;padding:1px 6px;}
+.sb-bottom{padding:12px 10px;border-top:1px solid var(--border);flex-shrink:0;}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:all 0.2s;}
+.sb-user:hover{border-color:var(--border2);}
+.sb-avatar{width:30px;height:30px;border-radius:50%;background:rgba(0,229,255,0.15);border:1px solid rgba(0,229,255,0.3);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:var(--cyan);flex-shrink:0;}
+.sb-uname{font-size:0.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-uplan{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);}
+.topbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--topbar-h);background:rgba(6,6,8,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;z-index:100;}
+.tb-bc{flex:1;font-size:0.82rem;color:var(--muted2);display:flex;align-items:center;gap:6px;}
+.tb-cur{color:var(--white);font-weight:600;}
+.tb-sep{opacity:0.4;}
+.tb-btn{width:36px;height:36px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.9rem;cursor:pointer;transition:all 0.2s;color:var(--muted2);}
+.tb-btn:hover{border-color:var(--border2);color:var(--white);}
+.mob-toggle{display:none;width:36px;height:36px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);align-items:center;justify-content:center;font-size:1rem;cursor:pointer;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;}
+.overlay.open{display:block;}
+/* Chat layout */
+.main{margin-left:var(--sidebar-w);padding-top:var(--topbar-h);height:100vh;display:flex;flex-direction:column;}
+.chat-layout{display:flex;flex:1;overflow:hidden;}
+/* Sidebar panel */
+.chat-side{width:260px;border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--black2);flex-shrink:0;}
+.cs-hdr{padding:14px 16px;border-bottom:1px solid var(--border);font-weight:700;font-size:0.88rem;}
+.cs-new{margin:10px;padding:9px 14px;background:var(--cyan);color:var(--black);border:none;border-radius:var(--radius);font-weight:700;font-size:0.82rem;cursor:pointer;transition:all 0.2s;}
+.cs-new:hover{box-shadow:var(--glow-cyan);}
+.cs-list{flex:1;overflow-y:auto;padding:4px 8px;}
+.cs-item{padding:10px 10px;border-radius:var(--radius);cursor:pointer;transition:background 0.2s;margin-bottom:2px;}
+.cs-item:hover{background:var(--surface);}
+.cs-item.active{background:rgba(0,229,255,0.08);}
+.cs-item-title{font-size:0.8rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cs-item-date{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);margin-top:2px;}
+.cs-prompt-area{padding:12px;}
+.cs-prompt-label{font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);text-transform:uppercase;margin-bottom:8px;}
+.cs-prompt-chip{padding:7px 11px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:0.75rem;color:var(--muted2);cursor:pointer;margin-bottom:6px;transition:all 0.2s;display:block;width:100%;text-align:left;}
+.cs-prompt-chip:hover{border-color:var(--border2);color:var(--white);}
+/* Chat main */
+.chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.chat-messages{flex:1;overflow-y:auto;padding:24px 28px;}
+.msg{margin-bottom:20px;display:flex;flex-direction:column;}
+.msg.user{align-items:flex-end;}
+.msg.assistant{align-items:flex-start;}
+.msg-role{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);margin-bottom:5px;}
+.msg.user .msg-role{text-align:right;}
+.msg-bubble{max-width:76%;padding:13px 16px;border-radius:var(--radius2);font-size:0.87rem;line-height:1.7;}
+.msg.user .msg-bubble{background:rgba(0,229,255,0.12);border:1px solid rgba(0,229,255,0.25);color:var(--white);}
+.msg.assistant .msg-bubble{background:var(--surface);border:1px solid var(--border);color:var(--muted2);}
+.msg.assistant .msg-bubble code{font-family:var(--font-mono);font-size:0.78rem;background:var(--black);padding:2px 5px;border-radius:4px;color:var(--cyan);}
+.msg.assistant .msg-bubble pre{font-family:var(--font-mono);font-size:0.74rem;background:var(--black);padding:12px;border-radius:var(--radius);overflow-x:auto;color:var(--green);line-height:1.6;margin:10px 0;border:1px solid var(--border);}
+.msg-typing{display:flex;gap:5px;padding:14px 16px;}
+.msg-typing span{width:7px;height:7px;background:var(--muted);border-radius:50%;animation:bounce 1.2s infinite;}
+.msg-typing span:nth-child(2){animation-delay:0.2s;}
+.msg-typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes bounce{0%,80%,100%{transform:translateY(0);}40%{transform:translateY(-7px);}}
+/* Input area */
+.chat-input-area{padding:16px 28px;border-top:1px solid var(--border);background:var(--black);}
+.chat-input-row{display:flex;gap:10px;align-items:flex-end;}
+.chat-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);padding:12px 16px;font-family:var(--font-body);font-size:0.87rem;color:var(--white);outline:none;transition:border-color 0.2s;resize:none;min-height:48px;max-height:140px;line-height:1.5;}
+.chat-input:focus{border-color:var(--cyan);}
+.chat-input::placeholder{color:var(--muted);}
+.send-btn{width:44px;height:44px;background:var(--cyan);color:var(--black);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;transition:all 0.2s;flex-shrink:0;}
+.send-btn:hover{box-shadow:var(--glow-cyan);}
+.send-btn:disabled{opacity:0.4;cursor:not-allowed;}
+/* Welcome */
+.chat-welcome{text-align:center;padding:48px 24px;}
+.cw-icon{font-size:3rem;margin-bottom:16px;}
+.cw-title{font-size:1.3rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:10px;}
+.cw-desc{font-size:0.88rem;color:var(--muted2);line-height:1.7;max-width:480px;margin:0 auto 28px;}
+.cw-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.cw-chip{padding:9px 16px;background:var(--surface);border:1px solid var(--border);border-radius:100px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;}
+.cw-chip:hover{border-color:var(--border2);color:var(--white);}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.overlay.open{display:block;}.main{margin-left:0;}.topbar{left:0;}.mob-toggle{display:flex;}.chat-side{display:none;}.chat-messages{padding:14px;}.chat-input-area{padding:12px 14px;}}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo" onclick="window.location.href='dashboard.html'" style="cursor:pointer">
+    <div class="sb-logo-icon">PC</div>
+    <div class="sb-logo-text">Pen<span>Checker</span></div>
+  </div>
+  <nav class="sb-nav" id="sbNav"></nav>
+  <div class="sb-bottom">
+    <div class="sb-user" onclick="window.location.href='dashboard-settings.html'">
+      <div class="sb-avatar" id="sbAvatar">?</div>
+      <div style="overflow:hidden;">
+        <div class="sb-uname" id="sbName">Loading...</div>
+        <div class="sb-uplan" id="sbPlan">Free Plan</div>
+      </div>
+      <div style="margin-left:auto;color:var(--muted);font-size:0.7rem;">&rsaquo;</div>
+    </div>
+  </div>
+</aside>
+<header class="topbar">
+  <button class="mob-toggle" onclick="openSidebar()"></button>
+  <div class="tb-bc"><span onclick="nav('dashboard.html')" style="cursor:pointer">Dashboard</span><span class="tb-sep">/</span><span class="tb-cur">AI Assistant</span></div>
+  <button class="tb-btn" id="themeToggle"></button>
+</header>
+
+<div class="main">
+  <div class="chat-layout">
+    <!-- Chat sessions sidebar -->
+    <div class="chat-side">
+      <div class="cs-hdr"> AI Assistant</div>
+      <button class="cs-new" onclick="newChat()">+ New conversation</button>
+      <div class="cs-list" id="sessionList">
+        <div class="cs-item active">
+          <div class="cs-item-title">Security Q&amp;A</div>
+          <div class="cs-item-date">Just now</div>
+        </div>
+      </div>
+      <div class="cs-prompt-area">
+        <div class="cs-prompt-label">Quick prompts</div>
+        <button class="cs-prompt-chip" onclick="quickPrompt('What are the most critical vulnerabilities I should fix first?')"> Critical findings to fix</button>
+        <button class="cs-prompt-chip" onclick="quickPrompt('Explain what a Content-Security-Policy header is and how to add one')"> Explain CSP headers</button>
+        <button class="cs-prompt-chip" onclick="quickPrompt('Write fix code for a missing X-Frame-Options header in nginx')"> Fix code for nginx</button>
+        <button class="cs-prompt-chip" onclick="quickPrompt('How do I prevent SQL injection in my web app?')"> Prevent SQL injection</button>
+        <button class="cs-prompt-chip" onclick="quickPrompt('What is my security score and how can I improve it?')"> Improve my score</button>
+      </div>
+    </div>
+    <!-- Chat window -->
+    <div class="chat-main">
+      <div class="chat-messages" id="messages">
+        <div class="chat-welcome">
+          <div class="cw-icon"></div>
+          <div class="cw-title">PenChecker AI Security Assistant</div>
+          <div class="cw-desc">Ask me anything about your security findings, get fix code in your stack, understand vulnerabilities in plain English, or get step-by-step remediation guides.</div>
+          <div class="cw-chips">
+            <div class="cw-chip" onclick="quickPrompt('What should I fix first on my website?')"> What to fix first</div>
+            <div class="cw-chip" onclick="quickPrompt('Explain XSS attacks and how to prevent them')"> Explain XSS</div>
+            <div class="cw-chip" onclick="quickPrompt('Write me a strict Content-Security-Policy header')"> Write a CSP header</div>
+            <div class="cw-chip" onclick="quickPrompt('What does a CVSS score of 7.5 mean?')"> CVSS scores</div>
+            <div class="cw-chip" onclick="quickPrompt('How do I set up HTTPS properly?')"> HTTPS setup</div>
+            <div class="cw-chip" onclick="quickPrompt('What is OWASP Top 10?')"> OWASP Top 10</div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <div class="chat-input-row">
+          <textarea class="chat-input" id="chatInput" placeholder="Ask about your security findings, request fix code, or ask any security question..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendMessage()">↑</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/sidebar.js"></script>
+<script>
+'use strict';
+function nav(u){window.location.href=u;}
+PC.requireAuth();
+
+const tBtn=document.getElementById('themeToggle');
+function setTheme(l){document.body.classList.toggle('light-theme',l);localStorage.setItem('pencheckerTheme',l?'light':'dark');tBtn.innerHTML=l?"<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"5\"></circle><line x1=\"12\" y1=\"1\" x2=\"12\" y2=\"3\"></line><line x1=\"12\" y1=\"21\" x2=\"12\" y2=\"23\"></line><line x1=\"4.22\" y1=\"4.22\" x2=\"5.64\" y2=\"5.64\"></line><line x1=\"18.36\" y1=\"18.36\" x2=\"19.78\" y2=\"19.78\"></line><line x1=\"1\" y1=\"12\" x2=\"3\" y2=\"12\"></line><line x1=\"21\" y1=\"12\" x2=\"23\" y2=\"12\"></line><line x1=\"4.22\" y1=\"19.78\" x2=\"5.64\" y2=\"18.36\"></line><line x1=\"18.36\" y1=\"5.64\" x2=\"19.78\" y2=\"4.22\"></svg>":"<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"></path></svg>";}
+tBtn.addEventListener('click',()=>setTheme(!document.body.classList.contains('light-theme')));
+(function(){const s=localStorage.getItem('pencheckerTheme');const p=window.matchMedia('(prefers-color-scheme: light)').matches;setTheme(s==='light'||(!s&&p));})();
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('open');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open');}
+
+// Dynamic sidebar handled by sidebar.js
+
+let history=[];
+let isLoading=false;
+let currentSessionId=null;
+
+// Load past sessions from DB
+async function loadSessions(){
+  try{
+    const res = await PC.listAIChats();
+    const sessions = res.sessions || [];
+    const list = document.getElementById('sessionList');
+    if(sessions.length){
+      list.innerHTML = sessions.map((sess, idx) => `
+        <div class="cs-item${currentSessionId === sess.id || (!currentSessionId && idx === 0) ? ' active' : ''}" data-session-id="${sess.id}" onclick="selectSession('${sess.id}')">
+          <div class="cs-item-title">${sess.session_title||'Security Q&A'}</div>
+          <div class="cs-item-date">${timeAgo(sess.updated_at)}</div>
+        </div>`).join('');
+      
+      if (!currentSessionId && sessions[0]) {
+        selectSession(sessions[0].id);
+      }
+    } else {
+      list.innerHTML = '<div style="font-size:0.75rem;color:var(--muted);padding:10px;text-align:center;">No past conversations</div>';
+    }
+  }catch(e){
+    console.error(e);
+  }
+}
+
+// Load a specific past session
+async function selectSession(id){
+  currentSessionId = id;
+  document.querySelectorAll('.cs-item').forEach(i=>i.classList.remove('active'));
+  const item = document.querySelector(`.cs-item[data-session-id="${id}"]`);
+  if(item) item.classList.add('active');
+
+  try {
+    const res = await PC.getAIChat(id);
+    const session = res.session;
+    history = session.messages || [];
+    const m = document.getElementById('messages');
+    m.innerHTML = '';
+    history.forEach(msg => appendMsg(msg.role, msg.content));
+    if(!history.length){
+      m.innerHTML=`<div class="chat-welcome"><div class="cw-icon"></div><div class="cw-title">Session loaded</div><div class="cw-desc">Continue your security conversation.</div></div>`;
+    }
+  } catch(err) {
+    console.error(err);
+  }
+}
+
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,140)+'px';}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
+function quickPrompt(q){document.getElementById('chatInput').value=q;document.getElementById('chatInput').focus();sendMessage();}
+function newChat(){
+  history=[];
+  currentSessionId=null;
+  document.querySelectorAll('.cs-item').forEach(i=>i.classList.remove('active'));
+  const m=document.getElementById('messages');
+  m.innerHTML=`<div class="chat-welcome"><div class="cw-icon"></div><div class="cw-title">New conversation</div><div class="cw-desc">Ask me anything about web security.</div></div>`;
+}
+
+function appendMsg(role,content){
+  const m=document.getElementById('messages');
+  const welcome=m.querySelector('.chat-welcome');
+  if(welcome)welcome.remove();
+  const div=document.createElement('div');
+  div.className='msg '+role;
+  div.innerHTML=`<div class="msg-role">${role==='user'?'You':'AI Assistant'}</div><div class="msg-bubble">${formatContent(content)}</div>`;
+  m.appendChild(div);
+  m.scrollTop=m.scrollHeight;
+  return div;
+}
+
+function formatContent(text){
+  text=text.replace(/```(\w*)\n?([\s\S]*?)```/g,(_,lang,code)=>`<pre>${escHtml(code.trim())}</pre>`);
+  text=text.replace(/`([^`]+)`/g,(_,c)=>`<code>${escHtml(c)}</code>`);
+  text=text.replace(/\n/g,'<br/>');
+  text=text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  return text;
+}
+function escHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+async function sendMessage(){
+  const input=document.getElementById('chatInput');
+  const msg=input.value.trim();
+  if(!msg||isLoading)return;
+  input.value='';input.style.height='auto';
+  isLoading=true;
+  document.getElementById('sendBtn').disabled=true;
+  appendMsg('user',msg);
+  history.push({role:'user',content:msg});
+
+  // Ensure session exists
+  if (!currentSessionId) {
+    try {
+      const res = await PC.createAIChat(msg.substring(0, 40));
+      currentSessionId = res.session.id;
+      await loadSessions();
+    } catch(err) {
+      console.error('Failed to create chat session:', err);
+    }
+  }
+
+  // Typing indicator
+  const typingDiv=document.createElement('div');
+  typingDiv.className='msg assistant';
+  typingDiv.innerHTML='<div class="msg-role">AI Assistant</div><div class="msg-bubble"><div class="msg-typing"><span></span><span></span><span></span></div></div>';
+  document.getElementById('messages').appendChild(typingDiv);
+  document.getElementById('messages').scrollTop=99999;
+
+  try{
+    const res = await PC.sendAIMessage(currentSessionId, msg);
+    typingDiv.remove();
+    const reply = res.reply || 'I could not generate a response. Please try again.';
+    appendMsg('assistant',reply);
+    history.push({role:'assistant',content:reply});
+  }catch(e){
+    typingDiv.remove();
+    const reply='Connection error. Please try again.';
+    appendMsg('assistant',reply);
+    history.push({role:'assistant',content:reply});
+  }
+  isLoading=false;
+  document.getElementById('sendBtn').disabled=false;
+  document.getElementById('chatInput').focus();
+}
+
+loadSessions();
+
+// Pre-fill from URL ?q=
+(function(){
+  const q=new URLSearchParams(window.location.search).get('q');
+  if(q){document.getElementById('chatInput').value=decodeURIComponent(q);setTimeout(sendMessage,400);}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# Node modules
+node_modules/
+
+# Local Environment Variables
+.env
+
+# SQLite local database files
+data/penchecker.db*
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+# Log files
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# System files
+.DS_Store
+Thumbs.db

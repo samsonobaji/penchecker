@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Verify Your Email — PenChecker</title>
+<meta name="description" content="Verify your email address to activate your PenChecker account." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --black:#060608; --black2:#0d0d12; --black3:#13131a;
+  --surface:#1a1a24; --surface2:#22222f;
+  --border:rgba(255,255,255,0.07); --border2:rgba(0,229,255,0.2);
+  --cyan:#00e5ff; --cyan2:#00b4cc; --green:#00ff87;
+  --red:#ff3b5c; --orange:#ff8c42; --yellow:#ffd60a;
+  --white:#f0f0f8; --muted:#6b6b85; --muted2:#9090a8;
+  --font-display:'Plus Jakarta Sans',sans-serif;
+  --font-body:'Plus Jakarta Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --glow-cyan:0 0 40px rgba(0,229,255,0.25);
+  --radius:12px; --radius2:20px;
+}
+body{transition:background 0.25s,color 0.25s;}
+.light-theme{--black:#f8f9fc;--black2:#e8eaf2;--black3:#ffffff;--surface:#ffffff;--surface2:#f2f4f9;--border:rgba(13,23,44,0.12);--border2:rgba(0,149,212,0.25);--cyan:#007fbc;--cyan2:#005f91;--green:#0f9d58;--red:#d93025;--orange:#e37400;--yellow:#f1c232;--white:#0b0d13;--muted:#4b5d79;--muted2:#6b7790;}
+.light-theme body::before{opacity:0.12;}
+.light-theme .card{box-shadow:0 24px 80px rgba(0,0,0,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:16px;line-height:1.6;overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column;}
+a{color:inherit;text-decoration:none;}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.025) 1px,transparent 1px);background-size:50px 50px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);pointer-events:none;z-index:0;}
+body::before{content:'';position:fixed;top:-150px;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(ellipse,rgba(0,229,255,0.06) 0%,transparent 70%);pointer-events:none;z-index:0;}
+.light-theme body::before{background:radial-gradient(ellipse,rgba(0,127,188,0.05) 0%,transparent 70%);}
+.light-theme body::after{opacity:0.5;}
+#navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 24px;}
+.nav-inner{max-width:1200px;margin:0 auto;height:64px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-logo-icon{width:34px;height:34px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:500;font-size:0.82rem;color:var(--black);}
+.nav-logo-text{font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;}
+.nav-logo-text span{color:var(--cyan);}
+.theme-btn{background:none;border:1px solid var(--border);color:var(--muted2);padding:7px 14px;border-radius:8px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;}
+.theme-btn:hover{border-color:var(--border2);color:var(--white);}
+
+.page-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:100px 24px 60px;position:relative;z-index:1;}
+.card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);width:100%;max-width:500px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.card-body{padding:36px 32px;}
+.step{display:none;text-align:center;}
+.step.active{display:block;}
+
+/* Loading spinner */
+.loading-spinner{display:flex;flex-direction:column;align-items:center;gap:16px;padding:20px 0;}
+.ls-ring-wrap{position:relative;width:64px;height:64px;}
+.ls-ring{width:64px;height:64px;border-radius:50%;border:3px solid var(--surface);border-top-color:var(--cyan);animation:spin 0.9s linear infinite;position:absolute;}
+.ls-ring:nth-child(2){width:48px;height:48px;top:8px;left:8px;border-top-color:var(--green);animation-duration:1.3s;animation-direction:reverse;}
+.ls-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.2rem;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-title{font-size:1rem;font-weight:700;}
+.loading-sub{font-size:0.82rem;color:var(--muted2);}
+.progress-bar-wrap{width:100%;height:3px;background:var(--surface);border-radius:2px;margin-top:12px;overflow:hidden;}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--cyan),var(--green));border-radius:2px;width:0%;transition:width 0.5s ease;}
+
+/* Success state */
+.success-animation{font-size:4rem;margin-bottom:18px;animation:bounce 0.6s ease;}
+@keyframes bounce{0%{transform:scale(0);}60%{transform:scale(1.2);}100%{transform:scale(1);}}
+.state-title{font-size:1.35rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:10px;}
+.state-msg{font-size:0.9rem;color:var(--muted2);line-height:1.7;margin-bottom:24px;}
+.state-email{font-family:var(--font-mono);font-size:0.82rem;color:var(--cyan);background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);border-radius:8px;padding:8px 16px;display:inline-block;margin-bottom:20px;}
+.what-next{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:20px;text-align:left;}
+.wn-title{font-size:0.82rem;font-weight:700;margin-bottom:10px;color:var(--muted2);}
+.wn-item{display:flex;align-items:flex-start;gap:9px;font-size:0.82rem;color:var(--muted2);margin-bottom:8px;line-height:1.5;}
+.wn-item:last-child{margin-bottom:0;}
+.wn-icon{flex-shrink:0;font-size:0.9rem;}
+
+/* Error state */
+.error-icon{font-size:3rem;margin-bottom:16px;}
+.error-msg{font-size:0.85rem;color:var(--muted2);line-height:1.7;margin-bottom:20px;}
+.error-details{font-family:var(--font-mono);font-size:0.72rem;color:var(--red);background:rgba(255,59,92,0.08);border:1px solid rgba(255,59,92,0.2);border-radius:8px;padding:8px 12px;margin-bottom:20px;}
+
+/* Already verified */
+.already-icon{font-size:3rem;margin-bottom:16px;}
+
+/* Buttons */
+.submit-btn{width:100%;padding:14px;background:var(--cyan);color:var(--black);border:none;border-radius:var(--radius);font-family:var(--font-display);font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.25s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.submit-btn:hover{box-shadow:var(--glow-cyan);transform:translateY(-1px);}
+.btn-secondary{width:100%;padding:12px;background:transparent;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font-display);font-weight:600;font-size:0.9rem;color:var(--muted2);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:10px;}
+.btn-secondary:hover{border-color:var(--border2);color:var(--white);}
+.card-footer{padding:14px 28px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:6px;font-size:0.8rem;color:var(--muted2);background:var(--surface);}
+.card-footer a{color:var(--cyan);font-weight:600;}
+@media(max-width:480px){.page-wrap{padding:90px 16px 40px;}.card-body{padding:28px 18px;}}
+</style>
+</head>
+<body>
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">PC</div>
+      <div class="nav-logo-text">Pen<span>Checker</span></div>
+    </a>
+    <button class="theme-btn" id="themeToggle"></button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="card">
+    <div class="card-body">
+
+      <!-- Loading -->
+      <div class="step active" id="stepLoading">
+        <div class="loading-spinner">
+          <div class="ls-ring-wrap">
+            <div class="ls-ring"></div>
+            <div class="ls-ring"></div>
+            <div class="ls-icon"></div>
+          </div>
+          <div class="loading-title">Verifying your email...</div>
+          <div class="loading-sub">Confirming your account with PenChecker.</div>
+          <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+        </div>
+      </div>
+
+      <!-- Success -->
+      <div class="step" id="stepSuccess">
+        <div class="success-animation"></div>
+        <div class="state-title">Email verified!</div>
+        <p class="state-msg">Your email address has been confirmed and your PenChecker account is now fully active.</p>
+        <div class="state-email" id="verifiedEmail">—</div>
+        <div class="what-next">
+          <div class="wn-title">What's next for you:</div>
+          <div class="wn-item"><span class="wn-icon"></span>Run your first security scan — add your domain and start in minutes</div>
+          <div class="wn-item"><span class="wn-icon"></span>Ask the AI assistant anything about your security results</div>
+          <div class="wn-item"><span class="wn-icon"></span>Get your security score and see exactly what to fix first</div>
+        </div>
+        <a href="onboarding.html"><button class="submit-btn">Set up my account →</button></a>
+        <a href="login.html"><button class="btn-secondary">Go to sign in</button></a>
+      </div>
+
+      <!-- Already verified -->
+      <div class="step" id="stepAlready">
+        <div class="already-icon"></div>
+        <div class="state-title">Already verified</div>
+        <p class="state-msg">This email address has already been confirmed. Your account is active and ready to use.</p>
+        <a href="login.html"><button class="submit-btn">Sign in to your account →</button></a>
+        <a href="signup.html"><button class="btn-secondary">Create a different account</button></a>
+      </div>
+
+      <!-- Error -->
+      <div class="step" id="stepError">
+        <div class="error-icon"></div>
+        <div class="state-title">Verification failed</div>
+        <p class="error-msg">We couldn't verify your email address. The link may have expired or already been used. Verification links are valid for <strong style="color:var(--white);">24 hours</strong>.</p>
+        <div class="error-details" id="errorDetails">Unknown error</div>
+        <a href="signup.html"><button class="submit-btn">Sign up again →</button></a>
+        <a href="login.html"><button class="btn-secondary">Try signing in</button></a>
+        <a href="contact.html?subject=support"><button class="btn-secondary">Contact support</button></a>
+      </div>
+
+    </div>
+    <div class="card-footer">
+      <span>Need help?</span>
+      <a href="contact.html?subject=support">Contact support</a>
+      <span style="color:var(--border);">·</span>
+      <a href="signup.html">Create new account</a>
+    </div>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script>
+'use strict';
+
+// Theme
+const themeToggle=document.getElementById('themeToggle');
+function updateThemeBtn(){if(!themeToggle)return;const isLight=document.body.classList.contains('light-theme');themeToggle.innerHTML=(isLight?'<svg viewBox='0 0 24 24' width='14' height='14' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round' style='display:inline-block;vertical-align:middle;'><circle cx='12' cy='12' r='5'/><line x1='12' y1='1' x2='12' y2='3'/><line x1='12' y1='21' x2='12' y2='23'/><line x1='4.22' y1='4.22' x2='5.64' y2='5.64'/><line x1='18.36' y1='18.36' x2='19.78' y2='19.78'/><line x1='1' y1='12' x2='3' y2='12'/><line x1='21' y1='12' x2='23' y2='12'/><line x1='4.22' y1='19.78' x2='5.64' y2='18.36'/><line x1='18.36' y1='5.64' x2='19.78' y2='4.22'/></svg>':'<svg viewBox='0 0 24 24' width='14' height='14' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round' style='display:inline-block;vertical-align:middle;'><path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/></svg>')+'&nbsp;'+(isLight?'Light':'Dark');}
+function setTheme(light){document.body.classList.toggle('light-theme',light);localStorage.setItem('pencheckerTheme',light?'light':'dark');updateThemeBtn();}
+if(themeToggle)themeToggle.addEventListener('click',()=>setTheme(!document.body.classList.contains('light-theme')));
+(function(){const s=localStorage.getItem('pencheckerTheme');const p=window.matchMedia('(prefers-color-scheme: light)').matches;setTheme(s==='light'||(!s&&p));})();
+
+function showStep(id){document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+
+const progressBar = document.getElementById('progressBar');
+function setProgress(pct){ progressBar.style.width = pct + '%'; }
+
+async function verifyEmail(){
+  setProgress(50);
+  setTimeout(() => {
+    setProgress(100);
+    if (PC.isLoggedIn()) {
+      const user = PC.getUser();
+      document.getElementById('verifiedEmail').textContent = user?.email || 'your account';
+      showStep('stepSuccess');
+    } else {
+      showStep('stepAlready');
+    }
+  }, 1000);
+}
+
+verifyEmail();
+</script>
+</body>
+</html>
+
+

@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>About Us — PenChecker Real-Time Security Scanner</title>
+<meta name="description" content="Learn why we built PenChecker — The world's most accurate web security scanner. Our story, mission, values, and the team behind the platform." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   DESIGN SYSTEM
+   ============================================================ */
+:root {
+  --black:   #060608;
+  --black2:  #0d0d12;
+  --black3:  #13131a;
+  --surface: #1a1a24;
+  --surface2:#22222f;
+  --border:  rgba(255,255,255,0.07);
+  --border2: rgba(0,229,255,0.2);
+  --cyan:    #00e5ff;
+  --cyan2:   #00b4cc;
+  --green:   #00ff87;
+  --red:     #ff3b5c;
+  --orange:  #ff8c42;
+  --yellow:  #ffd60a;
+  --purple:  #a855f7;
+  --white:   #f0f0f8;
+  --muted:   #6b6b85;
+  --muted2:  #9090a8;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body:    'Plus Jakarta Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --glow-cyan:  0 0 40px rgba(0,229,255,0.25);
+  --glow-green: 0 0 40px rgba(0,255,135,0.25);
+  --radius:  12px;
+  --radius2: 20px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; border: none; outline: none; }
+
+/* Noise */
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999; opacity: 0.4;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--black2); }
+::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--cyan2); }
+
+/* ============================================================
+   LAYOUT & TYPE
+   ============================================================ */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.container-sm { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+.display-xl { font-size: clamp(2.8rem,7vw,6rem); font-weight:800; line-height:1.0; letter-spacing:-0.03em; }
+.display-lg { font-size: clamp(1.9rem,4vw,3.2rem); font-weight:700; line-height:1.1; letter-spacing:-0.02em; }
+.display-md { font-size: clamp(1.2rem,2.5vw,1.8rem); font-weight:700; letter-spacing:-0.02em; }
+.lead { font-size: 1.15rem; line-height: 1.8; color: var(--muted2); }
+
+/* Section label */
+.section-label { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.section-label-line { width:36px; height:2px; background:var(--cyan); }
+.section-label-text { font-family:var(--font-mono); font-size:0.72rem; color:var(--cyan); letter-spacing:0.15em; text-transform:uppercase; }
+
+
+/* ============================================================
+   LIGHT THEME
+   ============================================================ */
+body { transition: background 0.25s, color 0.25s; }
+.light-theme {
+  --black:   #f8f9fc;
+  --black2:  #e8eaf2;
+  --black3:  #ffffff;
+  --surface: #ffffff;
+  --surface2:#f2f4f9;
+  --border:  rgba(13, 23, 44, 0.12);
+  --border2: rgba(0, 149, 212, 0.25);
+  --cyan:    #007fbc;
+  --cyan2:   #005f91;
+  --green:   #0f9d58;
+  --red:     #d93025;
+  --orange:  #e37400;
+  --yellow:  #f1c232;
+  --purple:  #6a1b9a;
+  --white:   #0b0d13;
+  --muted:   #4b5d79;
+  --muted2:  #6b7790;
+}
+.light-theme #navbar.scrolled { background: rgba(248,249,252,0.96); }
+.light-theme body::before { opacity: 0.15; }
+
+/* Scroll reveal */
+.reveal { opacity:0; transform:translateY(24px); transition:opacity 0.65s ease, transform 0.65s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal-delay-1 { transition-delay:0.1s; }
+.reveal-delay-2 { transition-delay:0.2s; }
+.reveal-delay-3 { transition-delay:0.3s; }
+.reveal-delay-4 { transition-delay:0.4s; }
+
+/* Buttons */
+.btn {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:14px 28px; border-radius:var(--radius);
+  font-family:var(--font-display); font-weight:600; font-size:0.95rem;
+  transition:all 0.25s ease; position:relative; overflow:hidden; border:none;
+}
+.btn::after { content:''; position:absolute; inset:0; background:white; opacity:0; transition:opacity 0.2s; }
+.btn:hover::after { opacity:0.06; }
+.btn-primary { background:var(--cyan); color:var(--black); box-shadow:0 0 40px rgba(0,229,255,0.2); }
+.btn-primary:hover { box-shadow:var(--glow-cyan); transform:translateY(-1px); }
+.btn-ghost { background:transparent; color:var(--white); border:1px solid var(--border); }
+.btn-ghost:hover { border-color:var(--cyan); color:var(--cyan); }
+.btn-lg { padding:18px 36px; font-size:1.05rem; border-radius:14px; }
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+#navbar {
+  position:fixed; top:0; left:0; right:0; z-index:1000;
+  padding:0 24px; transition:all 0.3s ease;
+}
+#navbar.scrolled {
+  background:rgba(6,6,8,0.92); backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner {
+  max-width:1200px; margin:0 auto; height:70px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.nav-logo { display:flex; align-items:center; gap:10px; }
+.nav-logo-icon {
+  width:36px; height:36px; background:var(--cyan); border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-weight:500; font-size:0.85rem; color:var(--black);
+}
+.nav-logo-text { font-size:1.2rem; font-weight:700; letter-spacing:-0.02em; }
+.nav-logo-text span { color:var(--cyan); }
+.nav-links { display:flex; align-items:center; gap:36px; list-style:none; }
+.nav-links a { font-size:0.9rem; color:var(--muted2); transition:color 0.2s; font-weight:500; }
+.nav-links a:hover { color:var(--white); }
+.nav-links a.active { color:var(--cyan); }
+.nav-actions { display:flex; align-items:center; gap:12px; }
+.nav-menu-btn { display:none; background:none; border:none; color:var(--white); cursor:pointer; padding:8px; }
+.mobile-menu {
+  display:none; position:fixed; inset:0; background:var(--black2);
+  z-index:999; flex-direction:column; align-items:center; justify-content:center; gap:32px;
+}
+.mobile-menu.open { display:flex; }
+.mobile-menu a { font-size:2rem; font-weight:700; color:var(--white); transition:color 0.2s; }
+.mobile-menu a:hover { color:var(--cyan); }
+.mobile-menu-close { position:absolute; top:20px; right:24px; background:none; border:none; color:var(--white); font-size:2rem; cursor:pointer; }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+#about-hero {
+  padding:160px 0 100px; position:relative; overflow:hidden;
+}
+#about-hero::before {
+  content:''; position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,255,0.025) 1px,transparent 1px);
+  background-size:50px 50px;
+  mask-image:radial-gradient(ellipse 80% 100% at 50% 0%,black 40%,transparent 100%);
+}
+#about-hero::after {
+  content:''; position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:700px; height:500px;
+  background:radial-gradient(ellipse,rgba(0,229,255,0.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.about-hero-inner {
+  position:relative; z-index:2;
+  display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center;
+}
+.about-hero-left {}
+.hero-eyebrow { display:flex; align-items:center; gap:10px; margin-bottom:24px; }
+.hero-eyebrow-dot { width:7px; height:7px; background:var(--green); border-radius:50%; animation:heroPulse 2s infinite; }
+@keyframes heroPulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,255,135,0.6);}50%{box-shadow:0 0 0 8px rgba(0,255,135,0);} }
+.hero-eyebrow-text { font-family:var(--font-mono); font-size:0.78rem; color:var(--green); letter-spacing:0.12em; text-transform:uppercase; }
+.about-hero-title { margin-bottom:20px; }
+.about-hero-title .accent { background:linear-gradient(135deg,var(--cyan),var(--green)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.about-hero-desc { font-size:1.1rem; color:var(--muted2); line-height:1.8; margin-bottom:32px; }
+.about-hero-actions { display:flex; gap:14px; flex-wrap:wrap; }
+
+/* Hero right — origin story card */
+.origin-card {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius2); padding:32px; position:relative; overflow:hidden;
+}
+.origin-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background:linear-gradient(90deg,var(--cyan),var(--green));
+}
+.origin-card-label {
+  font-family:var(--font-mono); font-size:0.7rem; color:var(--muted);
+  text-transform:uppercase; letter-spacing:0.12em; margin-bottom:16px;
+  display:flex; align-items:center; gap:8px;
+}
+.origin-card-label::before { content:''; display:inline-block; width:6px; height:6px; background:var(--red); border-radius:50%; }
+.origin-quote {
+  font-size:1.05rem; line-height:1.75; color:var(--white);
+  font-style:italic; margin-bottom:20px; border-left:3px solid var(--cyan);
+  padding-left:18px;
+}
+.origin-finding {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:14px 16px;
+  font-family:var(--font-mono); font-size:0.75rem; line-height:1.7;
+}
+.origin-finding-title {
+  color:var(--red); font-weight:600; margin-bottom:6px; display:flex; align-items:center; gap:6px;
+}
+.origin-finding-row { display:flex; justify-content:space-between; margin-bottom:4px; }
+.origin-finding-row .key { color:var(--muted2); }
+.origin-finding-row .val { color:var(--orange); }
+.origin-finding-row .val.fake { text-decoration:line-through; color:var(--red); }
+.origin-finding-verdict {
+  margin-top:10px; padding-top:10px; border-top:1px solid var(--border);
+  color:var(--green); font-size:0.72rem;
+  display:flex; align-items:center; gap:6px;
+}
+
+/* ============================================================
+   IMPACT NUMBERS
+   ============================================================ */
+#impact { padding:80px 0; background:var(--black2); }
+.impact-grid {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+}
+.impact-item {
+  padding:40px 32px; text-align:center; border-right:1px solid var(--border);
+  transition:background 0.3s;
+}
+.impact-item:hover { background:rgba(0,229,255,0.03); }
+.impact-item:last-child { border-right:none; }
+.impact-num {
+  font-size:clamp(2.5rem,5vw,4rem); font-weight:800; letter-spacing:-0.04em;
+  line-height:1; margin-bottom:8px; background:linear-gradient(135deg,var(--cyan),var(--green));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.impact-label { font-size:0.9rem; color:var(--muted2); font-weight:500; }
+.impact-sub { font-family:var(--font-mono); font-size:0.7rem; color:var(--muted); margin-top:4px; }
+
+/* ============================================================
+   MISSION SECTION
+   ============================================================ */
+#mission { padding:100px 0; }
+.mission-inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+.mission-left {}
+.mission-statement {
+  font-size:1.25rem; font-weight:600; line-height:1.7;
+  color:var(--white); margin-bottom:28px; padding:28px;
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius2); border-left:4px solid var(--cyan);
+}
+.mission-body { color:var(--muted2); font-size:1rem; line-height:1.8; }
+.mission-body p { margin-bottom:16px; }
+.mission-body p:last-child { margin-bottom:0; }
+
+.mission-right {}
+.values-list { display:flex; flex-direction:column; gap:16px; }
+.value-card {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius2); padding:22px 24px;
+  display:flex; align-items:flex-start; gap:16px;
+  transition:all 0.3s;
+}
+.value-card:hover { border-color:var(--border2); transform:translateX(4px); }
+.value-icon {
+  width:44px; height:44px; border-radius:10px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:1.2rem;
+}
+.vi-cyan   { background:rgba(0,229,255,0.1); border:1px solid rgba(0,229,255,0.2); }
+.vi-green  { background:rgba(0,255,135,0.1); border:1px solid rgba(0,255,135,0.2); }
+.vi-orange { background:rgba(255,140,66,0.1); border:1px solid rgba(255,140,66,0.2); }
+.vi-purple { background:rgba(168,85,247,0.1); border:1px solid rgba(168,85,247,0.2); }
+.vi-yellow { background:rgba(255,214,10,0.1);  border:1px solid rgba(255,214,10,0.2); }
+.value-content strong { display:block; font-weight:700; font-size:0.95rem; margin-bottom:4px; }
+.value-content span { font-size:0.85rem; color:var(--muted2); line-height:1.55; }
+
+/* ============================================================
+   THE PROBLEM WE SOLVE — TIMELINE
+   ============================================================ */
+#problem { padding:100px 0; background:var(--black2); }
+.problem-header { text-align:center; margin-bottom:64px; }
+.problem-header .display-lg { margin-bottom:12px; }
+.problem-header p { color:var(--muted2); max-width:560px; margin:0 auto; }
+
+.problem-timeline { max-width:760px; margin:0 auto; position:relative; }
+.problem-timeline::before {
+  content:''; position:absolute; left:28px; top:0; bottom:0; width:2px;
+  background:linear-gradient(180deg,var(--cyan),var(--green),transparent);
+}
+.pt-item { display:flex; gap:24px; margin-bottom:40px; position:relative; }
+.pt-item:last-child { margin-bottom:0; }
+.pt-dot-col { display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
+.pt-dot {
+  width:58px; height:58px; background:var(--black3); border:2px solid var(--border2);
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:1.3rem; flex-shrink:0; position:relative; z-index:2;
+  transition:all 0.3s;
+}
+.pt-item:hover .pt-dot { background:rgba(0,229,255,0.1); box-shadow:var(--glow-cyan); }
+.pt-content {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius2); padding:22px 24px; flex:1;
+  transition:all 0.3s;
+}
+.pt-item:hover .pt-content { border-color:rgba(0,229,255,0.15); }
+.pt-label { font-family:var(--font-mono); font-size:0.68rem; color:var(--cyan); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; }
+.pt-title { font-size:1rem; font-weight:700; margin-bottom:6px; }
+.pt-desc { font-size:0.85rem; color:var(--muted2); line-height:1.6; }
+
+/* ============================================================
+   GLOBAL REACH SECTION
+   ============================================================ */
+#global-reach { padding:100px 0; }
+.global-inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+.global-left .display-lg { margin-bottom:16px; }
+.global-left p { color:var(--muted2); font-size:1rem; line-height:1.8; margin-bottom:16px; }
+.global-left p:last-of-type { margin-bottom:28px; }
+
+.global-stats { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.global-stat {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius); padding:18px;
+  transition:all 0.3s;
+}
+.global-stat:hover { border-color:var(--border2); }
+.global-stat-num { font-size:1.6rem; font-weight:800; letter-spacing:-0.03em; margin-bottom:4px; }
+.global-stat-label { font-size:0.78rem; color:var(--muted2); line-height:1.4; }
+
+/* Country chips */
+.country-chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
+.country-chip {
+  display:inline-flex; align-items:center; gap:6px; padding:6px 12px;
+  background:var(--surface); border:1px solid var(--border); border-radius:100px;
+  font-size:0.78rem; color:var(--muted2); transition:all 0.2s;
+}
+.country-chip:hover { border-color:var(--border2); color:var(--white); }
+.country-chip-flag { font-size:1rem; }
+
+/* Global reach visual */
+.global-map-card {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius2); overflow:hidden;
+}
+.amc-header {
+  padding:14px 18px; background:var(--surface); border-bottom:1px solid var(--border);
+  font-family:var(--font-mono); font-size:0.72rem; color:var(--muted);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.amc-live { display:flex; align-items:center; gap:6px; color:var(--green); }
+.amc-live-dot { width:6px; height:6px; background:var(--green); border-radius:50%; animation:heroPulse 2s infinite; }
+.amc-body { padding:24px; }
+.region-list { display:flex; flex-direction:column; gap:10px; }
+.region-row { display:flex; align-items:center; gap:12px; }
+.region-name { font-size:0.85rem; font-weight:500; min-width:130px; }
+.region-bar-track { flex:1; height:6px; background:var(--surface2); border-radius:3px; overflow:hidden; }
+.region-bar-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,var(--cyan),var(--green)); transition:width 1s ease; }
+.region-count { font-family:var(--font-mono); font-size:0.72rem; color:var(--muted2); min-width:60px; text-align:right; }
+
+/* ============================================================
+   TEAM SECTION
+   ============================================================ */
+#team { padding:100px 0; background:var(--black2); }
+.team-header { text-align:center; margin-bottom:56px; }
+.team-header .display-lg { margin-bottom:12px; }
+.team-header p { color:var(--muted2); max-width:480px; margin:0 auto; }
+
+.team-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.team-card {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius2); padding:28px; text-align:center;
+  transition:all 0.3s;
+}
+.team-card:hover { border-color:rgba(0,229,255,0.2); transform:translateY(-4px); }
+.team-avatar {
+  width:72px; height:72px; border-radius:50%; margin:0 auto 16px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.8rem; font-weight:800; border:2px solid var(--border2);
+}
+.team-name { font-size:1rem; font-weight:700; margin-bottom:4px; }
+.team-role { font-family:var(--font-mono); font-size:0.72rem; color:var(--cyan); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px; }
+.team-bio { font-size:0.83rem; color:var(--muted2); line-height:1.6; margin-bottom:16px; }
+.team-socials { display:flex; justify-content:center; gap:8px; }
+.team-social {
+  width:30px; height:30px; background:var(--surface); border:1px solid var(--border);
+  border-radius:6px; display:flex; align-items:center; justify-content:center;
+  font-size:0.75rem; color:var(--muted2); transition:all 0.2s;
+}
+.team-social:hover { border-color:var(--border2); color:var(--cyan); }
+.team-join-card {
+  background:transparent; border:2px dashed var(--border);
+  border-radius:var(--radius2); padding:28px; text-align:center;
+  transition:all 0.3s; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; min-height:260px;
+}
+.team-join-card:hover { border-color:rgba(0,229,255,0.3); background:rgba(0,229,255,0.02); }
+.team-join-icon { font-size:2rem; margin-bottom:12px; }
+.team-join-card h4 { font-size:1rem; font-weight:700; margin-bottom:8px; }
+.team-join-card p { font-size:0.82rem; color:var(--muted2); line-height:1.6; margin-bottom:16px; }
+
+/* ============================================================
+   ROADMAP SECTION
+   ============================================================ */
+#roadmap { padding:100px 0; }
+.roadmap-header { text-align:center; margin-bottom:56px; }
+.roadmap-header .display-lg { margin-bottom:12px; }
+.roadmap-header p { color:var(--muted2); }
+
+.roadmap-track {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+  position:relative; max-width:960px; margin:0 auto;
+}
+.roadmap-track::before {
+  content:''; position:absolute; top:24px; left:12.5%; right:12.5%; height:2px;
+  background:linear-gradient(90deg,var(--green),var(--cyan),var(--muted),var(--muted));
+}
+.roadmap-phase { padding:0 16px; text-align:center; }
+.rp-dot-wrap { position:relative; width:48px; height:48px; margin:0 auto 18px; }
+.rp-dot {
+  width:48px; height:48px; border-radius:50%; border:2px solid;
+  display:flex; align-items:center; justify-content:center; font-size:1.1rem;
+  position:relative; z-index:2;
+  transition:all 0.3s;
+}
+.rp-dot:hover { transform:scale(1.1); }
+.rp-done    { background:rgba(0,255,135,0.15); border-color:var(--green);  }
+.rp-current { background:rgba(0,229,255,0.15); border-color:var(--cyan);   box-shadow:0 0 20px rgba(0,229,255,0.3); }
+.rp-upcoming{ background:var(--surface);        border-color:var(--border); }
+.rp-future  { background:var(--surface);        border-color:var(--border); opacity:0.5; }
+.rp-label { font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; }
+.rp-title { font-size:0.92rem; font-weight:700; margin-bottom:6px; }
+.rp-items { display:flex; flex-direction:column; gap:4px; }
+.rp-item { font-size:0.75rem; color:var(--muted2); display:flex; align-items:center; gap:4px; justify-content:center; }
+.rp-item-done { color:var(--green); }
+.rp-item::before { content:'·'; color:var(--muted); flex-shrink:0; }
+.rp-item-done::before { content:''; color:var(--green); }
+
+/* ============================================================
+   LEGAL COMMITMENT
+   ============================================================ */
+#legal-commitment { padding:80px 0; background:var(--black2); }
+.legal-inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+.legal-left .display-md { margin-bottom:16px; }
+.legal-left p { color:var(--muted2); font-size:0.95rem; line-height:1.8; margin-bottom:16px; }
+.legal-points { display:flex; flex-direction:column; gap:12px; margin-top:8px; }
+.legal-point {
+  display:flex; align-items:flex-start; gap:12px;
+  padding:14px 16px; background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius);
+}
+.lp-icon { font-size:1.1rem; flex-shrink:0; margin-top:1px; }
+.lp-text strong { display:block; font-size:0.88rem; font-weight:600; margin-bottom:3px; }
+.lp-text span { font-size:0.8rem; color:var(--muted2); line-height:1.5; }
+
+/* Consent log card */
+.consent-card {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius2); overflow:hidden;
+}
+.consent-card-header {
+  padding:14px 18px; background:var(--surface); border-bottom:1px solid var(--border);
+  font-family:var(--font-mono); font-size:0.72rem; color:var(--muted);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.consent-card-header span:last-child { color:var(--green); }
+.consent-body { padding:18px; }
+.consent-row { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+.consent-row:last-child { margin-bottom:0; }
+.cr-label { font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; }
+.cr-value { font-family:var(--font-mono); font-size:0.78rem; color:var(--muted2); background:var(--surface); padding:8px 12px; border-radius:6px; border-left:2px solid var(--cyan); }
+.consent-footer {
+  padding:12px 18px; border-top:1px solid var(--border);
+  background:rgba(0,255,135,0.05);
+  font-family:var(--font-mono); font-size:0.72rem; color:var(--green);
+  display:flex; align-items:center; gap:8px;
+}
+
+/* ============================================================
+   CTA
+   ============================================================ */
+#about-cta { padding:100px 0; text-align:center; overflow:hidden; position:relative; }
+#about-cta::before {
+  content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:700px; height:400px;
+  background:radial-gradient(ellipse,rgba(0,229,255,0.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.about-cta-inner { position:relative; z-index:2; max-width:600px; margin:0 auto; }
+.about-cta-inner .display-lg { margin-bottom:14px; }
+.about-cta-inner p { color:var(--muted2); font-size:1.05rem; margin-bottom:32px; }
+.about-cta-actions { display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap; }
+.about-cta-note { margin-top:18px; font-family:var(--font-mono); font-size:0.72rem; color:var(--muted); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer { background:var(--black); border-top:1px solid var(--border); padding:72px 0 32px; }
+.footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; margin-bottom:56px; }
+.footer-logo { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.footer-logo-icon { width:32px; height:32px; background:var(--cyan); border-radius:7px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-weight:500; font-size:0.75rem; color:var(--black); }
+.footer-logo-text { font-size:1.1rem; font-weight:700; }
+.footer-logo-text span { color:var(--cyan); }
+.footer-brand-desc { font-size:0.88rem; color:var(--muted2); line-height:1.7; margin-bottom:20px; max-width:300px; }
+.footer-socials { display:flex; gap:10px; }
+.footer-social { width:36px; height:36px; background:var(--surface); border:1px solid var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:0.85rem; color:var(--muted2); transition:all 0.2s; }
+.footer-social:hover { border-color:var(--cyan); color:var(--cyan); background:rgba(0,229,255,0.08); }
+.footer-col h4 { font-size:0.85rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted2); margin-bottom:16px; }
+.footer-col ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.footer-col ul li a { font-size:0.88rem; color:var(--muted2); transition:color 0.2s; }
+.footer-col ul li a:hover { color:var(--white); }
+.footer-bottom { border-top:1px solid var(--border); padding-top:28px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.footer-copyright { font-family:var(--font-mono); font-size:0.78rem; color:var(--muted); }
+.footer-copyright span { color:var(--cyan); }
+.footer-legal { display:flex; gap:20px; }
+.footer-legal a { font-size:0.8rem; color:var(--muted); transition:color 0.2s; }
+.footer-legal a:hover { color:var(--muted2); }
+.footer-legal-sep { color:var(--border); }
+.footer-pay { display:flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:0.72rem; color:var(--muted); }
+.footer-pay-dot { width:6px; height:6px; background:var(--green); border-radius:50%; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1024px) {
+  .impact-grid { grid-template-columns:repeat(2,1fr); }
+  .impact-item { border-bottom:1px solid var(--border); }
+  .impact-item:nth-child(2) { border-right:none; }
+  .roadmap-track { grid-template-columns:repeat(2,1fr); gap:40px; }
+  .roadmap-track::before { display:none; }
+}
+@media (max-width:768px) {
+  .nav-links { display:none; }
+  .nav-actions .btn-ghost { display:none; }
+  .nav-menu-btn { display:block; }
+  .about-hero-inner { grid-template-columns:1fr; gap:40px; }
+  .mission-inner { grid-template-columns:1fr; gap:40px; }
+  .global-inner { grid-template-columns:1fr; gap:40px; }
+  .team-grid { grid-template-columns:1fr 1fr; }
+  .legal-inner { grid-template-columns:1fr; gap:40px; }
+  .footer-grid { grid-template-columns:1fr 1fr; }
+  .global-stats { grid-template-columns:1fr 1fr; }
+  .roadmap-track { grid-template-columns:1fr 1fr; }
+}
+@media (max-width:480px) {
+  .team-grid { grid-template-columns:1fr; }
+  .impact-grid { grid-template-columns:1fr 1fr; }
+  .roadmap-track { grid-template-columns:1fr; }
+  .footer-grid { grid-template-columns:1fr; }
+  .footer-bottom { flex-direction:column; align-items:flex-start; }
+  .global-stats { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">PC</div>
+      <div class="nav-logo-text">Pen<span>Checker</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="features.html">Features</a></li>
+      <li><a href="index.html#how">How it works</a></li>
+      <li><a href="index.html#industries">Industries</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="blog.html">Blog</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button id="themeToggle" class="btn btn-ghost btn-sm" aria-label="Toggle theme" style="padding:8px 14px;font-size:0.82rem;display:inline-flex;align-items:center;gap:6px;"></button>
+      <a href="login.html" class="btn btn-ghost btn-sm">Sign in</a>
+      <a href="signup.html" class="btn btn-primary btn-sm">Start Free</a>
+    </div>
+    <button class="nav-menu-btn" id="menuBtn" aria-label="Open menu">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" id="menuClose"></button>
+  <a href="features.html" onclick="closeMobileMenu()">Features</a>
+  <a href="pricing.html" onclick="closeMobileMenu()">Pricing</a>
+  <a href="about.html" onclick="closeMobileMenu()">About</a>
+  <a href="login.html" onclick="closeMobileMenu()">Sign in</a>
+  <a href="signup.html" class="btn btn-primary">Start Free</a>
+</div>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section id="about-hero">
+  <div class="container">
+    <div class="about-hero-inner">
+      <div class="about-hero-left reveal">
+        <div class="hero-eyebrow">
+          <div class="hero-eyebrow-dot"></div>
+          <span class="hero-eyebrow-text">Our story</span>
+        </div>
+        <h1 class="display-xl about-hero-title">
+          Built because<br/><span class="accent">scanners lied.</span>
+        </h1>
+        <p class="about-hero-desc">
+          We watched a security scanner report SQL injection on a website with no database,
+          XSS on a page with no comment section, and MySQL vulnerabilities on a site running
+          Elasticsearch that wasn't even installed. We'd had enough. PenChecker was born.
+        </p>
+        <div class="about-hero-actions">
+          <a href="signup.html" class="btn btn-primary btn-lg">Try It Free</a>
+          <a href="contact.html" class="btn btn-ghost btn-lg">Talk to Us</a>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-2">
+        <div class="origin-card">
+          <div class="origin-card-label">The scan that started everything</div>
+          <p class="origin-quote">
+            "We scanned a client's Node.js site. The report came back with SQL injection
+            rated 9.8 CVSS. The site had no SQL database anywhere. The scanner was lying."
+          </p>
+          <div class="origin-finding">
+            <div class="origin-finding-title">
+              <span></span> Scanner Output (Fabricated)
+            </div>
+            <div class="origin-finding-row">
+              <span class="key">Vulnerability</span>
+              <span class="val fake">SQL Injection — CVSS 9.8</span>
+            </div>
+            <div class="origin-finding-row">
+              <span class="key">Database</span>
+              <span class="val fake">MySQL 8.0.34 on port 3306</span>
+            </div>
+            <div class="origin-finding-row">
+              <span class="key">Technology</span>
+              <span class="val fake">PHP detected</span>
+            </div>
+            <div class="origin-finding-verdict">
+               Reality: Node.js app. No SQL. No PHP. No MySQL installed.
+              This was a template report.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     IMPACT NUMBERS
+     ============================================================ -->
+<section id="impact">
+  <div class="container">
+    <div class="impact-grid">
+      <div class="impact-item reveal">
+        <div class="impact-num" data-count="0" data-target="2400">0</div>
+        <div class="impact-label">Scans completed</div>
+        <div class="impact-sub">and growing daily</div>
+      </div>
+      <div class="impact-item reveal reveal-delay-1">
+        <div class="impact-num" data-count="0" data-target="99">0</div>
+        <div class="impact-label">Accuracy rate</div>
+        <div class="impact-sub">verified findings only</div>
+      </div>
+      <div class="impact-item reveal reveal-delay-2">
+        <div class="impact-num" data-count="0" data-target="14">0</div>
+        <div class="impact-label">countries served</div>
+        <div class="impact-sub">served from day one</div>
+      </div>
+      <div class="impact-item reveal reveal-delay-3">
+        <div class="impact-num" data-count="0" data-target="0">0</div>
+        <div class="impact-label">Template results</div>
+        <div class="impact-sub">ever generated</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     MISSION
+     ============================================================ -->
+<section id="mission">
+  <div class="container">
+    <div class="mission-inner">
+      <div class="mission-left reveal">
+        <div class="section-label">
+          <div class="section-label-line"></div>
+          <span class="section-label-text">Our mission</span>
+        </div>
+        <h2 class="display-lg" style="margin-bottom:24px;">Make accurate security<br/>accessible to everyone.</h2>
+        <div class="mission-statement">
+          "Security tools should tell you the truth about your website — not scare you
+          with invented vulnerabilities or drown you in jargon nobody understands."
+        </div>
+        <div class="mission-body">
+          <p>Most security scanners were built for enterprise companies with dedicated security teams. They produce reports full of technical language, false positives, and templated findings that don't reflect reality.</p>
+          <p>We built PenChecker for the developer launching a startup at 2am, the small business owner who just wants to know if their site is safe, and the growing team that can't afford a $500/month tool built for Fortune 500 companies.</p>
+          <p>Our scanner verifies every finding before it reaches your report. Our AI explains what it means and writes the fix code for your exact tech stack. And our pricing is built to work for teams everywhere that deserve honest, accurate security tools without enterprise-level pricing.</p>
+        </div>
+      </div>
+
+      <div class="mission-right reveal reveal-delay-2">
+        <div class="section-label">
+          <div class="section-label-line"></div>
+          <span class="section-label-text">Our values</span>
+        </div>
+        <h3 class="display-md" style="margin-bottom:24px;">What guides every<br/>decision we make</h3>
+        <div class="values-list">
+          <div class="value-card">
+            <div class="value-icon vi-cyan">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="6"></circle>
+                <circle cx="12" cy="12" r="2"></circle>
+              </svg>
+            </div>
+            <div class="value-content">
+              <strong>Accuracy over everything</strong>
+              <span>We would rather show you 3 real vulnerabilities than 30 invented ones. Every finding must be verified before it reaches you.</span>
+            </div>
+          </div>
+          <div class="value-card">
+            <div class="value-icon vi-green">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <polyline points="9 11 11 13 15 9"></polyline>
+              </svg>
+            </div>
+            <div class="value-content">
+              <strong>Honest by design</strong>
+              <span>If your site is secure, we will tell you it's secure. We don't generate scary reports to justify our existence.</span>
+            </div>
+          </div>
+          <div class="value-card">
+            <div class="value-icon vi-orange">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+            </div>
+            <div class="value-content">
+              <strong>Built for the world</strong>
+              <span>Security isn't a Western luxury. We price for every market, support every currency, and build for every timezone.</span>
+            </div>
+          </div>
+          <div class="value-card">
+            <div class="value-icon vi-purple">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A5 5 0 0 0 8 8c0 1 .3 1.8.9 2.5C10 11.8 10.5 12.5 11 14"></path>
+                <line x1="9" y1="18" x2="15" y2="18"></line>
+                <line x1="10" y1="22" x2="14" y2="22"></line>
+              </svg>
+            </div>
+            <div class="value-content">
+              <strong>Clarity over complexity</strong>
+              <span>Security findings should be understandable by the person who built the site, not just a specialist who charges $300/hour.</span>
+            </div>
+          </div>
+          <div class="value-card">
+            <div class="value-icon vi-yellow">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="19" x2="19" y2="19"></line>
+                <line x1="6" y1="7" x2="18" y2="7"></line>
+                <path d="M6 7l-2 5h4zM18 7l-2 5h4z"></path>
+              </svg>
+            </div>
+            <div class="value-content">
+              <strong>Legal and ethical always</strong>
+              <span>We require domain ownership proof for every scan. We maintain blacklists for high-profile domains. We log all consent with timestamps.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     THE PROBLEM WE SOLVE
+     ============================================================ -->
+<section id="problem">
+  <div class="container">
+    <div class="problem-header reveal">
+      <div class="section-label" style="justify-content:center; margin-bottom:14px;">
+        <div class="section-label-line"></div>
+        <span class="section-label-text">The problem we solve</span>
+        <div class="section-label-line"></div>
+      </div>
+      <h2 class="display-lg">Why existing tools<br/>kept failing us</h2>
+      <p>Before building PenChecker, we documented exactly what was wrong with every other scanner on the market.</p>
+    </div>
+    <div class="problem-timeline">
+      <div class="pt-item reveal">
+        <div class="pt-dot-col">
+          <div class="pt-dot"></div>
+        </div>
+        <div class="pt-content">
+          <div class="pt-label">Problem 01</div>
+          <div class="pt-title">Template-based scanning</div>
+          <div class="pt-desc">Scanners run the same checklist against every site and output the same findings regardless of what technology the site actually uses. We saw SQL injection reported on pure static HTML sites. The results are fiction.</div>
+        </div>
+      </div>
+      <div class="pt-item reveal reveal-delay-1">
+        <div class="pt-dot-col">
+          <div class="pt-dot"></div>
+        </div>
+        <div class="pt-content">
+          <div class="pt-label">Problem 02</div>
+          <div class="pt-title">Unverified findings with no evidence</div>
+          <div class="pt-desc">Most tools report a vulnerability and give you nothing but a label. No server response. No proof it actually triggered. No confidence score. Just "SQL Injection found" — with no way to verify if it's real.</div>
+        </div>
+      </div>
+      <div class="pt-item reveal reveal-delay-2">
+        <div class="pt-dot-col">
+          <div class="pt-dot"></div>
+        </div>
+        <div class="pt-content">
+          <div class="pt-label">Problem 03</div>
+          <div class="pt-title">Reports nobody outside security can understand</div>
+          <div class="pt-desc">CVSS vectors, CWE numbers, and raw HTTP dumps. Useful for specialists. Useless for the startup founder who just wants to know if their checkout page is safe. Security reports shouldn't require a degree to read.</div>
+        </div>
+      </div>
+      <div class="pt-item reveal reveal-delay-3">
+        <div class="pt-dot-col">
+          <div class="pt-dot"></div>
+        </div>
+        <div class="pt-content">
+          <div class="pt-label">Problem 04</div>
+          <div class="pt-title">Pricing built for enterprise, not the world</div>
+          <div class="pt-desc">The leading security tools cost $200–$600 per month in USD only. Developers and startups worldwide are priced out entirely. Serious security should not require an enterprise budget.</div>
+        </div>
+      </div>
+      <div class="pt-item reveal reveal-delay-4">
+        <div class="pt-dot-col">
+          <div class="pt-dot"></div>
+        </div>
+        <div class="pt-content">
+          <div class="pt-label">Our answer</div>
+          <div class="pt-title">PenChecker — built to fix all four</div>
+          <div class="pt-desc">Technology-aware scanning. Double-verified findings with evidence. Plain English toggle for every report. AI that writes the fix code. And local currency pricing from day one. This is what a modern security scanner should be.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     GLOBAL REACH
+     ============================================================ -->
+<section id="global-reach">
+  <div class="container">
+    <div class="global-inner">
+      <div class="reveal">
+        <div class="section-label">
+          <div class="section-label-line"></div>
+          <span class="section-label-text">Built for the world</span>
+        </div>
+        <h2 class="display-lg" style="margin-bottom:20px;">Based in the US.<br/>Built for everyone.</h2>
+        <p>PenChecker is headquartered in the United States and built to serve developers, startups, and enterprises in every country. Security testing should not be a privilege limited by location or budget.</p>
+        <p>We support 20+ currencies with automatic conversion based on your location. Whether you're in New York, London, Singapore, Lagos, or anywhere else — you see prices in your currency and pay what makes sense for your market.</p>
+        <p>Our scanner is designed for every tech stack, every industry, and every team size. If your website is on the internet, PenChecker can help you secure it.</p>
+
+        <div class="global-stats">
+          <div class="global-stat">
+            <div class="global-stat-num" style="color:var(--cyan)">190+</div>
+            <div class="global-stat-label">Countries supported worldwide</div>
+          </div>
+          <div class="global-stat">
+            <div class="global-stat-num" style="color:var(--green)">20+</div>
+            <div class="global-stat-label">Currencies with live exchange rates</div>
+          </div>
+          <div class="global-stat">
+            <div class="global-stat-num" style="color:var(--orange)">24/7</div>
+            <div class="global-stat-label">Continuous monitoring across all time zones</div>
+          </div>
+          <div class="global-stat">
+            <div class="global-stat-num" style="color:var(--yellow)">10+</div>
+            <div class="global-stat-label">OWASP categories covered in every scan</div>
+          </div>
+        </div>
+
+        <div class="country-chips" style="margin-top:24px;">
+          <div class="country-chip"><span class="country-chip-flag"></span> United States</div>
+          <div class="country-chip"><span class="country-chip-flag"></span> United Kingdom</div>
+          <div class="country-chip"><span class="country-chip-flag"></span> Germany</div>
+          <div class="country-chip"><span class="country-chip-flag"></span> Canada</div>
+          <div class="country-chip"><span class="country-chip-flag"></span> Nigeria</div>
+          <div class="country-chip"><span class="country-chip-flag"></span> India</div>
+          <div class="country-chip"><span class="country-chip-flag"></span> Australia</div>
+          <div class="country-chip"><span class="country-chip-flag"></span> Singapore</div>
+          <div class="country-chip"><span class="country-chip-flag"></span> 180+ more</div>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-2">
+        <div class="global-map-card">
+          <div class="amc-header">
+            <span>Active Users by Region</span>
+            <div class="amc-live"><div class="amc-live-dot"></div>Live</div>
+          </div>
+          <div class="amc-body">
+            <div class="region-list">
+              <div class="region-row">
+                <div class="region-name">North America</div>
+                <div class="region-bar-track"><div class="region-bar-fill" style="width:82%"></div></div>
+                <div class="region-count">82%</div>
+              </div>
+              <div class="region-row">
+                <div class="region-name">Europe</div>
+                <div class="region-bar-track"><div class="region-bar-fill" style="width:64%"></div></div>
+                <div class="region-count">64%</div>
+              </div>
+              <div class="region-row">
+                <div class="region-name">Asia Pacific</div>
+                <div class="region-bar-track"><div class="region-bar-fill" style="width:52%"></div></div>
+                <div class="region-count">52%</div>
+              </div>
+              <div class="region-row">
+                <div class="region-name">West Africa</div>
+                <div class="region-bar-track"><div class="region-bar-fill" style="width:38%"></div></div>
+                <div class="region-count">38%</div>
+              </div>
+              <div class="region-row">
+                <div class="region-name">East Africa</div>
+                <div class="region-bar-track"><div class="region-bar-fill" style="width:28%"></div></div>
+                <div class="region-count">28%</div>
+              </div>
+              <div class="region-row">
+                <div class="region-name">Latin America</div>
+                <div class="region-bar-track"><div class="region-bar-fill" style="width:24%"></div></div>
+                <div class="region-count">24%</div>
+              </div>
+              <div class="region-row">
+                <div class="region-name">Middle East</div>
+                <div class="region-bar-track"><div class="region-bar-fill" style="width:18%"></div></div>
+                <div class="region-count">18%</div>
+              </div>
+              <div class="region-row">
+                <div class="region-name">Rest of World</div>
+                <div class="region-bar-track"><div class="region-bar-fill" style="width:12%"></div></div>
+                <div class="region-count">12%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TEAM
+     ============================================================ -->
+<section id="team">
+  <div class="container">
+    <div class="team-header reveal">
+      <div class="section-label" style="justify-content:center; margin-bottom:14px;">
+        <div class="section-label-line"></div>
+        <span class="section-label-text">The team</span>
+        <div class="section-label-line"></div>
+      </div>
+      <h2 class="display-lg">The people who refuse<br/>to ship fake results</h2>
+      <p>A small, focused team with deep experience in security, engineering, and product design.</p>
+    </div>
+    <div class="team-grid">
+
+      <div class="team-card reveal">
+        <div class="team-avatar" style="background:rgba(0,229,255,0.12);color:var(--cyan);">AO</div>
+        <div class="team-name">Adewale Okonkwo</div>
+        <div class="team-role">Founder & CEO</div>
+        <div class="team-bio">Former penetration tester with 8 years of experience. Watched too many clients get false positives from automated scanners and decided to fix the problem properly.</div>
+        <div class="team-socials">
+          <a href="#" class="team-social">𝕏</a>
+          <a href="#" class="team-social">in</a>
+          <a href="#" class="team-social">gh</a>
+        </div>
+      </div>
+
+      <div class="team-card reveal reveal-delay-1">
+        <div class="team-avatar" style="background:rgba(0,255,135,0.12);color:var(--green);">FK</div>
+        <div class="team-name">Fatima Koné</div>
+        <div class="team-role">CTO & Lead Engineer</div>
+        <div class="team-bio">Built distributed systems at scale at scale globally. Designed the entire scanning engine and verification pipeline from scratch to ensure zero template results.</div>
+        <div class="team-socials">
+          <a href="#" class="team-social">𝕏</a>
+          <a href="#" class="team-social">in</a>
+          <a href="#" class="team-social">gh</a>
+        </div>
+      </div>
+
+      <div class="team-card reveal reveal-delay-2">
+        <div class="team-avatar" style="background:rgba(168,85,247,0.12);color:var(--purple);">KM</div>
+        <div class="team-name">Kwame Mensah</div>
+        <div class="team-role">Head of Product</div>
+        <div class="team-bio">Product designer turned security advocate. Responsible for making security findings understandable to every type of user — from backend engineers to first-time business owners.</div>
+        <div class="team-socials">
+          <a href="#" class="team-social">𝕏</a>
+          <a href="#" class="team-social">in</a>
+          <a href="#" class="team-social">gh</a>
+        </div>
+      </div>
+
+      <div class="team-card reveal reveal-delay-1">
+        <div class="team-avatar" style="background:rgba(255,140,66,0.12);color:var(--orange);">SA</div>
+        <div class="team-name">Sara Abdi</div>
+        <div class="team-role">AI & Security Research</div>
+        <div class="team-bio">PhD in computer security. Leads our AI assistant development and CVE research pipeline. Passionate about making security knowledge available to developers everywhere.</div>
+        <div class="team-socials">
+          <a href="#" class="team-social">𝕏</a>
+          <a href="#" class="team-social">in</a>
+          <a href="#" class="team-social">gh</a>
+        </div>
+      </div>
+
+      <div class="team-card reveal reveal-delay-2">
+        <div class="team-avatar" style="background:rgba(255,214,10,0.12);color:var(--yellow);">TN</div>
+        <div class="team-name">Tunde Nwosu</div>
+        <div class="team-role">Backend Engineer</div>
+        <div class="team-bio">Specialist in high-performance scanning infrastructure. Built the parallel scan queue system that lets PenChecker process thousands of scans without slowing down for any user.</div>
+        <div class="team-socials">
+          <a href="#" class="team-social">𝕏</a>
+          <a href="#" class="team-social">in</a>
+          <a href="#" class="team-social">gh</a>
+        </div>
+      </div>
+
+      <div class="team-join-card reveal reveal-delay-3">
+        <div class="team-join-icon"></div>
+        <h4>We're hiring</h4>
+        <p>Building something this important takes exceptional people. If you care about honest security tools and want to make a real impact, we want to hear from you.</p>
+        <a href="contact.html?subject=careers" class="btn btn-ghost btn-sm">View Open Roles →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ROADMAP
+     ============================================================ -->
+<section id="roadmap">
+  <div class="container">
+    <div class="roadmap-header reveal">
+      <div class="section-label" style="justify-content:center; margin-bottom:14px;">
+        <div class="section-label-line"></div>
+        <span class="section-label-text">Where we're going</span>
+        <div class="section-label-line"></div>
+      </div>
+      <h2 class="display-lg">Our product roadmap</h2>
+      <p style="color:var(--muted2);">Built one phase at a time. No rushing. No shortcuts.</p>
+    </div>
+    <div class="roadmap-track">
+      <div class="roadmap-phase reveal">
+        <div class="rp-dot-wrap"><div class="rp-dot rp-done"></div></div>
+        <div class="rp-label">Phase 1 — Done</div>
+        <div class="rp-title">Core Scanner</div>
+        <div class="rp-items">
+          <div class="rp-item rp-item-done">Real-time scanner engine</div>
+          <div class="rp-item rp-item-done">Technology fingerprinting</div>
+          <div class="rp-item rp-item-done">OWASP Top 10 checks</div>
+          <div class="rp-item rp-item-done">Evidence per finding</div>
+          <div class="rp-item rp-item-done">4 pricing plans</div>
+        </div>
+      </div>
+      <div class="roadmap-phase reveal reveal-delay-1">
+        <div class="rp-dot-wrap"><div class="rp-dot rp-current"></div></div>
+        <div class="rp-label">Phase 2 — In Progress</div>
+        <div class="rp-title">AI & Teams</div>
+        <div class="rp-items">
+          <div class="rp-item rp-item-done">AI chat assistant</div>
+          <div class="rp-item rp-item-done">Team dashboard</div>
+          <div class="rp-item">Enterprise dashboard</div>
+          <div class="rp-item">White-label reports</div>
+          <div class="rp-item">Continuous monitoring</div>
+        </div>
+      </div>
+      <div class="roadmap-phase reveal reveal-delay-2">
+        <div class="rp-dot-wrap"><div class="rp-dot rp-upcoming"></div></div>
+        <div class="rp-label">Phase 3 — Coming Soon</div>
+        <div class="rp-title">Integrations</div>
+        <div class="rp-items">
+          <div class="rp-item">GitHub integration</div>
+          <div class="rp-item">CI/CD pipeline support</div>
+          <div class="rp-item">Slack / Discord bots</div>
+          <div class="rp-item">Browser extension</div>
+          <div class="rp-item">Public API</div>
+        </div>
+      </div>
+      <div class="roadmap-phase reveal reveal-delay-3">
+        <div class="rp-dot-wrap"><div class="rp-dot rp-future"></div></div>
+        <div class="rp-label">Phase 4 — Future</div>
+        <div class="rp-title">Marketplace</div>
+        <div class="rp-items">
+          <div class="rp-item">Expert marketplace</div>
+          <div class="rp-item">Security certification</div>
+          <div class="rp-item">Learning hub</div>
+          <div class="rp-item">Multilingual support</div>
+          <div class="rp-item">Mobile app</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     LEGAL COMMITMENT
+     ============================================================ -->
+<section id="legal-commitment">
+  <div class="container">
+    <div class="legal-inner">
+      <div class="reveal">
+        <div class="section-label">
+          <div class="section-label-line"></div>
+          <span class="section-label-text">Legal & ethical commitment</span>
+        </div>
+        <h2 class="display-md" style="margin-bottom:16px;">We protect you,<br/>and protect others from you.</h2>
+        <p>Security scanning is a powerful tool. In the wrong hands or used without permission, it becomes an attack. We take this responsibility seriously and have built multiple layers of protection into the platform.</p>
+        <div class="legal-points">
+          <div class="legal-point">
+            <div class="lp-icon"></div>
+            <div class="lp-text">
+              <strong>Consent logged with timestamp</strong>
+              <span>Every scan requires domain ownership confirmation. User ID, target URL, IP address, and timestamp are permanently stored.</span>
+            </div>
+          </div>
+          <div class="legal-point">
+            <div class="lp-icon"></div>
+            <div class="lp-text">
+              <strong>Domain blacklist enforced</strong>
+              <span>High-profile domains (Google, Facebook, government sites) are permanently blocked from being scanned on our platform.</span>
+            </div>
+          </div>
+          <div class="legal-point">
+            <div class="lp-icon"></div>
+            <div class="lp-text">
+              <strong>Domain ownership verification</strong>
+              <span>Users must verify domain ownership via DNS TXT record or file upload before active scans are allowed.</span>
+            </div>
+          </div>
+          <div class="legal-point">
+            <div class="lp-icon"></div>
+            <div class="lp-text">
+              <strong>Abuse detection & IP blocking</strong>
+              <span>Suspicious scan patterns trigger automatic flagging. Repeated abuse results in account and IP suspension.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-2">
+        <div class="consent-card">
+          <div class="consent-card-header">
+            <span>Consent Log Record</span>
+            <span> Stored permanently</span>
+          </div>
+          <div class="consent-body">
+            <div class="consent-row">
+              <div class="cr-label">User ID</div>
+              <div class="cr-value">usr_a7f3d91c2e84b...</div>
+            </div>
+            <div class="consent-row">
+              <div class="cr-label">Target URL</div>
+              <div class="cr-value">https://yoursite.com</div>
+            </div>
+            <div class="consent-row">
+              <div class="cr-label">IP Address</div>
+              <div class="cr-value">102.89.×××.×××</div>
+            </div>
+            <div class="consent-row">
+              <div class="cr-label">Consent Text</div>
+              <div class="cr-value">"I confirm I own this domain or have written permission to test it."</div>
+            </div>
+            <div class="consent-row">
+              <div class="cr-label">Timestamp</div>
+              <div class="cr-value" id="consentTimestamp">2025-04-02T09:14:32.000Z</div>
+            </div>
+          </div>
+          <div class="consent-footer">
+             This record cannot be deleted or modified by the user
+          </div>
+        </div>
+
+        <div style="margin-top:20px; padding:18px; background:var(--black3); border:1px solid var(--border); border-radius:var(--radius); font-size:0.82rem; color:var(--muted2); line-height:1.7;">
+          <strong style="color:var(--white); display:block; margin-bottom:6px;"> Legal reminder</strong>
+          PenChecker may only be used on systems you own or have explicit written permission to test. Unauthorized scanning may be illegal in your jurisdiction. By using PenChecker, you agree to our <a href="legal/acceptable-use.html" style="color:var(--cyan)">Acceptable Use Policy</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CTA
+     ============================================================ -->
+<section id="about-cta">
+  <div class="container">
+    <div class="about-cta-inner reveal">
+      <div class="section-label" style="justify-content:center; margin-bottom:16px;">
+        <div class="section-label-line"></div>
+        <span class="section-label-text">Join us</span>
+        <div class="section-label-line"></div>
+      </div>
+      <h2 class="display-lg">Ready to see what<br/>a real scan looks like?</h2>
+      <p>No templates. No guesses. No false alarms. Just an accurate picture of your website's real security posture — in minutes.</p>
+      <div class="about-cta-actions">
+        <a href="signup.html" class="btn btn-primary btn-lg">
+          Scan Your Site Free
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="contact.html" class="btn btn-ghost btn-lg">Talk to Us</a>
+      </div>
+      <p class="about-cta-note">Free plan · 3 scans/week · No credit card · Cancel anytime</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="footer-logo-icon">PC</div>
+          <div class="footer-logo-text">Pen<span>Checker</span></div>
+        </div>
+        <p class="footer-brand-desc">The world's most accurate web security scanner. Based in the US. Real findings, real evidence, real solutions.</p>
+        <div class="footer-socials">
+          <a href="#" class="footer-social">𝕏</a>
+          <a href="#" class="footer-social">in</a>
+          <a href="#" class="footer-social">gh</a>
+          <a href="#" class="footer-social">wa</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="index.html#how">How it works</a></li>
+          <li><a href="changelog.html">Changelog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About us</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="affiliates.html">Affiliates</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="legal/terms.html">Terms of Service</a></li>
+          <li><a href="legal/privacy.html">Privacy Policy</a></li>
+          <li><a href="legal/acceptable-use.html">Acceptable Use</a></li>
+          <li><a href="legal/dmca.html">DMCA</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copyright">© 2025 <span>PenChecker</span>. All rights reserved.</p>
+      <div class="footer-pay"><div class="footer-pay-dot"></div>Secure payments worldwide</div>
+      <div class="footer-legal">
+        <a href="legal/privacy.html">Privacy</a>
+        <span class="footer-legal-sep">·</span>
+        <a href="legal/terms.html">Terms</a>
+        <span class="footer-legal-sep">·</span>
+        <a href="legal/acceptable-use.html">Acceptable Use</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+'use strict';
+
+// ============================================================
+// NAVBAR
+// ============================================================
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 20));
+
+// ============================================================
+// MOBILE MENU
+// ============================================================
+document.getElementById('menuBtn').addEventListener('click', () => document.getElementById('mobileMenu').classList.add('open'));
+document.getElementById('menuClose').addEventListener('click', () => document.getElementById('mobileMenu').classList.remove('open'));
+function closeMobileMenu() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+// ============================================================
+// SCROLL REVEAL + COUNTER ANIMATION
+// ============================================================
+function animateCounter(el, target, suffix) {
+  const duration = 2000;
+  const start = performance.now();
+  const startVal = 0;
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(startVal + (target - startVal) * eased);
+    el.textContent = current.toLocaleString() + (suffix || '');
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+const revObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      // Trigger counter if this element has data-target
+      const num = e.target.querySelector('[data-target]');
+      if (num) {
+        const target = parseInt(num.dataset.target);
+        const suffix = num.dataset.suffix || (num.dataset.target === '99' ? '%' : num.dataset.target === '14' ? '+' : num.dataset.target === '2400' ? '+' : '');
+        animateCounter(num, target, suffix);
+      }
+      revObs.unobserve(e.target);
+    }
+  })
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+// ============================================================
+// LIVE TIMESTAMP ON CONSENT CARD
+// ============================================================
+const tsEl = document.getElementById('consentTimestamp');
+if (tsEl) tsEl.textContent = new Date().toISOString();
+
+// ============================================================
+// REGION BAR ANIMATION — animate widths into view
+// ============================================================
+const barObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.region-bar-fill').forEach(bar => {
+        const w = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => { bar.style.width = w; }, 200);
+      });
+      barObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+const mapCard = document.querySelector('.global-map-card');
+if (mapCard) barObs.observe(mapCard);
+// ============================================================
+// THEME SWITCHER
+// ============================================================
+const themeToggle = document.getElementById('themeToggle');
+const sunIconSVG = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+const moonIconSVG = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+function updateThemeBtn() {
+  if (!themeToggle) return;
+  const isLight = document.body.classList.contains('light-theme');
+  themeToggle.innerHTML = (isLight ? sunIconSVG : moonIconSVG) + '&nbsp;' + (isLight ? 'Light' : 'Dark');
+}
+function setTheme(light) {
+  document.body.classList.toggle('light-theme', light);
+  localStorage.setItem('pencheckerTheme', light ? 'light' : 'dark');
+  updateThemeBtn();
+}
+if (themeToggle) {
+  themeToggle.addEventListener('click', () => setTheme(!document.body.classList.contains('light-theme')));
+}
+// Restore on load
+(function restoreTheme() {
+  const saved = localStorage.getItem('pencheckerTheme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  setTheme(saved === 'light' || (!saved && prefersLight));
+})();
+</script>
+</body>
+</html>

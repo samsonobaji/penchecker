@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Reports — PenChecker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--black:#060608;--black2:#0d0d12;--black3:#13131a;--surface:#1a1a24;--surface2:#22222f;--border:rgba(255,255,255,0.07);--border2:rgba(0,229,255,0.2);--cyan:#00e5ff;--cyan2:#00b4cc;--green:#00ff87;--red:#ff3b5c;--orange:#ff8c42;--yellow:#ffd60a;--purple:#a855f7;--white:#f0f0f8;--muted:#6b6b85;--muted2:#9090a8;--font-display:'Plus Jakarta Sans',sans-serif;--font-body:'Plus Jakarta Sans',sans-serif;--font-mono:'JetBrains Mono',monospace;--glow-cyan:0 0 40px rgba(0,229,255,0.25);--radius:12px;--radius2:20px;--sidebar-w:240px;--topbar-h:60px;}
+body{transition:background 0.25s,color 0.25s;}
+.light-theme{--black:#f8f9fc;--black2:#e8eaf2;--black3:#ffffff;--surface:#ffffff;--surface2:#f2f4f9;--border:rgba(13,23,44,0.12);--border2:rgba(0,149,212,0.25);--cyan:#007fbc;--cyan2:#005f91;--green:#0f9d58;--red:#d93025;--orange:#e37400;--yellow:#f1c232;--purple:#6a1b9a;--white:#0b0d13;--muted:#4b5d79;--muted2:#6b7790;}
+.light-theme .topbar{background:rgba(248,249,252,0.96);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:15px;line-height:1.6;overflow-x:hidden;min-height:100vh;}
+a{color:inherit;text-decoration:none;}button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--black2);}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px;}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--black2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:200;transition:transform 0.3s;}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:18px 20px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sb-logo-icon{width:32px;height:32px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;font-size:0.8rem;color:var(--black);}
+.sb-logo-text{font-size:1.05rem;font-weight:700;}
+.sb-logo-text span{color:var(--cyan);}
+.sb-nav{flex:1;padding:12px 10px;overflow-y:auto;}
+.sb-section{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;padding:8px 10px 4px;margin-top:8px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius);font-size:0.85rem;font-weight:500;color:var(--muted2);transition:all 0.18s;position:relative;margin-bottom:1px;cursor:pointer;}
+.sb-link:hover{background:var(--surface);color:var(--white);}
+.sb-link.active{background:rgba(0,229,255,0.08);color:var(--cyan);font-weight:600;}
+.sb-link.active::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--cyan);border-radius:0 2px 2px 0;}
+.sb-icon{font-size:1rem;flex-shrink:0;width:20px;text-align:center;}
+.sb-badge{margin-left:auto;background:rgba(0,229,255,0.15);color:var(--cyan);font-family:var(--font-mono);font-size:0.6rem;font-weight:700;border-radius:10px;padding:1px 6px;}
+.sb-bottom{padding:12px 10px;border-top:1px solid var(--border);flex-shrink:0;}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);cursor:pointer;}
+.sb-avatar{width:30px;height:30px;border-radius:50%;background:rgba(0,229,255,0.15);border:1px solid rgba(0,229,255,0.3);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:var(--cyan);flex-shrink:0;}
+.sb-uname{font-size:0.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-uplan{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);}
+.topbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--topbar-h);background:rgba(6,6,8,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;z-index:100;}
+.tb-bc{flex:1;font-size:0.82rem;color:var(--muted2);display:flex;align-items:center;gap:6px;}
+.tb-cur{color:var(--white);font-weight:600;}
+.tb-sep{opacity:0.4;}
+.tb-btn{width:36px;height:36px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.9rem;cursor:pointer;transition:all 0.2s;color:var(--muted2);}
+.tb-btn:hover{border-color:var(--border2);color:var(--white);}
+.mob-toggle{display:none;width:36px;height:36px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);align-items:center;justify-content:center;font-size:1rem;cursor:pointer;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;}
+.overlay.open{display:block;}
+.main{margin-left:var(--sidebar-w);padding-top:var(--topbar-h);}
+.content{padding:28px 28px 60px;max-width:900px;}
+.page-title{font-size:1.4rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:4px;}
+.page-sub{font-size:0.84rem;color:var(--muted2);margin-bottom:28px;}
+/* Bulk export */
+.export-banner{background:linear-gradient(135deg,rgba(0,229,255,0.08),rgba(168,85,247,0.05));border:1px solid rgba(0,229,255,0.2);border-radius:var(--radius2);padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+.eb-text strong{display:block;font-weight:700;margin-bottom:3px;}
+.eb-text span{font-size:0.82rem;color:var(--muted2);}
+.eb-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.eb-btn{padding:9px 16px;border-radius:var(--radius);font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.eb-json{background:var(--cyan);color:var(--black);border:none;}
+.eb-json:hover{box-shadow:var(--glow-cyan);}
+.eb-csv{background:transparent;color:var(--muted2);border:1px solid var(--border);}
+.eb-csv:hover{border-color:var(--border2);color:var(--white);}
+/* Report table */
+.table-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;}
+.rt{width:100%;border-collapse:collapse;}
+.rt th{padding:10px 16px;background:var(--surface);font-family:var(--font-mono);font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:600;text-align:left;border-bottom:1px solid var(--border);}
+.rt td{padding:13px 16px;border-bottom:1px solid var(--border);font-size:0.82rem;vertical-align:middle;}
+.rt tr:last-child td{border-bottom:none;}
+.rt tbody tr{cursor:pointer;transition:background 0.15s;}
+.rt tbody tr:hover td{background:rgba(255,255,255,0.025);}
+.score-pill{font-family:var(--font-mono);font-size:0.78rem;font-weight:700;}
+.g{color:var(--green);}
+.y{color:var(--yellow);}
+.r{color:var(--red);}
+.dom{font-family:var(--font-mono);font-size:0.75rem;color:var(--cyan);}
+.type-tag{font-family:var(--font-mono);font-size:0.62rem;background:var(--surface2);padding:2px 7px;border-radius:5px;color:var(--muted2);}
+.action-wrap{display:flex;gap:6px;opacity:0;transition:opacity 0.15s;}
+.rt tbody tr:hover .action-wrap{opacity:1;}
+.act{padding:4px 10px;border-radius:6px;font-size:0.72rem;font-weight:600;cursor:pointer;background:transparent;border:1px solid var(--border);color:var(--muted2);transition:all 0.2s;}
+.act:hover{border-color:var(--border2);color:var(--white);}
+.empty-state{padding:60px;text-align:center;color:var(--muted2);}
+.es-icon{font-size:2.5rem;margin-bottom:12px;}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.overlay.open{display:block;}.main{margin-left:0;}.topbar{left:0;}.mob-toggle{display:flex;}.rt .hide{display:none;}}
+@media(max-width:480px){.content{padding:16px;}.export-banner{flex-direction:column;align-items:flex-start;}}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo" onclick="window.location.href='dashboard.html'" style="cursor:pointer">
+    <div class="sb-logo-icon">PC</div>
+    <div class="sb-logo-text">Pen<span>Checker</span></div>
+  </div>
+  <nav class="sb-nav" id="sbNav"></nav>
+  <div class="sb-bottom">
+    <div class="sb-user" onclick="window.location.href='dashboard-settings.html'">
+      <div class="sb-avatar" id="sbAvatar">?</div>
+      <div style="overflow:hidden;">
+        <div class="sb-uname" id="sbName">Loading...</div>
+        <div class="sb-uplan" id="sbPlan">Free Plan</div>
+      </div>
+      <div style="margin-left:auto;color:var(--muted);font-size:0.7rem;">&rsaquo;</div>
+    </div>
+  </div>
+</aside>
+<header class="topbar">
+  <button class="mob-toggle" onclick="openSidebar()"></button>
+  <div class="tb-bc"><span onclick="nav('dashboard.html')" style="cursor:pointer">Dashboard</span><span class="tb-sep">/</span><span class="tb-cur">Reports</span></div>
+  <button class="tb-btn" id="themeToggle"></button>
+</header>
+<main class="main"><div class="content">
+  <div class="page-title"> Reports</div>
+  <div class="page-sub">Download and share your security scan reports</div>
+
+  <div class="export-banner">
+    <div class="eb-text"><strong>Export all reports</strong><span>Download your complete scan history in one file</span></div>
+    <div class="eb-btns">
+      <button class="eb-btn eb-json" onclick="exportAll('json')"> Export all as JSON</button>
+      <button class="eb-btn eb-csv" onclick="exportAll('csv')"> Export as CSV</button>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <table class="rt">
+      <thead><tr><th>Domain</th><th>Date</th><th>Score</th><th class="hide">Type</th><th class="hide">Findings</th><th>Actions</th></tr></thead>
+      <tbody id="tbody"><tr><td colspan="6" class="empty-state"><div class="es-icon">⏳</div>Loading reports...</td></tr></tbody>
+    </table>
+  </div>
+</div></main>
+
+<script src="/js/api.js"></script>
+<script src="/js/sidebar.js"></script>
+<script>
+'use strict';
+function nav(u){window.location.href=u;}
+PC.requireAuth();
+
+const tBtn=document.getElementById('themeToggle');
+function setTheme(l){document.body.classList.toggle('light-theme',l);localStorage.setItem('pencheckerTheme',l?'light':'dark');tBtn.innerHTML=l?"<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"5\"></circle><line x1=\"12\" y1=\"1\" x2=\"12\" y2=\"3\"></line><line x1=\"12\" y1=\"21\" x2=\"12\" y2=\"23\"></line><line x1=\"4.22\" y1=\"4.22\" x2=\"5.64\" y2=\"5.64\"></line><line x1=\"18.36\" y1=\"18.36\" x2=\"19.78\" y2=\"19.78\"></line><line x1=\"1\" y1=\"12\" x2=\"3\" y2=\"12\"></line><line x1=\"21\" y1=\"12\" x2=\"23\" y2=\"12\"></line><line x1=\"4.22\" y1=\"19.78\" x2=\"5.64\" y2=\"18.36\"></line><line x1=\"18.36\" y1=\"5.64\" x2=\"19.78\" y2=\"4.22\"></svg>":"<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"></path></svg>";}
+tBtn.addEventListener('click',()=>setTheme(!document.body.classList.contains('light-theme')));
+(function(){const s=localStorage.getItem('pencheckerTheme');const p=window.matchMedia('(prefers-color-scheme: light)').matches;setTheme(s==='light'||(!s&&p));})();
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('open');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open');}
+// Dynamic sidebar handled by sidebar.js
+
+let allScans=[];
+async function load(){
+  try{
+    const r=await PC.listScans(100);
+    allScans=(r.scans || []).filter(s => s.status === 'completed');
+    render();
+  }catch{render();}
+}
+function render(){
+  const tb=document.getElementById('tbody');
+  if(!allScans.length){tb.innerHTML=`<tr><td colspan="6"><div class="empty-state"><div class="es-icon"></div>No completed scans yet. <a href="dashboard-scan.html" style="color:var(--cyan)">Run your first scan →</a></div></td></tr>`;return;}
+  tb.innerHTML=allScans.map(sc=>{
+    const sc2=sc.security_score;
+    const cls=sc2>=8?'g':sc2>=6?'y':'r';
+    const total=sc.total_vulnerabilities || 0;
+    const date=new Date(sc.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    return`<tr onclick="nav('dashboard-report.html?id=${sc.id}')">
+      <td><div class="dom">${sc.target_url||'—'}</div></td>
+      <td style="font-family:var(--font-mono);font-size:0.72rem;color:var(--muted2)">${date}</td>
+      <td><span class="score-pill ${cls}">${sc2?sc2.toFixed(1)+'/10':'—'}</span></td>
+      <td class="hide"><span class="type-tag">${(sc.scan_type||'standard')}</span></td>
+      <td class="hide" style="font-family:var(--font-mono);font-size:0.72rem">${total}</td>
+      <td><div class="action-wrap" onclick="event.stopPropagation()">
+        <button class="act" onclick="nav('dashboard-report.html?id=${sc.id}')">View</button>
+        <button class="act" onclick="exportOne('${sc.id}')">JSON</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+async function exportOne(id){
+  const scan=allScans.find(s=>s.id===id);
+  if(!scan)return;
+  try{
+    const fullScan = await PC.getScan(id);
+    const finds = fullScan.vulnerabilities || [];
+    download(JSON.stringify({scan: fullScan, findings:finds},null,2),`penchecker-${(scan.target_url||'scan').replace(/[^a-z0-9]/gi,'-')}.json`,'application/json');
+  }catch(err){
+    showToast('Export failed: ' + err.message);
+  }
+}
+
+async function exportAll(fmt){
+  if(fmt==='json'){
+    download(JSON.stringify(allScans,null,2),'penchecker-all-reports.json','application/json');
+  } else {
+    const header='Domain,Date,Score,Type,Critical,High,Medium,Low';
+    const rows=allScans.map(s=>{
+      return[
+        s.target_url,
+        new Date(s.created_at).toLocaleDateString(),
+        s.security_score||'',
+        s.scan_type||'',
+        s.critical_count||0,
+        s.high_count||0,
+        s.medium_count||0,
+        s.low_count||0
+      ].join(',');
+    });
+    download([header,...rows].join('\n'),'penchecker-reports.csv','text/csv');
+  }
+}
+
+function download(content,name,type){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type}));
+  a.download=name;a.click();
+}
+
+function showToast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);color:var(--white);padding:11px 20px;border-radius:10px;font-size:0.84rem;z-index:10000;box-shadow:0 8px 24px rgba(0,0,0,0.4);transition:opacity 0.3s;text-align:center;';document.body.appendChild(t);}t.textContent=msg;t.style.opacity='1';clearTimeout(window._tt);window._tt=setTimeout(()=>t.style.opacity='0',3000);}
+
+load();
+</script>
+</body>
+</html>

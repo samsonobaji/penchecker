@@ -1,0 +1,421 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Acceptable Use Policy — PenChecker</title>
+<meta name="description" content="PenChecker Acceptable Use Policy. Rules governing lawful and ethical use of the PenChecker security scanning platform." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+:root{--black:#060608;--black2:#0d0d12;--black3:#13131a;--surface:#1a1a24;--surface2:#22222f;--border:rgba(255,255,255,0.07);--border2:rgba(0,229,255,0.2);--cyan:#00e5ff;--cyan2:#00b4cc;--green:#00ff87;--red:#ff3b5c;--orange:#ff8c42;--yellow:#ffd60a;--white:#f0f0f8;--muted:#6b6b85;--muted2:#9090a8;--font-display:'Plus Jakarta Sans',sans-serif;--font-body:'Plus Jakarta Sans',sans-serif;--font-mono:'JetBrains Mono',monospace;--radius:12px;--radius2:20px;}
+body{transition:background 0.25s,color 0.25s;}
+.light-theme{--black:#f8f9fc;--black2:#e8eaf2;--black3:#ffffff;--surface:#ffffff;--surface2:#f2f4f9;--border:rgba(13,23,44,0.12);--border2:rgba(0,149,212,0.25);--cyan:#007fbc;--cyan2:#005f91;--green:#0f9d58;--red:#d93025;--orange:#e37400;--yellow:#f1c232;--white:#0b0d13;--muted:#4b5d79;--muted2:#6b7790;}
+.light-theme #navbar.scrolled{background:rgba(248,249,252,0.96);}
+.light-theme body::before{opacity:0.12;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:16px;line-height:1.6;overflow-x:hidden;}
+a{color:inherit;text-decoration:none;}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--black2);}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px;}::-webkit-scrollbar-thumb:hover{background:var(--cyan2);}
+.container{max-width:1200px;margin:0 auto;padding:0 24px;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:var(--radius);font-family:var(--font-display);font-weight:600;font-size:0.95rem;transition:all 0.25s ease;position:relative;overflow:hidden;border:none;}
+.btn::after{content:'';position:absolute;inset:0;background:white;opacity:0;transition:opacity 0.2s;}
+.btn:hover::after{opacity:0.06;}
+.btn-primary{background:var(--cyan);color:var(--black);}
+.btn-ghost{background:transparent;color:var(--white);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);}
+.btn-sm{padding:10px 20px;font-size:0.85rem;}
+#navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 24px;transition:all 0.3s ease;}
+#navbar.scrolled{background:rgba(6,6,8,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1200px;margin:0 auto;height:70px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-logo-icon{width:36px;height:36px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:500;font-size:0.85rem;color:var(--black);}
+.nav-logo-text{font-size:1.2rem;font-weight:700;letter-spacing:-0.02em;}
+.nav-logo-text span{color:var(--cyan);}
+.nav-actions{display:flex;align-items:center;gap:10px;}
+.nav-menu-btn{display:none;background:none;border:none;color:var(--white);cursor:pointer;padding:8px;}
+.mobile-menu{display:none;position:fixed;inset:0;background:var(--black2);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:32px;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{font-size:2rem;font-weight:700;color:var(--white);}
+.mobile-menu a:hover{color:var(--cyan);}
+.mobile-menu-close{position:absolute;top:20px;right:24px;background:none;border:none;color:var(--white);font-size:2rem;cursor:pointer;}
+.legal-page{padding:130px 0 100px;}
+.legal-layout{display:grid;grid-template-columns:260px 1fr;gap:56px;align-items:start;}
+.legal-toc{position:sticky;top:90px;}
+.toc-header{font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:14px;}
+.toc-list{display:flex;flex-direction:column;gap:2px;}
+.toc-item{display:block;padding:8px 12px;border-radius:var(--radius);font-size:0.82rem;color:var(--muted2);transition:all 0.2s;border-left:2px solid transparent;}
+.toc-item:hover{color:var(--white);background:var(--surface);}
+.toc-item.active{color:var(--orange);border-left-color:var(--orange);background:rgba(255,140,66,0.05);}
+.toc-divider{height:1px;background:var(--border);margin:10px 0;}
+.toc-meta{font-family:var(--font-mono);font-size:0.68rem;color:var(--muted);padding:0 12px;}
+.legal-other-docs{margin-top:20px;}
+.legal-other-title{font-family:var(--font-mono);font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;}
+.legal-other-link{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:var(--radius);font-size:0.8rem;color:var(--muted2);transition:all 0.2s;border:1px solid var(--border);margin-bottom:7px;}
+.legal-other-link:hover{border-color:var(--border2);color:var(--cyan);}
+.legal-hero{margin-bottom:48px;}
+.legal-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:var(--surface);border:1px solid var(--border);border-radius:100px;font-family:var(--font-mono);font-size:0.72rem;color:var(--muted2);margin-bottom:18px;}
+.legal-badge-dot{width:6px;height:6px;background:var(--orange);border-radius:50%;}
+.legal-title{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;letter-spacing:-0.03em;margin-bottom:14px;}
+.legal-title span{background:linear-gradient(135deg,var(--orange),var(--red));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.legal-meta{display:flex;gap:20px;flex-wrap:wrap;}
+.legal-meta-item{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);}
+.legal-meta-dot{width:4px;height:4px;background:var(--muted);border-radius:50%;}
+.legal-section{margin-bottom:52px;scroll-margin-top:100px;}
+.legal-section-num{font-family:var(--font-mono);font-size:0.7rem;color:var(--orange);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;}
+.legal-section h2{font-size:1.35rem;font-weight:700;letter-spacing:-0.01em;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.legal-section h3{font-size:1rem;font-weight:700;margin:20px 0 10px;}
+.legal-section p{font-size:0.9rem;color:var(--muted2);line-height:1.8;margin-bottom:14px;}
+.legal-section p:last-child{margin-bottom:0;}
+.legal-section ul,.legal-section ol{padding-left:22px;margin-bottom:14px;}
+.legal-section li{font-size:0.9rem;color:var(--muted2);line-height:1.8;margin-bottom:6px;}
+.legal-section a{color:var(--cyan);}
+.legal-section a:hover{text-decoration:underline;}
+.legal-section strong{color:var(--white);}
+.legal-highlight{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin:18px 0;border-left:3px solid var(--orange);}
+.legal-highlight.warning{border-left-color:var(--red);background:rgba(255,59,92,0.04);}
+.legal-highlight.good{border-left-color:var(--green);background:rgba(0,255,135,0.04);}
+.legal-highlight.info{border-left-color:var(--cyan);}
+.legal-highlight p{margin-bottom:0;font-size:0.88rem;}
+.legal-highlight strong{color:var(--white);}
+.lh-label{font-family:var(--font-mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;font-weight:600;color:var(--orange);}
+.legal-highlight.warning .lh-label{color:var(--red);}
+.legal-highlight.good .lh-label{color:var(--green);}
+.legal-highlight.info .lh-label{color:var(--cyan);}
+/* Allowed/denied grid */
+.use-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0;}
+.use-card{border-radius:var(--radius);padding:18px;}
+.use-card.allowed{background:rgba(0,255,135,0.05);border:1px solid rgba(0,255,135,0.15);}
+.use-card.denied{background:rgba(255,59,92,0.05);border:1px solid rgba(255,59,92,0.15);}
+.use-card-title{font-weight:700;font-size:0.88rem;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.use-card.allowed .use-card-title{color:var(--green);}
+.use-card.denied .use-card-title{color:var(--red);}
+.use-list{display:flex;flex-direction:column;gap:6px;}
+.use-item{display:flex;align-items:flex-start;gap:7px;font-size:0.8rem;color:var(--muted2);line-height:1.5;}
+.use-item-icon{flex-shrink:0;margin-top:1px;}
+footer{background:var(--black);border-top:1px solid var(--border);padding:48px 0 28px;}
+.footer-mini{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.footer-mini-logo{display:flex;align-items:center;gap:8px;}
+.fml-icon{width:28px;height:28px;background:var(--cyan);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:0.72rem;color:var(--black);font-weight:500;}
+.fml-text{font-size:1rem;font-weight:700;}
+.fml-text span{color:var(--cyan);}
+.footer-mini-copy{font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);}
+.footer-mini-copy span{color:var(--cyan);}
+.footer-mini-links{display:flex;gap:18px;}
+.footer-mini-links a{font-size:0.8rem;color:var(--muted);transition:color 0.2s;}
+.footer-mini-links a:hover{color:var(--muted2);}
+@media(max-width:900px){.legal-layout{grid-template-columns:1fr;}.legal-toc{display:none;}.use-grid{grid-template-columns:1fr;}}
+@media(max-width:768px){.nav-menu-btn{display:block;}.nav-actions .btn-ghost:not(#themeToggle){display:none;}.footer-mini{flex-direction:column;align-items:flex-start;}}
+</style>
+</head>
+<body>
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <div class="nav-logo-icon" style="background:none;width:36px;height:36px;display:flex;align-items:center;justify-content:center;padding:0;">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="36" height="36">
+    <defs>
+      <linearGradient id="penchecker-grad-nav" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#00e5ff" />
+        <stop offset="50%" stop-color="#7c3aed" />
+        <stop offset="100%" stop-color="#00ff87" />
+      </linearGradient>
+      <filter id="penchecker-glow-nav" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+    </defs>
+    <path d="M50 12 L82 22 V52 C82 70 68 83 50 88 C32 83 18 70 18 52 V22 Z" fill="none" stroke="url(#penchecker-grad-nav)" stroke-width="3" stroke-linejoin="round" filter="url(#penchecker-glow-nav)" />
+    <path d="M30 40 A 24 24 0 0 1 70 40" fill="none" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.8" />
+    <path d="M36 48 A 16 16 0 0 1 64 48" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6" />
+    <path d="M50 28 L62 54 L50 72 L38 54 Z" fill="url(#penchecker-grad-nav)" />
+    <line x1="50" y1="38" x2="50" y2="60" stroke="#060608" stroke-width="2" stroke-linecap="round" />
+    <circle cx="50" cy="34" r="2.5" fill="#00ff87" filter="url(#penchecker-glow-nav)" />
+  </svg>
+</div>
+      <div class="nav-logo-text">Pen<span>Checker</span></div>
+    </a>
+    <div class="nav-actions">
+      <button id="themeToggle" class="btn btn-ghost btn-sm" style="padding:8px 14px;font-size:0.82rem;;display:inline-flex;align-items:center;gap:6px;"></button>
+      <a href="../login.html" class="btn btn-ghost btn-sm">Sign in</a>
+      <a href="../signup.html" class="btn btn-primary btn-sm">Start Free</a>
+    </div>
+    <button class="nav-menu-btn" id="menuBtn"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" id="menuClose"></button>
+  <a href="../index.html">Home</a>
+  <a href="../pricing.html">Pricing</a>
+  <a href="../signup.html" class="btn btn-primary">Start Free</a>
+</div>
+
+<div class="legal-page">
+  <div class="container">
+    <div class="legal-layout">
+      <aside class="legal-toc">
+        <div class="toc-header">On this page</div>
+        <nav class="toc-list">
+          <a class="toc-item active" href="#purpose">1. Purpose</a>
+          <a class="toc-item" href="#who-may-use">2. Who May Use</a>
+          <a class="toc-item" href="#permitted">3. Permitted Uses</a>
+          <a class="toc-item" href="#prohibited">4. Prohibited Uses</a>
+          <a class="toc-item" href="#domain-ownership">5. Domain Ownership</a>
+          <a class="toc-item" href="#blacklist">6. Blacklisted Domains</a>
+          <a class="toc-item" href="#rate-limits">7. Rate Limits & Abuse</a>
+          <a class="toc-item" href="#consequences">8. Consequences</a>
+          <a class="toc-item" href="#reporting">9. Reporting Violations</a>
+          <a class="toc-item" href="#changes-aup">10. Changes</a>
+        </nav>
+        <div class="toc-divider"></div>
+        <div class="toc-meta">Last updated: April 1, 2025</div>
+        <div class="legal-other-docs">
+          <div class="legal-other-title">Other legal docs</div>
+          <a href="terms.html" class="legal-other-link"> Terms of Service</a>
+          <a href="privacy.html" class="legal-other-link"> Privacy Policy</a>
+          <a href="dmca.html" class="legal-other-link"> DMCA Policy</a>
+        </div>
+      </aside>
+
+      <main class="legal-content">
+        <div class="legal-hero">
+          <div class="legal-badge"><div class="legal-badge-dot"></div>Legal Document</div>
+          <h1 class="legal-title">Acceptable <span>Use Policy</span></h1>
+          <div class="legal-meta">
+            <div class="legal-meta-item"> Effective April 1, 2025</div>
+            <div class="legal-meta-item"><div class="legal-meta-dot"></div>Version 1.0</div>
+            <div class="legal-meta-item"><div class="legal-meta-dot"></div>PenChecker Inc.</div>
+          </div>
+        </div>
+
+        <div class="legal-highlight warning">
+          <div class="lh-label"> Critical Legal Notice</div>
+          <p><strong>Unauthorized scanning of systems you do not own or lack permission to test is illegal.</strong> The Computer Fraud and Abuse Act (CFAA) and equivalent laws in 190+ countries criminalize unauthorized access to computer systems. PenChecker cooperates fully with law enforcement investigations. Violations will result in immediate account termination and may result in criminal referral.</p>
+        </div>
+
+        <div class="legal-highlight info">
+          <div class="lh-label"> Plain English Summary</div>
+          <p>You may only use PenChecker on websites and systems you own or have explicit written permission to test. Unauthorized scanning is illegal. Certain high-profile domains (Google, government sites, etc.) are permanently blocked. Violations result in immediate account termination and may be reported to law enforcement. If you find a vulnerability in PenChecker itself, please report it responsibly to security@penchecker.io.</p>
+        </div>
+
+        <div class="legal-section" id="purpose">
+          <div class="legal-section-num">Section 01</div>
+          <h2>Purpose</h2>
+          <p>This Acceptable Use Policy ("AUP") defines the rules for lawful, ethical use of the PenChecker platform. Security testing tools are powerful — and with that power comes legal and ethical responsibility. This policy exists to protect you, third parties, and the integrity of the platform.</p>
+          <p>By using PenChecker, you agree to this AUP in addition to our <a href="terms.html">Terms of Service</a>. This AUP is incorporated by reference into the Terms.</p>
+        </div>
+
+        <div class="legal-section" id="who-may-use">
+          <div class="legal-section-num">Section 02</div>
+          <h2>Who May Use PenChecker</h2>
+          <p>PenChecker may be used by:</p>
+          <ul>
+            <li>Website and web application owners testing their own systems</li>
+            <li>Security professionals with written authorization from system owners</li>
+            <li>Developers and DevOps teams testing systems they are responsible for</li>
+            <li>Organizations conducting authorized internal security assessments</li>
+            <li>Penetration testers operating under a signed engagement agreement</li>
+          </ul>
+          <p>You may <strong>not</strong> use PenChecker if you are:</p>
+          <ul>
+            <li>Under 18 years of age</li>
+            <li>Located in a jurisdiction where such tools are prohibited by law</li>
+            <li>Previously banned from the platform</li>
+            <li>Attempting to test systems without authorization</li>
+          </ul>
+        </div>
+
+        <div class="legal-section" id="permitted">
+          <div class="legal-section-num">Section 03</div>
+          <h2>Permitted Uses</h2>
+          <div class="use-grid">
+            <div class="use-card allowed">
+              <div class="use-card-title"> Allowed</div>
+              <div class="use-list">
+                <div class="use-item"><span class="use-item-icon"></span>Scanning your own website or web app</div>
+                <div class="use-item"><span class="use-item-icon"></span>Scanning client sites with signed permission</div>
+                <div class="use-item"><span class="use-item-icon"></span>Testing staging/development environments you own</div>
+                <div class="use-item"><span class="use-item-icon"></span>Security assessments under written engagement contracts</div>
+                <div class="use-item"><span class="use-item-icon"></span>Educational use on intentionally vulnerable test apps (e.g., DVWA, HackTheBox)</div>
+                <div class="use-item"><span class="use-item-icon"></span>Bug bounty programs where scanning is explicitly authorized</div>
+                <div class="use-item"><span class="use-item-icon"></span>Verifying fixes after patching vulnerabilities</div>
+              </div>
+            </div>
+            <div class="use-card denied">
+              <div class="use-card-title"> Prohibited</div>
+              <div class="use-list">
+                <div class="use-item"><span class="use-item-icon"></span>Scanning any site you don't own or have permission for</div>
+                <div class="use-item"><span class="use-item-icon"></span>Using scan results to exploit or attack systems</div>
+                <div class="use-item"><span class="use-item-icon"></span>Scanning competitors without authorization</div>
+                <div class="use-item"><span class="use-item-icon"></span>Testing government, military, or critical infrastructure</div>
+                <div class="use-item"><span class="use-item-icon"></span>Running scans as a proxy attack tool</div>
+                <div class="use-item"><span class="use-item-icon"></span>Reverse engineering PenChecker's scanner engine</div>
+                <div class="use-item"><span class="use-item-icon"></span>Reselling or sharing account access</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="legal-section" id="prohibited">
+          <div class="legal-section-num">Section 04</div>
+          <h2>Prohibited Activities (Full List)</h2>
+          <p>The following activities are strictly prohibited and will result in immediate account termination:</p>
+          <h3>4.1 Unauthorized Scanning</h3>
+          <p>Scanning any domain, IP address, system, API, or application without clear ownership or written authorization from the owner. This includes but is not limited to: scanning competitor sites, scanning random domains to look for vulnerabilities, or conducting reconnaissance without authorization.</p>
+          <h3>4.2 Exploitation</h3>
+          <p>Using information found in PenChecker scan reports to actively exploit, attack, or compromise systems. PenChecker is a detection and remediation tool only — not an exploitation platform.</p>
+          <h3>4.3 System Abuse</h3>
+          <ul>
+            <li>Creating multiple accounts to circumvent Free plan limits or evade bans</li>
+            <li>Using automated scripts to submit excessive scans in violation of plan limits</li>
+            <li>Attempting to access other users' scan data or reports</li>
+            <li>Injecting malicious content into scan inputs to attack PenChecker infrastructure</li>
+          </ul>
+          <h3>4.4 Illegal Activities</h3>
+          <ul>
+            <li>Using the platform in violation of any applicable federal, state, or international law</li>
+            <li>Scanning systems in connection with criminal activity, fraud, or harassment</li>
+            <li>Using the platform to facilitate unauthorized access to computer systems (CFAA violation)</li>
+          </ul>
+          <h3>4.5 Intellectual Property Violations</h3>
+          <ul>
+            <li>Attempting to copy, clone, or replicate PenChecker's scanning technology</li>
+            <li>Using PenChecker's brand, name, or reports in misleading commercial contexts</li>
+          </ul>
+        </div>
+
+        <div class="legal-section" id="domain-ownership">
+          <div class="legal-section-num">Section 05</div>
+          <h2>Domain Ownership & Consent Requirements</h2>
+          <p>Before running any active scan, you must confirm that you own the target domain or have written permission to test it. This confirmation is:</p>
+          <ul>
+            <li><strong>Logged permanently</strong> — your user ID, target URL, IP address, and timestamp</li>
+            <li><strong>Legally binding</strong> — by confirming, you make a representation of fact</li>
+            <li><strong>Non-deletable</strong> — these records are retained indefinitely for legal compliance</li>
+          </ul>
+          <p>For domains where ownership verification is required, you may verify via:</p>
+          <ul>
+            <li>DNS TXT record verification</li>
+            <li>File upload verification (placing a verification file on the domain)</li>
+            <li>Meta tag verification</li>
+          </ul>
+          <div class="legal-highlight good">
+            <div class="lh-label"> Penetration Testers</div>
+            <p>If you are a professional penetration tester scanning client systems, we recommend uploading a copy of your signed engagement agreement to your account documentation. This protects both you and your client in the event of any legal question about authorization.</p>
+          </div>
+        </div>
+
+        <div class="legal-section" id="blacklist">
+          <div class="legal-section-num">Section 06</div>
+          <h2>Blacklisted Domains</h2>
+          <p>The following categories of domains are permanently blocked from scanning on PenChecker, regardless of claimed ownership or permission:</p>
+          <ul>
+            <li><strong>Major consumer platforms</strong> — Google, Facebook, YouTube, Twitter/X, Instagram, Amazon, Microsoft, Apple, Netflix, LinkedIn, TikTok, WhatsApp, and similar high-profile targets</li>
+            <li><strong>US Government domains</strong> — .gov and .mil domains including but not limited to: whitehouse.gov, cia.gov, fbi.gov, nsa.gov, dhs.gov, pentagon.mil, irs.gov, and all US federal agencies</li>
+            <li><strong>International government and military domains</strong> — Government and military domains of all nations</li>
+            <li><strong>International organizations</strong> — UN, WHO, IMF, World Bank, and similar organizations</li>
+            <li><strong>Financial infrastructure</strong> — Federal Reserve, SWIFT, major stock exchanges, and core financial infrastructure</li>
+          </ul>
+          <p>Attempting to scan a blacklisted domain will be flagged, logged, and may result in immediate account suspension. Repeated attempts will result in permanent termination and may be referred to relevant authorities.</p>
+          <div class="legal-highlight info">
+            <div class="lh-label"> Blacklist Management</div>
+            <p>The blacklist is maintained and updated by PenChecker administrators. To request removal of a legitimate domain from the blacklist (e.g., a company that has acquired one of the listed domains), contact <a href="mailto:security@penchecker.io">security@penchecker.io</a> with proof of ownership.</p>
+          </div>
+        </div>
+
+        <div class="legal-section" id="rate-limits">
+          <div class="legal-section-num">Section 07</div>
+          <h2>Rate Limits & Abuse Detection</h2>
+          <p>Each plan has defined scan limits (see <a href="../pricing.html">Pricing</a>). Attempting to circumvent these limits through automation, multiple accounts, or technical exploits is a violation of this policy.</p>
+          <p>Our abuse detection system monitors for:</p>
+          <ul>
+            <li>Unusually high scan volumes from a single IP or account</li>
+            <li>Attempts to scan the same target repeatedly in a short period</li>
+            <li>Patterns consistent with reconnaissance or coordinated attack activity</li>
+            <li>Multiple failed attempts to scan blacklisted domains</li>
+          </ul>
+          <p>Flagged accounts may be temporarily suspended pending review. Our security team reviews all flags within 24 hours.</p>
+        </div>
+
+        <div class="legal-section" id="consequences">
+          <div class="legal-section-num">Section 08</div>
+          <h2>Consequences of Violations</h2>
+          <p>Violations of this AUP may result in, at our sole discretion:</p>
+          <ol>
+            <li><strong>Warning</strong> — For minor first-time violations</li>
+            <li><strong>Temporary suspension</strong> — Account access suspended pending investigation (1–30 days)</li>
+            <li><strong>Immediate termination</strong> — Account deleted without refund for serious violations</li>
+            <li><strong>IP ban</strong> — Your IP address blocked from the platform</li>
+            <li><strong>Legal referral</strong> — Reporting to relevant law enforcement agencies for criminal violations</li>
+            <li><strong>Civil action</strong> — PenChecker Inc. reserves the right to pursue civil damages for violations that cause harm to the platform or third parties</li>
+          </ol>
+          <p>We take the safety of third-party systems seriously. If we have evidence that a user has used PenChecker to facilitate an unauthorized attack, we will cooperate with law enforcement and the affected parties without hesitation.</p>
+        </div>
+
+        <div class="legal-section" id="reporting">
+          <div class="legal-section-num">Section 09</div>
+          <h2>Reporting Policy Violations</h2>
+          <p>If you believe another user is violating this policy, or if you have received unauthorized scans from our platform, please report it immediately:</p>
+          <ul>
+            <li><strong>Email:</strong> <a href="mailto:abuse@penchecker.io">abuse@penchecker.io</a></li>
+            <li><strong>Include:</strong> Your contact information, description of the violation, evidence (logs, timestamps, URLs), and any relevant technical details</li>
+          </ul>
+          <p>We investigate all reports and will respond within <strong>48 hours</strong>. Reports are treated confidentially.</p>
+          <div class="legal-highlight good">
+            <div class="lh-label"> Responsible Disclosure</div>
+            <p>If you discover a security vulnerability in PenChecker itself, please report it responsibly to <a href="mailto:security@penchecker.io">security@penchecker.io</a> before public disclosure. We will acknowledge your report within 24 hours and work with you to resolve it. We do not take legal action against good-faith security researchers who follow responsible disclosure guidelines.</p>
+          </div>
+        </div>
+
+        <div class="legal-section" id="changes-aup">
+          <div class="legal-section-num">Section 10</div>
+          <h2>Changes to This Policy</h2>
+          <p>We may update this AUP to reflect changes in law, platform capabilities, or our understanding of appropriate use. Material changes will be communicated to registered users at least <strong>14 days</strong> before taking effect.</p>
+          <p>Questions about this policy? Contact <a href="mailto:legal@penchecker.io">legal@penchecker.io</a>.</p>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-mini">
+      <div class="footer-mini-logo"><div class="fml-icon">PC</div><div class="fml-text">Pen<span>Checker</span></div></div>
+      <div class="footer-mini-copy">© 2025 <span>PenChecker</span> Inc. All rights reserved.</div>
+      <div class="footer-mini-links">
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="acceptable-use.html">Acceptable Use</a>
+        <a href="dmca.html">DMCA</a>
+        <a href="../contact.html">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+'use strict';
+const navbar=document.getElementById('navbar');
+window.addEventListener('scroll',()=>navbar.classList.toggle('scrolled',window.scrollY>20));
+document.getElementById('menuBtn').addEventListener('click',()=>document.getElementById('mobileMenu').classList.add('open'));
+document.getElementById('menuClose').addEventListener('click',()=>document.getElementById('mobileMenu').classList.remove('open'));
+const themeToggle=document.getElementById('themeToggle');
+function updateThemeBtn(){if(!themeToggle)return;const isLight=document.body.classList.contains('light-theme');themeToggle.innerHTML=(isLight?'<svg viewBox='0 0 24 24' width='14' height='14' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round' style='display:inline-block;vertical-align:middle;'><circle cx='12' cy='12' r='5'/><line x1='12' y1='1' x2='12' y2='3'/><line x1='12' y1='21' x2='12' y2='23'/><line x1='4.22' y1='4.22' x2='5.64' y2='5.64'/><line x1='18.36' y1='18.36' x2='19.78' y2='19.78'/><line x1='1' y1='12' x2='3' y2='12'/><line x1='21' y1='12' x2='23' y2='12'/><line x1='4.22' y1='19.78' x2='5.64' y2='18.36'/><line x1='18.36' y1='5.64' x2='19.78' y2='4.22'/></svg>':'<svg viewBox='0 0 24 24' width='14' height='14' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round' style='display:inline-block;vertical-align:middle;'><path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/></svg>')+'&nbsp;'+(isLight?'Light':'Dark');}
+function setTheme(light){document.body.classList.toggle('light-theme',light);localStorage.setItem('pencheckerTheme',light?'light':'dark');updateThemeBtn();}
+if(themeToggle)themeToggle.addEventListener('click',()=>setTheme(!document.body.classList.contains('light-theme')));
+(function(){const s=localStorage.getItem('pencheckerTheme');const p=window.matchMedia('(prefers-color-scheme: light)').matches;setTheme(s==='light'||(!s&&p));})();
+const sections=document.querySelectorAll('.legal-section');
+const tocItems=document.querySelectorAll('.toc-item');
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){tocItems.forEach(t=>t.classList.remove('active'));const active=document.querySelector('.toc-item[href="#'+e.target.id+'"]');if(active)active.classList.add('active');}});},{rootMargin:'-20% 0px -70% 0px'});
+sections.forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
+
+

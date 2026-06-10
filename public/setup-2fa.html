@@ -1,0 +1,520 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Set Up Two-Factor Authentication — PenChecker</title>
+<meta name="description" content="Secure your PenChecker account with two-factor authentication using an authenticator app." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --black:#060608;--black2:#0d0d12;--black3:#13131a;
+  --surface:#1a1a24;--surface2:#22222f;
+  --border:rgba(255,255,255,0.07);--border2:rgba(0,229,255,0.2);
+  --cyan:#00e5ff;--cyan2:#00b4cc;--green:#00ff87;
+  --red:#ff3b5c;--orange:#ff8c42;--yellow:#ffd60a;--purple:#a855f7;
+  --white:#f0f0f8;--muted:#6b6b85;--muted2:#9090a8;
+  --font-display:'Plus Jakarta Sans',sans-serif;
+  --font-body:'Plus Jakarta Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --glow-cyan:0 0 40px rgba(0,229,255,0.25);
+  --radius:12px;--radius2:20px;
+}
+body{transition:background 0.25s,color 0.25s;}
+.light-theme{--black:#f8f9fc;--black2:#e8eaf2;--black3:#ffffff;--surface:#ffffff;--surface2:#f2f4f9;--border:rgba(13,23,44,0.12);--border2:rgba(0,149,212,0.25);--cyan:#007fbc;--cyan2:#005f91;--green:#0f9d58;--red:#d93025;--orange:#e37400;--yellow:#f1c232;--purple:#6a1b9a;--white:#0b0d13;--muted:#4b5d79;--muted2:#6b7790;}
+.light-theme body::before{opacity:0.12;}
+.light-theme .main-card{box-shadow:0 24px 80px rgba(0,0,0,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:16px;line-height:1.6;overflow-x:hidden;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.025) 1px,transparent 1px);background-size:50px 50px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);pointer-events:none;z-index:0;}
+body::before{content:'';position:fixed;top:-150px;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(ellipse,rgba(0,229,255,0.06) 0%,transparent 70%);pointer-events:none;z-index:0;}
+.light-theme body::before{background:radial-gradient(ellipse,rgba(0,127,188,0.05) 0%,transparent 70%);}
+.light-theme body::after{opacity:0.5;}
+
+/* Nav */
+#navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 24px;}
+.nav-inner{max-width:1200px;margin:0 auto;height:64px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-logo-icon{width:34px;height:34px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:500;font-size:0.82rem;color:var(--black);}
+.nav-logo-text{font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;}
+.nav-logo-text span{color:var(--cyan);}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.theme-btn{background:none;border:1px solid var(--border);color:var(--muted2);padding:7px 14px;border-radius:8px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;}
+.theme-btn:hover{border-color:var(--border2);color:var(--white);}
+.skip-link{font-size:0.82rem;color:var(--muted2);transition:color 0.2s;}
+.skip-link:hover{color:var(--cyan);}
+
+/* Layout */
+.page-wrap{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:90px 24px 60px;position:relative;z-index:1;}
+.page-inner{width:100%;max-width:980px;display:grid;grid-template-columns:1fr 440px;gap:56px;align-items:start;padding-top:24px;}
+
+/* Step indicator */
+.step-indicator{display:flex;align-items:center;gap:0;margin-bottom:32px;}
+.si-step{display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);transition:color 0.3s;}
+.si-step.active{color:var(--cyan);}
+.si-step.done{color:var(--green);}
+.si-num{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;transition:all 0.3s;flex-shrink:0;}
+.si-step.active .si-num{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,0.1);}
+.si-step.done .si-num{border-color:var(--green);color:var(--black);background:var(--green);}
+.si-line{width:32px;height:1.5px;background:var(--border);margin:0 8px;flex-shrink:0;}
+
+/* Left info */
+.info-panel{}
+.ip-eyebrow{font-family:var(--font-mono);font-size:0.72rem;color:var(--cyan);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:14px;}
+.ip-title{font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:800;letter-spacing:-0.03em;line-height:1.1;margin-bottom:16px;}
+.ip-title .accent{background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.ip-desc{font-size:0.92rem;color:var(--muted2);line-height:1.8;margin-bottom:32px;max-width:400px;}
+.why-2fa{display:flex;flex-direction:column;gap:12px;margin-bottom:32px;}
+.w2fa-item{display:flex;align-items:flex-start;gap:12px;}
+.w2fa-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;}
+.w2fa-cyan{background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.2);}
+.w2fa-green{background:rgba(0,255,135,0.1);border:1px solid rgba(0,255,135,0.2);}
+.w2fa-purple{background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2);}
+.w2fa-text strong{display:block;font-size:0.88rem;font-weight:700;margin-bottom:2px;}
+.w2fa-text span{font-size:0.8rem;color:var(--muted2);}
+
+/* Recommended apps */
+.apps-label{font-family:var(--font-mono);font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;}
+.apps-row{display:flex;gap:10px;flex-wrap:wrap;}
+.app-chip{display:flex;align-items:center;gap:7px;padding:8px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:0.8rem;font-weight:600;transition:all 0.2s;cursor:default;}
+.app-chip:hover{border-color:var(--border2);}
+
+/* Right card */
+.main-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.card-header{padding:18px 24px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.ch-icon{font-size:1.1rem;}
+.ch-title{font-weight:700;font-size:0.92rem;}
+.ch-sub{font-size:0.75rem;color:var(--muted2);margin-top:1px;}
+.card-body{padding:24px;}
+
+/* Steps */
+.step{display:none;}
+.step.active{display:block;}
+
+/* QR code placeholder */
+.qr-wrap{text-align:center;margin-bottom:20px;}
+.qr-box{width:180px;height:180px;background:var(--white);border-radius:var(--radius);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.qr-pattern{position:absolute;inset:0;display:grid;grid-template-columns:repeat(10,1fr);gap:1px;padding:12px;}
+.qr-cell{background:var(--black);border-radius:1px;}
+.qr-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--white);font-size:1.5rem;}
+.qr-label{font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);text-align:center;}
+
+/* Manual key */
+.manual-key-wrap{margin-bottom:20px;}
+.mk-label{font-size:0.78rem;color:var(--muted2);margin-bottom:7px;}
+.mk-key-row{display:flex;align-items:center;gap:8px;}
+.mk-key{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 13px;font-family:var(--font-mono);font-size:0.8rem;color:var(--cyan);letter-spacing:0.05em;cursor:text;}
+.mk-copy{padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:0.78rem;color:var(--muted2);cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.mk-copy:hover{border-color:var(--border2);color:var(--white);}
+
+/* Verify code input */
+.verify-section{}
+.vs-label{font-size:0.82rem;font-weight:600;margin-bottom:8px;}
+.code-input-row{display:flex;gap:7px;margin-bottom:10px;}
+.digit-box{width:44px;height:52px;background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);text-align:center;font-size:1.3rem;font-weight:700;font-family:var(--font-mono);color:var(--white);outline:none;transition:border-color 0.2s;}
+.digit-box:focus{border-color:var(--cyan);}
+.digit-box.error-box{border-color:var(--red);}
+
+/* Error banner */
+.error-banner{display:none;background:rgba(255,59,92,0.08);border:1px solid rgba(255,59,92,0.25);border-radius:var(--radius);padding:10px 13px;font-size:0.82rem;color:var(--red);margin-bottom:12px;align-items:center;gap:8px;}
+.error-banner.show{display:flex;}
+
+/* Submit btn */
+.submit-btn{width:100%;padding:13px;background:var(--cyan);color:var(--black);border:none;border-radius:var(--radius);font-family:var(--font-display);font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 0.25s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;}
+.submit-btn:hover{box-shadow:var(--glow-cyan);transform:translateY(-1px);}
+.submit-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none;}
+.spinner{display:none;width:15px;height:15px;border:2px solid rgba(0,0,0,0.25);border-top-color:var(--black);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.btn-secondary{width:100%;padding:11px;background:transparent;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font-display);font-weight:600;font-size:0.88rem;color:var(--muted2);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:10px;}
+.btn-secondary:hover{border-color:var(--border2);color:var(--white);}
+
+/* Recovery codes */
+.recovery-codes-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px;}
+.rc-code{font-family:var(--font-mono);font-size:0.78rem;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:8px 10px;text-align:center;color:var(--green);letter-spacing:0.05em;}
+.recovery-warning{background:rgba(255,214,10,0.06);border:1px solid rgba(255,214,10,0.2);border-radius:var(--radius);padding:11px 13px;font-size:0.8rem;color:var(--yellow);margin-bottom:16px;display:flex;align-items:flex-start;gap:8px;}
+
+/* Success state */
+.success-icon{font-size:3.5rem;text-align:center;margin-bottom:16px;animation:bounce 0.6s ease;}
+@keyframes bounce{0%{transform:scale(0);}60%{transform:scale(1.2);}100%{transform:scale(1);}}
+.success-title{font-size:1.2rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:10px;text-align:center;}
+.success-msg{font-size:0.85rem;color:var(--muted2);line-height:1.7;margin-bottom:20px;text-align:center;}
+
+/* Card footer */
+.card-footer{padding:13px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:6px;font-size:0.78rem;color:var(--muted2);background:var(--surface);}
+.card-footer a{color:var(--cyan);font-weight:600;}
+
+@media(max-width:900px){.page-inner{grid-template-columns:1fr;gap:32px;}.info-panel{}.page-inner{padding-top:0;}}
+@media(max-width:480px){.page-wrap{padding:80px 16px 40px;}.code-input-row{gap:5px;}.digit-box{width:38px;height:46px;font-size:1.1rem;}}
+</style>
+</head>
+<body>
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon" style="background:none;width:36px;height:36px;display:flex;align-items:center;justify-content:center;padding:0;">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="36" height="36">
+    <defs>
+      <linearGradient id="penchecker-grad-nav" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#00e5ff" />
+        <stop offset="50%" stop-color="#7c3aed" />
+        <stop offset="100%" stop-color="#00ff87" />
+      </linearGradient>
+      <filter id="penchecker-glow-nav" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+    </defs>
+    <path d="M50 12 L82 22 V52 C82 70 68 83 50 88 C32 83 18 70 18 52 V22 Z" fill="none" stroke="url(#penchecker-grad-nav)" stroke-width="3" stroke-linejoin="round" filter="url(#penchecker-glow-nav)" />
+    <path d="M30 40 A 24 24 0 0 1 70 40" fill="none" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.8" />
+    <path d="M36 48 A 16 16 0 0 1 64 48" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6" />
+    <path d="M50 28 L62 54 L50 72 L38 54 Z" fill="url(#penchecker-grad-nav)" />
+    <line x1="50" y1="38" x2="50" y2="60" stroke="#060608" stroke-width="2" stroke-linecap="round" />
+    <circle cx="50" cy="34" r="2.5" fill="#00ff87" filter="url(#penchecker-glow-nav)" />
+  </svg>
+</div>
+      <div class="nav-logo-text">Pen<span>Checker</span></div>
+    </a>
+    <div class="nav-right">
+      <button class="theme-btn" id="themeToggle"></button>
+      <a class="skip-link" href="dashboard.html">Skip for now →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-inner">
+
+    <!-- Left info -->
+    <div class="info-panel">
+      <div class="step-indicator" id="stepIndicator">
+        <div class="si-step active" id="si1"><div class="si-num">1</div>Scan QR code</div>
+        <div class="si-line"></div>
+        <div class="si-step" id="si2"><div class="si-num">2</div>Verify code</div>
+        <div class="si-line"></div>
+        <div class="si-step" id="si3"><div class="si-num">3</div>Save backups</div>
+      </div>
+
+      <div class="ip-eyebrow">Account security</div>
+      <h1 class="ip-title">Two-factor<br/><span class="accent">authentication.</span></h1>
+      <p class="ip-desc">Add an extra layer of protection to your account. Even if your password is compromised, no one can sign in without your authenticator code.</p>
+
+      <div class="why-2fa">
+        <div class="w2fa-item">
+          <div class="w2fa-icon w2fa-cyan"></div>
+          <div class="w2fa-text">
+            <strong>Stops account takeover</strong>
+            <span>Even with your password, attackers can't sign in without your phone</span>
+          </div>
+        </div>
+        <div class="w2fa-item">
+          <div class="w2fa-icon w2fa-green"></div>
+          <div class="w2fa-text">
+            <strong>Takes 60 seconds to set up</strong>
+            <span>Scan a QR code with your authenticator app — done</span>
+          </div>
+        </div>
+        <div class="w2fa-item">
+          <div class="w2fa-icon w2fa-purple"></div>
+          <div class="w2fa-text">
+            <strong>Works with any TOTP app</strong>
+            <span>Google Authenticator, Authy, 1Password, Bitwarden, and more</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="apps-label">Recommended apps</div>
+      <div class="apps-row">
+        <div class="app-chip"> Google Authenticator</div>
+        <div class="app-chip"> Authy</div>
+        <div class="app-chip"> 1Password</div>
+        <div class="app-chip"> Bitwarden</div>
+      </div>
+    </div>
+
+    <!-- Right card -->
+    <div>
+      <div class="main-card">
+        <div class="card-header">
+          <div class="ch-icon"></div>
+          <div>
+            <div class="ch-title" id="cardTitle">Step 1 — Scan QR Code</div>
+            <div class="ch-sub" id="cardSub">Open your authenticator app and scan the code below</div>
+          </div>
+        </div>
+        <div class="card-body">
+
+          <!-- Step 1 — QR Code -->
+          <div class="step active" id="step1">
+            <div class="qr-wrap">
+              <div class="qr-box" id="qrBox">
+                <div class="qr-loading" id="qrLoading">⏳</div>
+              </div>
+              <div class="qr-label" id="qrLabel">Loading QR code...</div>
+            </div>
+
+            <div class="manual-key-wrap">
+              <div class="mk-label">Can't scan? Enter this key manually:</div>
+              <div class="mk-key-row">
+                <div class="mk-key" id="manualKey">Loading...</div>
+                <button class="mk-copy" onclick="copyKey()"> Copy</button>
+              </div>
+            </div>
+
+            <div style="font-family:var(--font-mono);font-size:0.68rem;color:var(--muted);margin-bottom:16px;line-height:1.6;">
+              Account name in your app: <strong style="color:var(--white);" id="accountName">PenChecker</strong>
+            </div>
+
+            <button class="submit-btn" onclick="goToVerify()">
+              I've scanned it — verify code →
+            </button>
+            <button class="btn-secondary" onclick="window.location.href='dashboard.html'">
+              Set up later (not recommended)
+            </button>
+          </div>
+
+          <!-- Step 2 — Verify Code -->
+          <div class="step" id="step2">
+            <div class="error-banner" id="errorBanner"><span></span><span id="errorMsg">Invalid code.</span></div>
+            <div class="verify-section">
+              <div class="vs-label">Enter the 6-digit code from your authenticator app:</div>
+              <div class="code-input-row" id="codeInputs">
+                <input type="text" class="digit-box" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+                <input type="text" class="digit-box" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+                <input type="text" class="digit-box" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+                <input type="text" class="digit-box" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+                <input type="text" class="digit-box" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+                <input type="text" class="digit-box" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+              </div>
+              <div style="font-size:0.78rem;color:var(--muted2);margin-bottom:16px;">Codes refresh every 30 seconds. Enter the current code shown in your app.</div>
+            </div>
+            <button class="submit-btn" id="verifyBtn" onclick="verifyTOTP()">
+              <span id="verifyText">Verify & Enable 2FA →</span>
+              <div class="spinner" id="verifySpinner"></div>
+            </button>
+            <button class="btn-secondary" onclick="backToQR()">← Back to QR code</button>
+          </div>
+
+          <!-- Step 3 — Recovery Codes -->
+          <div class="step" id="step3">
+            <div class="recovery-warning">
+              <span></span>
+              <span><strong>Save these recovery codes now.</strong> If you lose access to your authenticator app, these are the only way to get back into your account. Each code can only be used once.</span>
+            </div>
+            <div class="recovery-codes-grid" id="recoveryCodes"></div>
+            <button class="btn-secondary" onclick="downloadCodes()" style="margin-bottom:10px;">
+               Download codes as text file
+            </button>
+            <button class="submit-btn" id="doneBtn" onclick="completSetup()">
+              I've saved my codes — finish setup →
+            </button>
+          </div>
+
+          <!-- Step 4 — Done -->
+          <div class="step" id="step4">
+            <div class="success-icon"></div>
+            <div class="success-title">2FA is now active!</div>
+            <p class="success-msg">Your account is now protected with two-factor authentication. You'll be asked for a 6-digit code every time you sign in.</p>
+            <a href="dashboard.html"><button class="submit-btn">Go to my dashboard →</button></a>
+          </div>
+
+        </div>
+        <div class="card-footer">
+          <span>Need help?</span>
+          <a href="contact.html?subject=support">Contact support</a>
+          <span style="color:var(--border);">·</span>
+          <a href="dashboard.html">Skip for now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+const themeToggle=document.getElementById('themeToggle');
+function updateThemeBtn(){if(!themeToggle)return;const isLight=document.body.classList.contains('light-theme');themeToggle.innerHTML=(isLight?'<svg viewBox='0 0 24 24' width='14' height='14' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round' style='display:inline-block;vertical-align:middle;'><circle cx='12' cy='12' r='5'/><line x1='12' y1='1' x2='12' y2='3'/><line x1='12' y1='21' x2='12' y2='23'/><line x1='4.22' y1='4.22' x2='5.64' y2='5.64'/><line x1='18.36' y1='18.36' x2='19.78' y2='19.78'/><line x1='1' y1='12' x2='3' y2='12'/><line x1='21' y1='12' x2='23' y2='12'/><line x1='4.22' y1='19.78' x2='5.64' y2='18.36'/><line x1='18.36' y1='5.64' x2='19.78' y2='4.22'/></svg>':'<svg viewBox='0 0 24 24' width='14' height='14' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round' style='display:inline-block;vertical-align:middle;'><path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/></svg>')+'&nbsp;'+(isLight?'Light':'Dark');}
+function setTheme(light){document.body.classList.toggle('light-theme',light);localStorage.setItem('pencheckerTheme',light?'light':'dark');updateThemeBtn();}
+if(themeToggle)themeToggle.addEventListener('click',()=>setTheme(!document.body.classList.contains('light-theme')));
+(function(){const s=localStorage.getItem('pencheckerTheme');const p=window.matchMedia('(prefers-color-scheme: light)').matches;setTheme(s==='light'||(!s&&p));})();
+
+function showStep(id){document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function updateStepIndicator(num){
+  for(let i=1;i<=3;i++){
+    const el=document.getElementById('si'+i);
+    if(!el) continue;
+    el.classList.remove('active','done');
+    if(i<num) el.classList.add('done');
+    else if(i===num) el.classList.add('active');
+  }
+}
+function updateCardHeader(title,sub){
+  document.getElementById('cardTitle').textContent=title;
+  document.getElementById('cardSub').textContent=sub;
+}
+
+// State
+let secretKey  = null;
+let recoveryCodes = [];
+
+// Init — local mock TOTP setup
+async function initTOTP(){
+  if(!PC.isLoggedIn()){window.location.href='login.html?redirect=setup-2fa.html';return;}
+
+  const user = PC.getUser();
+  const email = user?.email || 'your account';
+  document.getElementById('accountName').textContent=`PenChecker (${email})`;
+
+  try {
+    // Generate a secure mock 16-character base32 secret
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+    let key = 'PC2FA';
+    for(let i=0; i<11; i++) {
+      key += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    secretKey = key;
+
+    const qrUri = `https://api.qrserver.com/v1/create-qr-code/?size=156x156&data=${encodeURIComponent(`otpauth://totp/PenChecker:${email}?secret=${secretKey}&issuer=PenChecker`)}`;
+
+    // Display QR code using an img element
+    document.getElementById('qrLoading').style.display='none';
+    
+    // Clear existing children except qrLoading
+    const qrBox = document.getElementById('qrBox');
+    const loading = document.getElementById('qrLoading');
+    qrBox.innerHTML = '';
+    qrBox.appendChild(loading);
+    loading.style.display = 'none';
+
+    const img=document.createElement('img');
+    img.src=qrUri; img.style.cssText='width:156px;height:156px;object-fit:contain;';
+    img.onerror=()=>{
+      document.getElementById('qrBox').innerHTML='<div style="padding:16px;text-align:center;font-size:0.75rem;color:var(--muted2);">Use manual key below</div>';
+    };
+    document.getElementById('qrBox').appendChild(img);
+    document.getElementById('qrLabel').textContent='Scan with your authenticator app';
+
+    // Show manual key formatted
+    const formatted=secretKey.match(/.{1,4}/g)?.join(' ')||secretKey;
+    document.getElementById('manualKey').textContent=formatted;
+
+  } catch(err){
+    document.getElementById('qrLoading').textContent='';
+    document.getElementById('qrLabel').textContent='Error generating setup. Please refresh.';
+  }
+}
+
+function copyKey(){
+  navigator.clipboard?.writeText(secretKey||'')
+    .then(()=>showToast('Secret key copied to clipboard'))
+    .catch(()=>showToast('Copy the key from the field above'));
+}
+
+function goToVerify(){
+  showStep('step2');
+  updateStepIndicator(2);
+  updateCardHeader('Step 2 — Verify Code','Enter the code from your authenticator to confirm setup');
+  initDigitBoxes();
+  document.querySelector('#codeInputs .digit-box')?.focus();
+}
+
+function backToQR(){
+  showStep('step1');
+  updateStepIndicator(1);
+  updateCardHeader('Step 1 — Scan QR Code','Open your authenticator app and scan the code below');
+  document.querySelectorAll('.digit-box').forEach(b=>{b.value='';b.classList.remove('error-box');});
+  document.getElementById('errorBanner').classList.remove('show');
+}
+
+// Digit boxes
+function initDigitBoxes(){
+  const boxes=document.querySelectorAll('#codeInputs .digit-box');
+  boxes.forEach((box,i)=>{
+    box.addEventListener('input',e=>{
+      const val=e.target.value.replace(/\D/g,'');
+      e.target.value=val.slice(-1);
+      if(val&&i<boxes.length-1) boxes[i+1].focus();
+      const code=Array.from(boxes).map(b=>b.value).join('');
+      if(code.length===6) verifyTOTP();
+    });
+    box.addEventListener('keydown',e=>{
+      if(e.key==='Backspace'&&!box.value&&i>0) boxes[i-1].focus();
+    });
+    box.addEventListener('paste',e=>{
+      e.preventDefault();
+      const pasted=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'');
+      if(pasted.length===6){boxes.forEach((b,idx)=>{b.value=pasted[idx]||'';});boxes[5].focus();verifyTOTP();}
+    });
+  });
+}
+
+async function verifyTOTP(){
+  const code=Array.from(document.querySelectorAll('#codeInputs .digit-box')).map(b=>b.value).join('');
+  if(code.length!==6) return;
+
+  if(!PC.isLoggedIn()){showToast('Session expired. Please refresh.');return;}
+
+  const btn=document.getElementById('verifyBtn');
+  const txt=document.getElementById('verifyText');
+  const spin=document.getElementById('verifySpinner');
+  btn.disabled=true;txt.style.display='none';spin.style.display='block';
+  document.getElementById('errorBanner').classList.remove('show');
+
+  try {
+    // Call our backend API to enable 2FA
+    const res = await PC.updateMe({ two_factor_enabled: 1, two_factor_secret: secretKey });
+    
+    // Save updated user to localStorage
+    localStorage.setItem('pc_user', JSON.stringify(res.user));
+
+    // Generate mock recovery codes
+    recoveryCodes=Array.from({length:8},()=>Math.random().toString(36).substring(2,10).toUpperCase().match(/.{4}/g).join('-'));
+    const grid=document.getElementById('recoveryCodes');
+    grid.innerHTML=recoveryCodes.map(c=>`<div class="rc-code">${c}</div>`).join('');
+
+    showStep('step3');
+    updateStepIndicator(3);
+    updateCardHeader('Step 3 — Save Recovery Codes','Store these in a safe place — they\'re your backup');
+
+  } catch(err){
+    document.getElementById('errorMsg').textContent=err.message || 'Connection error. Please try again.';
+    document.getElementById('errorBanner').classList.add('show');
+    document.querySelectorAll('.digit-box').forEach(b=>{b.value='';b.classList.add('error-box');});
+    document.querySelector('.digit-box')?.focus();
+    btn.disabled=false;txt.style.display='';spin.style.display='none';
+  }
+}
+
+function downloadCodes(){
+  const text=`PenChecker Recovery Codes\nGenerated: ${new Date().toLocaleString()}\nAccount: ${PC.getUser()?.email || ''}\n\n${recoveryCodes.join('\n')}\n\nEach code can only be used once.\nStore these in a secure location.`;
+  const blob=new Blob([text],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='penchecker-recovery-codes.txt';
+  a.click();
+}
+
+function completSetup(){
+  showStep('step4');
+  updateCardHeader('2FA Enabled','Your account is now protected');
+}
+
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);color:var(--white);padding:12px 22px;border-radius:10px;font-size:0.85rem;z-index:10000;box-shadow:0 8px 32px rgba(0,0,0,0.4);transition:opacity 0.3s;min-width:240px;text-align:center;font-family:var(--font-body);';document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity='1';
+  clearTimeout(window._tt);window._tt=setTimeout(()=>{t.style.opacity='0';},3200);
+}
+
+initTOTP();
+</script>
+</body>
+</html>
+
+

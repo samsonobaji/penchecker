@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Blog & Security Learning Hub — PenChecker</title>
+<meta name="description" content="Security guides, vulnerability breakdowns, how-to articles, and expert insights. Learn web security the right way with PenChecker's learning hub." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   DESIGN SYSTEM
+   ============================================================ */
+:root {
+  --black:   #060608;
+  --black2:  #0d0d12;
+  --black3:  #13131a;
+  --surface: #1a1a24;
+  --surface2:#22222f;
+  --border:  rgba(255,255,255,0.07);
+  --border2: rgba(0,229,255,0.2);
+  --cyan:    #00e5ff;
+  --cyan2:   #00b4cc;
+  --green:   #00ff87;
+  --red:     #ff3b5c;
+  --orange:  #ff8c42;
+  --yellow:  #ffd60a;
+  --purple:  #a855f7;
+  --white:   #f0f0f8;
+  --muted:   #6b6b85;
+  --muted2:  #9090a8;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body:    'Plus Jakarta Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --glow-cyan:  0 0 40px rgba(0,229,255,0.25);
+  --glow-green: 0 0 40px rgba(0,255,135,0.25);
+  --radius:  12px;
+  --radius2: 20px;
+}
+/* Light theme */
+body { transition: background 0.25s, color 0.25s; }
+.light-theme {
+  --black:   #f8f9fc;
+  --black2:  #e8eaf2;
+  --black3:  #ffffff;
+  --surface: #ffffff;
+  --surface2:#f2f4f9;
+  --border:  rgba(13,23,44,0.12);
+  --border2: rgba(0,149,212,0.25);
+  --cyan:    #007fbc;
+  --cyan2:   #005f91;
+  --green:   #0f9d58;
+  --red:     #d93025;
+  --orange:  #e37400;
+  --yellow:  #f1c232;
+  --purple:  #6a1b9a;
+  --white:   #0b0d13;
+  --muted:   #4b5d79;
+  --muted2:  #6b7790;
+}
+.light-theme #navbar.scrolled { background: rgba(248,249,252,0.96); }
+.light-theme body::before { opacity: 0.12; }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; border: none; outline: none; }
+/* Noise */
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999; opacity: 0.4;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--black2); }
+::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--cyan2); }
+
+/* ============================================================
+   LAYOUT & TYPE
+   ============================================================ */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.display-xl { font-size: clamp(2.5rem,6vw,5rem); font-weight:800; line-height:1.0; letter-spacing:-0.03em; }
+.display-lg { font-size: clamp(1.8rem,4vw,3rem); font-weight:700; line-height:1.1; letter-spacing:-0.02em; }
+.display-md { font-size: clamp(1.2rem,2.5vw,1.8rem); font-weight:700; letter-spacing:-0.02em; }
+
+/* Scroll reveal */
+.reveal { opacity:0; transform:translateY(22px); transition:opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal-delay-1 { transition-delay:0.1s; }
+.reveal-delay-2 { transition-delay:0.2s; }
+.reveal-delay-3 { transition-delay:0.3s; }
+.reveal-delay-4 { transition-delay:0.4s; }
+
+/* Section label */
+.section-label { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.section-label-line { width:36px; height:2px; background:var(--cyan); }
+.section-label-text { font-family:var(--font-mono); font-size:0.72rem; color:var(--cyan); letter-spacing:0.15em; text-transform:uppercase; }
+
+/* Tags */
+.tag {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:4px 11px; border-radius:100px;
+  font-family:var(--font-mono); font-size:0.68rem; font-weight:600;
+  letter-spacing:0.05em; text-transform:uppercase; cursor:pointer; transition:all 0.2s;
+}
+.tag-cyan   { background:rgba(0,229,255,0.1);  color:var(--cyan);   border:1px solid rgba(0,229,255,0.2); }
+.tag-green  { background:rgba(0,255,135,0.1);  color:var(--green);  border:1px solid rgba(0,255,135,0.2); }
+.tag-red    { background:rgba(255,59,92,0.1);  color:var(--red);    border:1px solid rgba(255,59,92,0.2); }
+.tag-orange { background:rgba(255,140,66,0.1); color:var(--orange); border:1px solid rgba(255,140,66,0.2); }
+.tag-purple { background:rgba(168,85,247,0.1); color:var(--purple); border:1px solid rgba(168,85,247,0.2); }
+.tag-yellow { background:rgba(255,214,10,0.1); color:var(--yellow); border:1px solid rgba(255,214,10,0.2); }
+.tag:hover { opacity:0.8; transform:scale(0.97); }
+
+/* Buttons */
+.btn {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:14px 28px; border-radius:var(--radius);
+  font-family:var(--font-display); font-weight:600; font-size:0.95rem;
+  transition:all 0.25s ease; position:relative; overflow:hidden; border:none;
+}
+.btn::after { content:''; position:absolute; inset:0; background:white; opacity:0; transition:opacity 0.2s; }
+.btn:hover::after { opacity:0.06; }
+.btn-primary { background:var(--cyan); color:var(--black); box-shadow:0 0 40px rgba(0,229,255,0.2); }
+.btn-primary:hover { box-shadow:var(--glow-cyan); transform:translateY(-1px); }
+.btn-ghost { background:transparent; color:var(--white); border:1px solid var(--border); }
+.btn-ghost:hover { border-color:var(--cyan); color:var(--cyan); }
+.btn-sm { padding:10px 20px; font-size:0.85rem; }
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+#navbar {
+  position:fixed; top:0; left:0; right:0; z-index:1000;
+  padding:0 24px; transition:all 0.3s ease;
+}
+#navbar.scrolled {
+  background:rgba(6,6,8,0.92); backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner {
+  max-width:1200px; margin:0 auto; height:70px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.nav-logo { display:flex; align-items:center; gap:10px; }
+.nav-logo-icon {
+  width:36px; height:36px; background:var(--cyan); border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-weight:500; font-size:0.85rem; color:var(--black);
+}
+.nav-logo-text { font-size:1.2rem; font-weight:700; letter-spacing:-0.02em; }
+.nav-logo-text span { color:var(--cyan); }
+.nav-links { display:flex; align-items:center; gap:36px; list-style:none; }
+.nav-links a { font-size:0.9rem; color:var(--muted2); transition:color 0.2s; font-weight:500; }
+.nav-links a:hover { color:var(--white); }
+.nav-links a.active { color:var(--cyan); }
+.nav-actions { display:flex; align-items:center; gap:10px; }
+.nav-menu-btn { display:none; background:none; border:none; color:var(--white); cursor:pointer; padding:8px; }
+.mobile-menu {
+  display:none; position:fixed; inset:0; background:var(--black2);
+  z-index:999; flex-direction:column; align-items:center; justify-content:center; gap:32px;
+}
+.mobile-menu.open { display:flex; }
+.mobile-menu a { font-size:2rem; font-weight:700; color:var(--white); transition:color 0.2s; }
+.mobile-menu a:hover { color:var(--cyan); }
+.mobile-menu-close { position:absolute; top:20px; right:24px; background:none; border:none; color:var(--white); font-size:2rem; cursor:pointer; }
+
+/* ============================================================
+   PAGE HERO
+   ============================================================ */
+#blog-hero {
+  padding:150px 0 80px; position:relative; overflow:hidden;
+}
+#blog-hero::before {
+  content:''; position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,255,0.025) 1px,transparent 1px);
+  background-size:50px 50px;
+  mask-image:radial-gradient(ellipse 80% 100% at 50% 0%,black 40%,transparent 100%);
+}
+#blog-hero::after {
+  content:''; position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:700px; height:500px;
+  background:radial-gradient(ellipse,rgba(0,229,255,0.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.blog-hero-inner { position:relative; z-index:2; display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:center; }
+.blog-hero-left {}
+.hero-eyebrow { display:flex; align-items:center; gap:10px; margin-bottom:24px; }
+.hero-eyebrow-dot { width:7px; height:7px; background:var(--green); border-radius:50%; animation:heroPulse 2s infinite; }
+@keyframes heroPulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,255,135,0.6);}50%{box-shadow:0 0 0 8px rgba(0,255,135,0);} }
+.hero-eyebrow-text { font-family:var(--font-mono); font-size:0.78rem; color:var(--green); letter-spacing:0.12em; text-transform:uppercase; }
+.blog-hero-title { margin-bottom:18px; }
+.blog-hero-title .accent { background:linear-gradient(135deg,var(--cyan),var(--green)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.blog-hero-desc { font-size:1.05rem; color:var(--muted2); line-height:1.75; margin-bottom:28px; }
+.blog-hero-actions { display:flex; gap:12px; flex-wrap:wrap; }
+
+/* Hero right — featured stats */
+.blog-hero-stats {
+  display:grid; grid-template-columns:1fr 1fr; gap:12px;
+}
+.bhs-card {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius2); padding:20px;
+  transition:all 0.3s;
+}
+.bhs-card:hover { border-color:var(--border2); transform:translateY(-2px); }
+.bhs-num {
+  font-size:2rem; font-weight:800; letter-spacing:-0.03em;
+  background:linear-gradient(135deg,var(--cyan),var(--green));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  margin-bottom:4px;
+}
+.bhs-label { font-size:0.8rem; color:var(--muted2); }
+.bhs-card-wide { grid-column:span 2; }
+.newsletter-box {
+  background:linear-gradient(135deg,rgba(0,229,255,0.06),rgba(0,255,135,0.06));
+  border:1px solid var(--border2); border-radius:var(--radius2); padding:20px;
+}
+.newsletter-box p { font-size:0.82rem; color:var(--muted2); margin-bottom:12px; }
+.newsletter-box strong { display:block; font-size:0.95rem; font-weight:700; margin-bottom:6px; }
+.newsletter-form { display:flex; gap:8px; }
+.newsletter-input {
+  flex:1; background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:10px 14px;
+  font-family:var(--font-body); font-size:0.85rem; color:var(--white); outline:none;
+}
+.newsletter-input:focus { border-color:var(--cyan); }
+.newsletter-input::placeholder { color:var(--muted); }
+.newsletter-btn {
+  background:var(--cyan); color:var(--black); border:none;
+  border-radius:var(--radius); padding:10px 18px; font-weight:700;
+  font-size:0.82rem; cursor:pointer; transition:all 0.2s; white-space:nowrap;
+}
+.newsletter-btn:hover { box-shadow:var(--glow-cyan); }
+.newsletter-success { display:none; font-size:0.82rem; color:var(--green); font-family:var(--font-mono); }
+
+/* ============================================================
+   FILTER / SEARCH BAR
+   ============================================================ */
+#blog-filter {
+  position:sticky; top:70px; z-index:900;
+  background:rgba(6,6,8,0.92); backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border); padding:12px 0;
+}
+.light-theme #blog-filter { background:rgba(248,249,252,0.96); }
+.filter-inner {
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+}
+.search-box {
+  display:flex; align-items:center; gap:8px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:9px 14px; flex:1; max-width:340px;
+  transition:border-color 0.2s;
+}
+.search-box:focus-within { border-color:var(--cyan); }
+.search-box svg { color:var(--muted); flex-shrink:0; }
+.search-input {
+  background:none; border:none; outline:none;
+  font-family:var(--font-body); font-size:0.85rem; color:var(--white);
+  width:100%;
+}
+.search-input::placeholder { color:var(--muted); }
+.filter-tags { display:flex; gap:8px; flex-wrap:wrap; flex:1; }
+.filter-tag {
+  padding:6px 14px; border-radius:100px; font-size:0.78rem; font-weight:600;
+  border:1px solid var(--border); background:transparent; color:var(--muted2);
+  cursor:pointer; transition:all 0.2s; white-space:nowrap;
+}
+.filter-tag:hover { border-color:var(--border2); color:var(--white); }
+.filter-tag.active { background:var(--cyan); color:var(--black); border-color:var(--cyan); }
+.filter-count {
+  font-family:var(--font-mono); font-size:0.72rem; color:var(--muted);
+  white-space:nowrap; margin-left:auto;
+}
+
+/* ============================================================
+   FEATURED ARTICLE (LARGE)
+   ============================================================ */
+#blog-main { padding:80px 0; }
+.featured-article {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius2); overflow:hidden; margin-bottom:60px;
+  display:grid; grid-template-columns:1fr 1fr; transition:all 0.3s;
+}
+.featured-article:hover { border-color:rgba(0,229,255,0.2); transform:translateY(-3px); box-shadow:0 24px 60px rgba(0,0,0,0.4); }
+.featured-img {
+  background:var(--black2); min-height:320px;
+  display:flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden;
+}
+.featured-img-graphic {
+  width:100%; height:100%; display:flex; align-items:center; justify-content:center;
+  font-size:5rem; position:relative;
+}
+.featured-img-overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(135deg,rgba(0,229,255,0.08),rgba(0,255,135,0.04));
+}
+.featured-grid-bg {
+  position:absolute; inset:0;
+  background-image: linear-gradient(rgba(0,229,255,0.04) 1px,transparent 1px), linear-gradient(90deg,rgba(0,229,255,0.04) 1px,transparent 1px);
+  background-size:30px 30px;
+}
+.featured-content { padding:40px; display:flex; flex-direction:column; justify-content:space-between; }
+.featured-top {}
+.featured-meta { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+.article-date { font-family:var(--font-mono); font-size:0.7rem; color:var(--muted); }
+.article-read-time { font-family:var(--font-mono); font-size:0.7rem; color:var(--muted); }
+.featured-title {
+  font-size:clamp(1.4rem,3vw,2rem); font-weight:800; letter-spacing:-0.02em;
+  line-height:1.2; margin-bottom:14px; transition:color 0.2s;
+}
+.featured-article:hover .featured-title { color:var(--cyan); }
+.featured-excerpt { font-size:0.92rem; color:var(--muted2); line-height:1.7; margin-bottom:24px; }
+.featured-bottom { display:flex; align-items:center; justify-content:space-between; }
+.author-row { display:flex; align-items:center; gap:10px; }
+.author-avatar {
+  width:32px; height:32px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.82rem; font-weight:700; flex-shrink:0;
+}
+.author-name { font-size:0.82rem; font-weight:600; }
+.author-role { font-family:var(--font-mono); font-size:0.68rem; color:var(--muted); }
+.read-more-btn {
+  display:flex; align-items:center; gap:6px;
+  font-size:0.82rem; font-weight:600; color:var(--cyan);
+  transition:gap 0.2s;
+}
+.featured-article:hover .read-more-btn { gap:10px; }
+
+/* ============================================================
+   ARTICLE GRID
+   ============================================================ */
+.articles-section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; }
+.articles-section-title { font-size:1.1rem; font-weight:700; }
+.articles-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:60px; }
+.article-card {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius2); overflow:hidden; transition:all 0.3s;
+  display:flex; flex-direction:column; cursor:pointer;
+}
+.article-card:hover { border-color:rgba(0,229,255,0.2); transform:translateY(-3px); box-shadow:0 16px 48px rgba(0,0,0,0.35); }
+.article-card-img {
+  height:140px; display:flex; align-items:center; justify-content:center;
+  font-size:2.8rem; position:relative; overflow:hidden; flex-shrink:0;
+}
+.article-card-img-overlay { position:absolute; inset:0; }
+.article-card-body { padding:20px; display:flex; flex-direction:column; flex:1; }
+.article-card-meta { display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap; }
+.article-card-title {
+  font-size:0.95rem; font-weight:700; line-height:1.35; margin-bottom:8px;
+  transition:color 0.2s;
+}
+.article-card:hover .article-card-title { color:var(--cyan); }
+.article-card-excerpt { font-size:0.8rem; color:var(--muted2); line-height:1.6; flex:1; margin-bottom:16px; }
+.article-card-footer { display:flex; align-items:center; justify-content:space-between; margin-top:auto; }
+.article-card-author { display:flex; align-items:center; gap:7px; }
+.acc-avatar {
+  width:24px; height:24px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.65rem; font-weight:700; flex-shrink:0;
+}
+.acc-name { font-size:0.72rem; color:var(--muted2); }
+.article-card-date { font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); }
+
+/* ============================================================
+   LEARNING PATH SECTION
+   ============================================================ */
+#learning-paths { padding:80px 0; background:var(--black2); }
+.lp-header { text-align:center; margin-bottom:52px; }
+.lp-header .display-lg { margin-bottom:12px; }
+.lp-header p { color:var(--muted2); max-width:500px; margin:0 auto; }
+.lp-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.lp-card {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius2); padding:28px; transition:all 0.3s;
+  position:relative; overflow:hidden; cursor:pointer;
+}
+.lp-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  opacity:0; transition:opacity 0.3s;
+}
+.lp-card.beginner::before { background:linear-gradient(90deg,var(--green),var(--cyan)); }
+.lp-card.intermediate::before { background:linear-gradient(90deg,var(--cyan),var(--purple)); }
+.lp-card.advanced::before { background:linear-gradient(90deg,var(--orange),var(--red)); }
+.lp-card:hover { transform:translateY(-4px); border-color:rgba(0,229,255,0.15); }
+.lp-card:hover::before { opacity:1; }
+.lp-level {
+  font-family:var(--font-mono); font-size:0.65rem; text-transform:uppercase;
+  letter-spacing:0.12em; margin-bottom:10px; font-weight:600;
+}
+.beginner .lp-level { color:var(--green); }
+.intermediate .lp-level { color:var(--cyan); }
+.advanced .lp-level { color:var(--orange); }
+.lp-icon { font-size:2.2rem; margin-bottom:14px; }
+.lp-title { font-size:1.05rem; font-weight:700; margin-bottom:8px; }
+.lp-desc { font-size:0.82rem; color:var(--muted2); line-height:1.6; margin-bottom:16px; }
+.lp-articles-list { display:flex; flex-direction:column; gap:7px; margin-bottom:18px; }
+.lp-article-item {
+  display:flex; align-items:center; gap:8px; font-size:0.78rem; color:var(--muted2);
+  padding:7px 10px; background:var(--surface); border-radius:7px;
+  transition:all 0.2s; cursor:pointer;
+}
+.lp-article-item:hover { background:var(--surface2); color:var(--white); }
+.lp-article-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+.beginner .lp-article-dot { background:var(--green); }
+.intermediate .lp-article-dot { background:var(--cyan); }
+.advanced .lp-article-dot { background:var(--orange); }
+.lp-progress { display:flex; align-items:center; gap:10px; margin-top:4px; }
+.lp-progress-label { font-family:var(--font-mono); font-size:0.68rem; color:var(--muted); white-space:nowrap; }
+.lp-progress-track { flex:1; height:4px; background:var(--surface2); border-radius:2px; overflow:hidden; }
+.lp-progress-fill { height:100%; border-radius:2px; }
+.beginner .lp-progress-fill { background:var(--green); width:0%; transition:width 1.2s ease; }
+.intermediate .lp-progress-fill { background:var(--cyan); width:0%; transition:width 1.2s ease; }
+.advanced .lp-progress-fill { background:var(--orange); width:0%; transition:width 1.2s ease; }
+
+/* ============================================================
+   OWASP SERIES SECTION
+   ============================================================ */
+#owasp-series { padding:80px 0; }
+.owasp-header { margin-bottom:40px; }
+.owasp-header .display-lg { margin-bottom:12px; }
+.owasp-header p { color:var(--muted2); max-width:600px; }
+.owasp-series-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
+.owasp-series-card {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius2); padding:20px; text-align:center;
+  transition:all 0.3s; cursor:pointer; position:relative; overflow:hidden;
+}
+.owasp-series-card::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--green)); opacity:0; transition:opacity 0.3s;
+}
+.owasp-series-card:hover { border-color:rgba(0,229,255,0.2); transform:translateY(-3px); }
+.owasp-series-card:hover::after { opacity:1; }
+.osc-num { font-family:var(--font-mono); font-size:0.62rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px; }
+.osc-icon { font-size:1.8rem; margin-bottom:8px; }
+.osc-title { font-size:0.78rem; font-weight:600; line-height:1.3; margin-bottom:8px; }
+.osc-status { display:flex; align-items:center; justify-content:center; gap:4px; font-family:var(--font-mono); font-size:0.62rem; }
+.osc-dot { width:5px; height:5px; border-radius:50%; }
+
+/* ============================================================
+   QUICK TIPS SECTION
+   ============================================================ */
+#quick-tips { padding:80px 0; background:var(--black2); }
+.qt-header { text-align:center; margin-bottom:52px; }
+.qt-header .display-lg { margin-bottom:12px; }
+.qt-header p { color:var(--muted2); }
+.qt-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+.qt-card {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius2); padding:22px; transition:all 0.3s;
+}
+.qt-card:hover { border-color:var(--border2); transform:translateY(-2px); }
+.qt-icon { font-size:1.8rem; margin-bottom:12px; }
+.qt-title { font-size:0.9rem; font-weight:700; margin-bottom:6px; }
+.qt-body { font-size:0.78rem; color:var(--muted2); line-height:1.6; margin-bottom:14px; }
+.qt-code {
+  background:var(--surface); border-radius:7px; padding:10px 12px;
+  font-family:var(--font-mono); font-size:0.72rem; color:var(--cyan);
+  border-left:2px solid var(--cyan); line-height:1.6; word-break:break-all;
+}
+.qt-difficulty { margin-top:12px; display:flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); }
+
+/* ============================================================
+   VULNERABILITY GLOSSARY
+   ============================================================ */
+#glossary { padding:80px 0; }
+.glossary-header { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:32px; flex-wrap:wrap; gap:16px; }
+.glossary-search {
+  display:flex; align-items:center; gap:8px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:9px 14px;
+  transition:border-color 0.2s;
+}
+.glossary-search:focus-within { border-color:var(--cyan); }
+.glossary-search input {
+  background:none; border:none; outline:none;
+  font-family:var(--font-body); font-size:0.85rem; color:var(--white); width:200px;
+}
+.glossary-search input::placeholder { color:var(--muted); }
+.alpha-tabs { display:flex; gap:4px; flex-wrap:wrap; margin-bottom:24px; }
+.alpha-tab {
+  width:32px; height:32px; border-radius:7px;
+  background:var(--surface); border:1px solid var(--border);
+  font-family:var(--font-mono); font-size:0.72rem; font-weight:600;
+  color:var(--muted2); cursor:pointer; transition:all 0.2s;
+  display:flex; align-items:center; justify-content:center;
+}
+.alpha-tab:hover { border-color:var(--border2); color:var(--white); }
+.alpha-tab.active { background:var(--cyan); color:var(--black); border-color:var(--cyan); }
+.alpha-tab.has-items { color:var(--white); }
+.glossary-grid { display:flex; flex-direction:column; gap:0; }
+.glossary-letter-group { margin-bottom:24px; }
+.glossary-letter { font-family:var(--font-mono); font-size:2rem; font-weight:800; color:var(--cyan); opacity:0.4; margin-bottom:12px; }
+.glossary-items { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+.glossary-item {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius); padding:16px 18px; cursor:pointer; transition:all 0.25s;
+}
+.glossary-item:hover { border-color:rgba(0,229,255,0.2); background:var(--surface); }
+.gi-term { font-weight:700; font-size:0.9rem; margin-bottom:5px; transition:color 0.2s; }
+.glossary-item:hover .gi-term { color:var(--cyan); }
+.gi-def { font-size:0.78rem; color:var(--muted2); line-height:1.55; }
+.gi-tags { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+
+/* ============================================================
+   NEWSLETTER SECTION (BOTTOM)
+   ============================================================ */
+#blog-newsletter { padding:80px 0; background:var(--black2); }
+.bn-inner {
+  text-align:center; max-width:560px; margin:0 auto; position:relative; z-index:2;
+}
+.bn-inner .display-lg { margin-bottom:12px; }
+.bn-inner p { color:var(--muted2); margin-bottom:28px; }
+.bn-form { display:flex; gap:10px; max-width:440px; margin:0 auto; }
+.bn-input {
+  flex:1; background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:13px 16px;
+  font-family:var(--font-body); font-size:0.9rem; color:var(--white); outline:none;
+}
+.bn-input:focus { border-color:var(--cyan); }
+.bn-input::placeholder { color:var(--muted); }
+.bn-note { font-family:var(--font-mono); font-size:0.7rem; color:var(--muted); margin-top:12px; }
+.bn-success {
+  display:none; padding:14px 20px;
+  background:rgba(0,255,135,0.1); border:1px solid rgba(0,255,135,0.2);
+  border-radius:var(--radius); font-size:0.88rem; color:var(--green);
+}
+
+/* ============================================================
+   SIDEBAR / POPULAR
+   ============================================================ */
+.blog-layout { display:grid; grid-template-columns:1fr 300px; gap:48px; align-items:start; }
+.sidebar {}
+.sidebar-widget {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius2); padding:22px; margin-bottom:20px;
+}
+.sw-title { font-weight:700; font-size:0.9rem; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+.popular-list { display:flex; flex-direction:column; gap:12px; }
+.popular-item { display:flex; gap:12px; cursor:pointer; transition:all 0.2s; }
+.popular-item:hover .pi-title { color:var(--cyan); }
+.pi-num { font-family:var(--font-mono); font-size:1.4rem; font-weight:800; color:var(--border); line-height:1; flex-shrink:0; min-width:24px; }
+.pi-title { font-size:0.82rem; font-weight:600; line-height:1.4; margin-bottom:3px; transition:color 0.2s; }
+.pi-meta { font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); }
+.tag-cloud { display:flex; flex-wrap:wrap; gap:7px; }
+
+/* ============================================================
+   PAGINATION
+   ============================================================ */
+.pagination { display:flex; align-items:center; justify-content:center; gap:8px; margin-top:40px; }
+.pg-btn {
+  width:38px; height:38px; border-radius:9px; background:var(--surface);
+  border:1px solid var(--border); display:flex; align-items:center; justify-content:center;
+  font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.2s; color:var(--muted2);
+}
+.pg-btn:hover { border-color:var(--border2); color:var(--white); }
+.pg-btn.active { background:var(--cyan); color:var(--black); border-color:var(--cyan); }
+.pg-btn.disabled { opacity:0.3; pointer-events:none; }
+.pg-dots { color:var(--muted); font-size:0.85rem; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer { background:var(--black); border-top:1px solid var(--border); padding:72px 0 32px; }
+.footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; margin-bottom:56px; }
+.footer-logo { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.footer-logo-icon { width:32px; height:32px; background:var(--cyan); border-radius:7px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-weight:500; font-size:0.75rem; color:var(--black); }
+.footer-logo-text { font-size:1.1rem; font-weight:700; }
+.footer-logo-text span { color:var(--cyan); }
+.footer-brand-desc { font-size:0.88rem; color:var(--muted2); line-height:1.7; margin-bottom:20px; max-width:300px; }
+.footer-socials { display:flex; gap:10px; }
+.footer-social { width:36px; height:36px; background:var(--surface); border:1px solid var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:0.85rem; color:var(--muted2); transition:all 0.2s; }
+.footer-social:hover { border-color:var(--cyan); color:var(--cyan); background:rgba(0,229,255,0.08); }
+.footer-col h4 { font-size:0.85rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted2); margin-bottom:16px; }
+.footer-col ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.footer-col ul li a { font-size:0.88rem; color:var(--muted2); transition:color 0.2s; }
+.footer-col ul li a:hover { color:var(--white); }
+.footer-bottom { border-top:1px solid var(--border); padding-top:28px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.footer-copyright { font-family:var(--font-mono); font-size:0.78rem; color:var(--muted); }
+.footer-copyright span { color:var(--cyan); }
+.footer-legal { display:flex; gap:20px; }
+.footer-legal a { font-size:0.8rem; color:var(--muted); transition:color 0.2s; }
+.footer-legal a:hover { color:var(--muted2); }
+.footer-legal-sep { color:var(--border); }
+.footer-pay { display:flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:0.72rem; color:var(--muted); }
+.footer-pay-dot { width:6px; height:6px; background:var(--green); border-radius:50%; }
+
+/* No results */
+.no-results { text-align:center; padding:60px 24px; color:var(--muted2); }
+.no-results-icon { font-size:3rem; margin-bottom:12px; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1024px) {
+  .blog-layout { grid-template-columns:1fr; }
+  .sidebar { display:none; }
+  .owasp-series-grid { grid-template-columns:repeat(4,1fr); }
+  .qt-grid { grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width:768px) {
+  .nav-links { display:none; }
+  .nav-actions .btn-ghost:not(#themeToggle) { display:none; }
+  .nav-menu-btn { display:block; }
+  .blog-hero-inner { grid-template-columns:1fr; gap:40px; }
+  .blog-hero-stats { display:none; }
+  .articles-grid { grid-template-columns:1fr; }
+  .lp-grid { grid-template-columns:1fr; }
+  .owasp-series-grid { grid-template-columns:repeat(2,1fr); }
+  .glossary-items { grid-template-columns:1fr; }
+  .featured-article { grid-template-columns:1fr; }
+  .featured-img { min-height:180px; }
+  .footer-grid { grid-template-columns:1fr 1fr; }
+  .bn-form { flex-direction:column; }
+}
+@media (max-width:480px) {
+  .qt-grid { grid-template-columns:1fr; }
+  .owasp-series-grid { grid-template-columns:repeat(2,1fr); }
+  .footer-grid { grid-template-columns:1fr; }
+  .footer-bottom { flex-direction:column; align-items:flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">PC</div>
+      <div class="nav-logo-text">Pen<span>Checker</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="features.html">Features</a></li>
+      <li><a href="index.html#how">How it works</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="blog.html" class="active">Blog</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button id="themeToggle" class="btn btn-ghost btn-sm" aria-label="Toggle theme" style="padding:8px 14px;font-size:0.82rem;display:inline-flex;align-items:center;gap:6px;"></button>
+      <a href="login.html" class="btn btn-ghost btn-sm">Sign in</a>
+      <a href="signup.html" class="btn btn-primary btn-sm">Start Free</a>
+    </div>
+    <button class="nav-menu-btn" id="menuBtn" aria-label="Open menu">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" id="menuClose"></button>
+  <a href="features.html" onclick="closeMobileMenu()">Features</a>
+  <a href="pricing.html" onclick="closeMobileMenu()">Pricing</a>
+  <a href="blog.html" onclick="closeMobileMenu()">Blog</a>
+  <a href="about.html" onclick="closeMobileMenu()">About</a>
+  <a href="login.html" onclick="closeMobileMenu()">Sign in</a>
+  <a href="signup.html" class="btn btn-primary">Start Free</a>
+</div>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section id="blog-hero">
+  <div class="container">
+    <div class="blog-hero-inner">
+      <div class="blog-hero-left reveal">
+        <div class="hero-eyebrow">
+          <div class="hero-eyebrow-dot"></div>
+          <span class="hero-eyebrow-text">Security Learning Hub</span>
+        </div>
+        <h1 class="display-xl blog-hero-title">
+          Learn security<br/><span class="accent">the right way.</span>
+        </h1>
+        <p class="blog-hero-desc">
+          Practical guides, vulnerability breakdowns, how-to tutorials, and expert insights.
+          No fluff, no fear-mongering — just clear, actionable security knowledge for developers and teams.
+        </p>
+        <div class="blog-hero-actions">
+          <a href="#blog-main" class="btn btn-primary">Browse Articles</a>
+          <a href="#learning-paths" class="btn btn-ghost">Learning Paths</a>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="blog-hero-stats">
+          <div class="bhs-card">
+            <div class="bhs-num">48+</div>
+            <div class="bhs-label">Security articles published</div>
+          </div>
+          <div class="bhs-card">
+            <div class="bhs-num">10</div>
+            <div class="bhs-label">OWASP guides in series</div>
+          </div>
+          <div class="bhs-card">
+            <div class="bhs-num">3</div>
+            <div class="bhs-label">Learning paths for all levels</div>
+          </div>
+          <div class="bhs-card">
+            <div class="bhs-num">100%</div>
+            <div class="bhs-label">Free to read, always</div>
+          </div>
+          <div class="bhs-card bhs-card-wide newsletter-box">
+            <strong> Get security tips weekly</strong>
+            <p>No spam. Unsubscribe anytime.</p>
+            <div class="newsletter-form">
+              <input type="email" class="newsletter-input" id="heroNewsletterInput" placeholder="your@email.com" />
+              <button class="newsletter-btn" onclick="subscribeNewsletter('heroNewsletterInput','heroNewsletterSuccess')">Subscribe →</button>
+            </div>
+            <div class="newsletter-success" id="heroNewsletterSuccess"> You're in! Check your inbox.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FILTER BAR
+     ============================================================ -->
+<div id="blog-filter">
+  <div class="container">
+    <div class="filter-inner">
+      <div class="search-box">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.4"/><path d="M10 10l2.5 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search articles..." />
+      </div>
+      <div class="filter-tags">
+        <button class="filter-tag active" data-cat="all">All</button>
+        <button class="filter-tag" data-cat="owasp">OWASP</button>
+        <button class="filter-tag" data-cat="howto">How-To</button>
+        <button class="filter-tag" data-cat="vulnerability">Vulnerabilities</button>
+        <button class="filter-tag" data-cat="tools">Tools</button>
+        <button class="filter-tag" data-cat="news">Security News</button>
+        <button class="filter-tag" data-cat="beginner">Beginner</button>
+      </div>
+      <span class="filter-count" id="filterCount">Showing 12 articles</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MAIN BLOG CONTENT
+     ============================================================ -->
+<section id="blog-main">
+  <div class="container">
+    <div class="blog-layout">
+      <!-- MAIN COLUMN -->
+      <div>
+        <!-- FEATURED ARTICLE -->
+        <div class="featured-article reveal" data-cat="owasp vulnerability" onclick="openArticle('sql-injection-guide')">
+          <div class="featured-img">
+            <div class="featured-grid-bg"></div>
+            <div class="featured-img-overlay"></div>
+            <div class="featured-img-graphic"></div>
+          </div>
+          <div class="featured-content">
+            <div class="featured-top">
+              <div class="featured-meta">
+                <span class="tag tag-red">OWASP A03</span>
+                <span class="tag tag-orange">Deep Dive</span>
+                <span class="article-date">March 28, 2025</span>
+                <span class="article-read-time">· 12 min read</span>
+              </div>
+              <div class="featured-title">SQL Injection in 2025: Why It's Still the #1 Vulnerability and How to Actually Fix It</div>
+              <div class="featured-excerpt">SQL injection has been in the OWASP Top 10 for over 15 years. It's still responsible for some of the largest data breaches in history. We break down exactly how it works, why scanners keep reporting false positives, and what a real verified injection finding looks like.</div>
+            </div>
+            <div class="featured-bottom">
+              <div class="author-row">
+                <div class="author-avatar" style="background:rgba(255,59,92,0.15);color:var(--red);">SA</div>
+                <div>
+                  <div class="author-name">Sara Abdi</div>
+                  <div class="author-role">Security Research Lead</div>
+                </div>
+              </div>
+              <div class="read-more-btn">Read Article →</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ARTICLES SECTION HEADER -->
+        <div class="articles-section-header">
+          <div class="articles-section-title">Latest Articles</div>
+          <span class="tag tag-cyan">Sorted by newest</span>
+        </div>
+
+        <!-- ARTICLES GRID -->
+        <div class="articles-grid" id="articlesGrid">
+
+          <div class="article-card reveal" data-cat="owasp howto" onclick="openArticle('xss-complete-guide')">
+            <div class="article-card-img" style="background:linear-gradient(135deg,rgba(255,140,66,0.12),rgba(255,59,92,0.08));">
+              <div class="article-card-img-overlay" style="background:linear-gradient(135deg,rgba(255,140,66,0.1),transparent)"></div>
+              
+            </div>
+            <div class="article-card-body">
+              <div class="article-card-meta">
+                <span class="tag tag-orange" style="font-size:0.62rem;padding:3px 9px;">XSS</span>
+                <span class="tag tag-cyan" style="font-size:0.62rem;padding:3px 9px;">How-To</span>
+              </div>
+              <div class="article-card-title">Cross-Site Scripting (XSS): Stored, Reflected, and DOM-Based Explained With Real Examples</div>
+              <div class="article-card-excerpt">Three types of XSS, how each works, what server responses confirm it's real, and code fixes in React, Vue, and plain JavaScript.</div>
+              <div class="article-card-footer">
+                <div class="article-card-author">
+                  <div class="acc-avatar" style="background:rgba(255,140,66,0.15);color:var(--orange);">KM</div>
+                  <span class="acc-name">Kwame Mensah</span>
+                </div>
+                <span class="article-card-date">Mar 22</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-card reveal reveal-delay-1" data-cat="howto tools" onclick="openArticle('http-headers-guide')">
+            <div class="article-card-img" style="background:linear-gradient(135deg,rgba(0,229,255,0.1),rgba(0,255,135,0.06));">
+              <div class="article-card-img-overlay" style="background:linear-gradient(135deg,rgba(0,229,255,0.08),transparent)"></div>
+              
+            </div>
+            <div class="article-card-body">
+              <div class="article-card-meta">
+                <span class="tag tag-cyan" style="font-size:0.62rem;padding:3px 9px;">Headers</span>
+                <span class="tag tag-green" style="font-size:0.62rem;padding:3px 9px;">Beginner</span>
+              </div>
+              <div class="article-card-title">The 7 HTTP Security Headers Every Website Must Have in 2025</div>
+              <div class="article-card-excerpt">Content-Security-Policy, X-Frame-Options, HSTS, and four more. What each one does, how to add it in Nginx, Apache, and Node.js, and how to verify it's working.</div>
+              <div class="article-card-footer">
+                <div class="article-card-author">
+                  <div class="acc-avatar" style="background:rgba(0,229,255,0.15);color:var(--cyan);">FK</div>
+                  <span class="acc-name">Fatima Koné</span>
+                </div>
+                <span class="article-card-date">Mar 18</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-card reveal reveal-delay-2" data-cat="vulnerability owasp" onclick="openArticle('broken-auth-guide')">
+            <div class="article-card-img" style="background:linear-gradient(135deg,rgba(168,85,247,0.1),rgba(0,229,255,0.06));">
+              <div class="article-card-img-overlay" style="background:linear-gradient(135deg,rgba(168,85,247,0.08),transparent)"></div>
+              
+            </div>
+            <div class="article-card-body">
+              <div class="article-card-meta">
+                <span class="tag tag-purple" style="font-size:0.62rem;padding:3px 9px;">Auth</span>
+                <span class="tag tag-red" style="font-size:0.62rem;padding:3px 9px;">OWASP A07</span>
+              </div>
+              <div class="article-card-title">Broken Authentication: 8 Ways Your Login System Can Be Exploited</div>
+              <div class="article-card-excerpt">From weak session tokens to credential stuffing to JWT misconfiguration. How attackers exploit each weakness and how to build authentication that actually holds.</div>
+              <div class="article-card-footer">
+                <div class="article-card-author">
+                  <div class="acc-avatar" style="background:rgba(168,85,247,0.15);color:var(--purple);">SA</div>
+                  <span class="acc-name">Sara Abdi</span>
+                </div>
+                <span class="article-card-date">Mar 14</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-card reveal" data-cat="howto beginner" onclick="openArticle('ssl-tls-guide')">
+            <div class="article-card-img" style="background:linear-gradient(135deg,rgba(0,255,135,0.1),rgba(0,229,255,0.06));">
+              <div class="article-card-img-overlay" style="background:linear-gradient(135deg,rgba(0,255,135,0.08),transparent)"></div>
+              
+            </div>
+            <div class="article-card-body">
+              <div class="article-card-meta">
+                <span class="tag tag-green" style="font-size:0.62rem;padding:3px 9px;">SSL/TLS</span>
+                <span class="tag tag-cyan" style="font-size:0.62rem;padding:3px 9px;">Beginner</span>
+              </div>
+              <div class="article-card-title">SSL vs TLS: What's the Difference and Why TLS 1.0 Is Still Dangerous</div>
+              <div class="article-card-excerpt">A clear breakdown of the protocol stack, why TLS 1.0 and 1.1 are still found on production servers, and the two-line config change that fixes it across all major servers.</div>
+              <div class="article-card-footer">
+                <div class="article-card-author">
+                  <div class="acc-avatar" style="background:rgba(0,255,135,0.15);color:var(--green);">TN</div>
+                  <span class="acc-name">Tunde Nwosu</span>
+                </div>
+                <span class="article-card-date">Mar 10</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-card reveal reveal-delay-1" data-cat="vulnerability tools" onclick="openArticle('api-security-guide')">
+            <div class="article-card-img" style="background:linear-gradient(135deg,rgba(255,214,10,0.1),rgba(255,140,66,0.06));">
+              <div class="article-card-img-overlay" style="background:linear-gradient(135deg,rgba(255,214,10,0.08),transparent)"></div>
+              
+            </div>
+            <div class="article-card-body">
+              <div class="article-card-meta">
+                <span class="tag tag-yellow" style="font-size:0.62rem;padding:3px 9px;">API Security</span>
+                <span class="tag tag-orange" style="font-size:0.62rem;padding:3px 9px;">Intermediate</span>
+              </div>
+              <div class="article-card-title">REST API Security Checklist: 12 Things to Check Before Going Live</div>
+              <div class="article-card-excerpt">Rate limiting, authentication, input validation, CORS misconfiguration, mass assignment vulnerabilities. A practical pre-launch checklist with code examples in Node.js and Python.</div>
+              <div class="article-card-footer">
+                <div class="article-card-author">
+                  <div class="acc-avatar" style="background:rgba(255,214,10,0.15);color:var(--yellow);">FK</div>
+                  <span class="acc-name">Fatima Koné</span>
+                </div>
+                <span class="article-card-date">Mar 5</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-card reveal reveal-delay-2" data-cat="news security" onclick="openArticle('scanner-accuracy-guide')">
+            <div class="article-card-img" style="background:linear-gradient(135deg,rgba(0,229,255,0.1),rgba(168,85,247,0.06));">
+              <div class="article-card-img-overlay" style="background:linear-gradient(135deg,rgba(0,229,255,0.08),transparent)"></div>
+              
+            </div>
+            <div class="article-card-body">
+              <div class="article-card-meta">
+                <span class="tag tag-cyan" style="font-size:0.62rem;padding:3px 9px;">Scanners</span>
+                <span class="tag tag-purple" style="font-size:0.62rem;padding:3px 9px;">Analysis</span>
+              </div>
+              <div class="article-card-title">Why Most Security Scanners Report SQL Injection on Node.js Sites (And What Real Evidence Looks Like)</div>
+              <div class="article-card-excerpt">We tested 6 popular security scanners against a pure Node.js app with no database. Five reported SQL injection. Here's exactly why it happens and what a verified finding actually looks like.</div>
+              <div class="article-card-footer">
+                <div class="article-card-author">
+                  <div class="acc-avatar" style="background:rgba(0,229,255,0.15);color:var(--cyan);">AO</div>
+                  <span class="acc-name">Adewale Okonkwo</span>
+                </div>
+                <span class="article-card-date">Feb 28</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-card reveal" data-cat="beginner howto" onclick="openArticle('csrf-guide')">
+            <div class="article-card-img" style="background:linear-gradient(135deg,rgba(255,59,92,0.1),rgba(255,140,66,0.06));">
+              <div class="article-card-img-overlay"></div>
+            </div>
+            <div class="article-card-body">
+              <div class="article-card-meta">
+                <span class="tag tag-red" style="font-size:0.62rem;padding:3px 9px;">CSRF</span>
+                <span class="tag tag-green" style="font-size:0.62rem;padding:3px 9px;">Beginner</span>
+              </div>
+              <div class="article-card-title">CSRF Attacks Explained: How a Single Click Can Drain a Bank Account</div>
+              <div class="article-card-excerpt">Cross-Site Request Forgery is one of the easiest attacks to execute and one of the most overlooked protections. Includes a working demo and SameSite cookie fix.</div>
+              <div class="article-card-footer">
+                <div class="article-card-author">
+                  <div class="acc-avatar" style="background:rgba(0,255,135,0.15);color:var(--green);">KM</div>
+                  <span class="acc-name">Kwame Mensah</span>
+                </div>
+                <span class="article-card-date">Feb 22</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-card reveal reveal-delay-1" data-cat="tools howto" onclick="openArticle('penchecker-tutorial')">
+            <div class="article-card-img" style="background:linear-gradient(135deg,rgba(0,229,255,0.12),rgba(0,255,135,0.08));">
+              <div class="article-card-img-overlay"></div>
+            </div>
+            <div class="article-card-body">
+              <div class="article-card-meta">
+                <span class="tag tag-cyan" style="font-size:0.62rem;padding:3px 9px;">Tutorial</span>
+                <span class="tag tag-green" style="font-size:0.62rem;padding:3px 9px;">PenChecker</span>
+              </div>
+              <div class="article-card-title">How to Scan Your Website With PenChecker and Actually Understand the Results</div>
+              <div class="article-card-excerpt">A step-by-step walkthrough of running your first scan, reading the report, understanding each finding, and using the AI assistant to fix vulnerabilities in your stack.</div>
+              <div class="article-card-footer">
+                <div class="article-card-author">
+                  <div class="acc-avatar" style="background:rgba(0,255,135,0.15);color:var(--green);">AO</div>
+                  <span class="acc-name">Adewale Okonkwo</span>
+                </div>
+                <span class="article-card-date">Feb 18</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-card reveal reveal-delay-2" data-cat="vulnerability owasp" onclick="openArticle('idor-guide')">
+            <div class="article-card-img" style="background:linear-gradient(135deg,rgba(168,85,247,0.12),rgba(255,59,92,0.06));">
+              <div class="article-card-img-overlay"></div>
+            </div>
+            <div class="article-card-body">
+              <div class="article-card-meta">
+                <span class="tag tag-purple" style="font-size:0.62rem;padding:3px 9px;">IDOR</span>
+                <span class="tag tag-red" style="font-size:0.62rem;padding:3px 9px;">OWASP A01</span>
+              </div>
+              <div class="article-card-title">IDOR Vulnerabilities: How Attackers Access Other Users' Data With One URL Change</div>
+              <div class="article-card-excerpt">Insecure Direct Object Reference is behind some of the biggest data exposure incidents in tech history. How it works, how to test for it, and how to fix it with proper authorization checks.</div>
+              <div class="article-card-footer">
+                <div class="article-card-author">
+                  <div class="acc-avatar" style="background:rgba(255,59,92,0.15);color:var(--red);">SA</div>
+                  <span class="acc-name">Sara Abdi</span>
+                </div>
+                <span class="article-card-date">Feb 12</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- No results -->
+        <div class="no-results" id="noResults" style="display:none;">
+          <div class="no-results-icon"></div>
+          <p>No articles found for your search. Try a different keyword or category.</p>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination">
+          <button class="pg-btn disabled">←</button>
+          <button class="pg-btn active">1</button>
+          <button class="pg-btn" onclick="changePage(2)">2</button>
+          <button class="pg-btn" onclick="changePage(3)">3</button>
+          <span class="pg-dots">...</span>
+          <button class="pg-btn" onclick="changePage(6)">6</button>
+          <button class="pg-btn" onclick="changePage(2)">→</button>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="sidebar">
+        <!-- Popular -->
+        <div class="sidebar-widget reveal">
+          <div class="sw-title"> Most Read</div>
+          <div class="popular-list">
+            <div class="popular-item" onclick="openArticle('sql-injection-guide')">
+              <div class="pi-num">01</div>
+              <div>
+                <div class="pi-title">SQL Injection in 2025: Why It's Still #1</div>
+                <div class="pi-meta">12 min · 24.3k reads</div>
+              </div>
+            </div>
+            <div class="popular-item" onclick="openArticle('http-headers-guide')">
+              <div class="pi-num">02</div>
+              <div>
+                <div class="pi-title">7 HTTP Security Headers Every Site Must Have</div>
+                <div class="pi-meta">8 min · 18.7k reads</div>
+              </div>
+            </div>
+            <div class="popular-item" onclick="openArticle('scanner-accuracy-guide')">
+              <div class="pi-num">03</div>
+              <div>
+                <div class="pi-title">Why Scanners Report SQL Injection on Node.js</div>
+                <div class="pi-meta">10 min · 15.2k reads</div>
+              </div>
+            </div>
+            <div class="popular-item" onclick="openArticle('xss-complete-guide')">
+              <div class="pi-num">04</div>
+              <div>
+                <div class="pi-title">XSS: Stored, Reflected, and DOM-Based</div>
+                <div class="pi-meta">11 min · 12.8k reads</div>
+              </div>
+            </div>
+            <div class="popular-item" onclick="openArticle('api-security-guide')">
+              <div class="pi-num">05</div>
+              <div>
+                <div class="pi-title">REST API Security Checklist: 12 Items</div>
+                <div class="pi-meta">9 min · 11.4k reads</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tag Cloud -->
+        <div class="sidebar-widget reveal">
+          <div class="sw-title"> Browse by Topic</div>
+          <div class="tag-cloud">
+            <span class="tag tag-red">SQL Injection</span>
+            <span class="tag tag-orange">XSS</span>
+            <span class="tag tag-cyan">Headers</span>
+            <span class="tag tag-green">SSL/TLS</span>
+            <span class="tag tag-purple">Authentication</span>
+            <span class="tag tag-yellow">API Security</span>
+            <span class="tag tag-red">CSRF</span>
+            <span class="tag tag-cyan">OWASP</span>
+            <span class="tag tag-orange">Port Scanning</span>
+            <span class="tag tag-green">Zero Day</span>
+            <span class="tag tag-purple">IDOR</span>
+            <span class="tag tag-yellow">SSRF</span>
+          </div>
+        </div>
+
+        <!-- Start scanning CTA -->
+        <div class="sidebar-widget reveal" style="background:linear-gradient(135deg,rgba(0,229,255,0.06),rgba(0,255,135,0.04));border-color:var(--border2);">
+          <div style="font-size:1.4rem;margin-bottom:10px;"></div>
+          <div style="font-weight:700;margin-bottom:8px;font-size:0.95rem;">Don't just read about it.</div>
+          <p style="font-size:0.8rem;color:var(--muted2);margin-bottom:16px;line-height:1.6;">Scan your website and find real vulnerabilities — not template results.</p>
+          <a href="signup.html" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">Scan Free Now →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     LEARNING PATHS
+     ============================================================ -->
+<section id="learning-paths">
+  <div class="container">
+    <div class="lp-header reveal">
+      <div class="section-label" style="justify-content:center;margin-bottom:14px;">
+        <div class="section-label-line"></div>
+        <span class="section-label-text">Structured learning</span>
+        <div class="section-label-line"></div>
+      </div>
+      <h2 class="display-lg">Three paths.<br/>One destination: secure.</h2>
+      <p>Follow a structured learning path from complete beginner to advanced security practitioner.</p>
+    </div>
+    <div class="lp-grid">
+      <div class="lp-card beginner reveal">
+        <div class="lp-level"> Beginner</div>
+        <div class="lp-icon"></div>
+        <div class="lp-title">Security Foundations</div>
+        <div class="lp-desc">Perfect if you're new to web security. No prior knowledge required — just a website you want to protect.</div>
+        <div class="lp-articles-list">
+          <div class="lp-article-item" onclick="openArticle('what-is-security')"><div class="lp-article-dot"></div>What is web application security?</div>
+          <div class="lp-article-item" onclick="openArticle('owasp-intro')"><div class="lp-article-dot"></div>Understanding the OWASP Top 10</div>
+          <div class="lp-article-item" onclick="openArticle('http-headers-guide')"><div class="lp-article-dot"></div>HTTP security headers: the quick wins</div>
+          <div class="lp-article-item" onclick="openArticle('ssl-tls-guide')"><div class="lp-article-dot"></div>SSL/TLS and why it matters</div>
+          <div class="lp-article-item" onclick="openArticle('csrf-guide')"><div class="lp-article-dot"></div>CSRF: the invisible attack</div>
+        </div>
+        <div class="lp-progress">
+          <span class="lp-progress-label">0 / 5 complete</span>
+          <div class="lp-progress-track"><div class="lp-progress-fill" id="lpBeginner"></div></div>
+        </div>
+      </div>
+
+      <div class="lp-card intermediate reveal reveal-delay-1">
+        <div class="lp-level"> Intermediate</div>
+        <div class="lp-icon"></div>
+        <div class="lp-title">Vulnerability Deep Dives</div>
+        <div class="lp-desc">For developers who know the basics and want to understand how attacks actually work.</div>
+        <div class="lp-articles-list">
+          <div class="lp-article-item" onclick="openArticle('sql-injection-guide')"><div class="lp-article-dot"></div>SQL injection: the full picture</div>
+          <div class="lp-article-item" onclick="openArticle('xss-complete-guide')"><div class="lp-article-dot"></div>XSS in-depth: all 3 types</div>
+          <div class="lp-article-item" onclick="openArticle('broken-auth-guide')"><div class="lp-article-dot"></div>Authentication failure patterns</div>
+          <div class="lp-article-item" onclick="openArticle('idor-guide')"><div class="lp-article-dot"></div>IDOR and access control bypasses</div>
+          <div class="lp-article-item" onclick="openArticle('api-security-guide')"><div class="lp-article-dot"></div>API security: the full checklist</div>
+        </div>
+        <div class="lp-progress">
+          <span class="lp-progress-label">0 / 5 complete</span>
+          <div class="lp-progress-track"><div class="lp-progress-fill" id="lpIntermediate"></div></div>
+        </div>
+      </div>
+
+      <div class="lp-card advanced reveal reveal-delay-2">
+        <div class="lp-level"> Advanced</div>
+        <div class="lp-icon"></div>
+        <div class="lp-title">Penetration Testing Techniques</div>
+        <div class="lp-desc">For security professionals who want to think like an attacker and build bulletproof systems.</div>
+        <div class="lp-articles-list">
+          <div class="lp-article-item" onclick="openArticle('scanner-accuracy-guide')"><div class="lp-article-dot"></div>How automated scanners actually work</div>
+          <div class="lp-article-item" onclick="openArticle('subdomain-enum')"><div class="lp-article-dot"></div>Subdomain enumeration and mapping</div>
+          <div class="lp-article-item" onclick="openArticle('ssrf-guide')"><div class="lp-article-dot"></div>SSRF: server-side request forgery</div>
+          <div class="lp-article-item" onclick="openArticle('race-conditions')"><div class="lp-article-dot"></div>Race conditions in web apps</div>
+          <div class="lp-article-item" onclick="openArticle('cicd-security')"><div class="lp-article-dot"></div>Securing your CI/CD pipeline</div>
+        </div>
+        <div class="lp-progress">
+          <span class="lp-progress-label">0 / 5 complete</span>
+          <div class="lp-progress-track"><div class="lp-progress-fill" id="lpAdvanced"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     OWASP SERIES
+     ============================================================ -->
+<section id="owasp-series">
+  <div class="container">
+    <div class="owasp-header reveal">
+      <div class="section-label"><div class="section-label-line"></div><span class="section-label-text">Complete Series</span></div>
+      <h2 class="display-lg">OWASP Top 10 — Complete Guide Series</h2>
+      <p>Every OWASP Top 10 category covered in full depth. Real examples, real fixes, real server responses.</p>
+    </div>
+    <div class="owasp-series-grid">
+      <div class="owasp-series-card reveal" onclick="openArticle('owasp-a01')">
+        <div class="osc-num">A01 · 2021</div>
+        <div class="osc-icon"></div>
+        <div class="osc-title">Broken Access Control</div>
+        <div class="osc-status"><div class="osc-dot" style="background:var(--green)"></div><span style="color:var(--green)">Published</span></div>
+      </div>
+      <div class="owasp-series-card reveal reveal-delay-1" onclick="openArticle('owasp-a02')">
+        <div class="osc-num">A02 · 2021</div>
+        <div class="osc-icon"></div>
+        <div class="osc-title">Cryptographic Failures</div>
+        <div class="osc-status"><div class="osc-dot" style="background:var(--green)"></div><span style="color:var(--green)">Published</span></div>
+      </div>
+      <div class="owasp-series-card reveal reveal-delay-1" onclick="openArticle('sql-injection-guide')">
+        <div class="osc-num">A03 · 2021</div>
+        <div class="osc-icon"></div>
+        <div class="osc-title">Injection Attacks</div>
+        <div class="osc-status"><div class="osc-dot" style="background:var(--green)"></div><span style="color:var(--green)">Published</span></div>
+      </div>
+      <div class="owasp-series-card reveal reveal-delay-2" onclick="openArticle('owasp-a04')">
+        <div class="osc-num">A04 · 2021</div>
+        <div class="osc-icon"></div>
+        <div class="osc-title">Insecure Design</div>
+        <div class="osc-status"><div class="osc-dot" style="background:var(--green)"></div><span style="color:var(--green)">Published</span></div>
+      </div>
+      <div class="owasp-series-card reveal reveal-delay-2" onclick="openArticle('owasp-a05')">
+        <div class="osc-num">A05 · 2021</div>
+        <div class="osc-icon"></div>
+        <div class="osc-title">Security Misconfiguration</div>
+        <div class="osc-status"><div class="osc-dot" style="background:var(--cyan)"></div><span style="color:var(--cyan)">Coming Soon</span></div>
+      </div>
+      <div class="owasp-series-card reveal reveal-delay-3" onclick="openArticle('owasp-a06')">
+        <div class="osc-num">A06 · 2021</div>
+        <div class="osc-icon"></div>
+        <div class="osc-title">Vulnerable Components</div>
+        <div class="osc-status"><div class="osc-dot" style="background:var(--cyan)"></div><span style="color:var(--cyan)">Coming Soon</span></div>
+      </div>
+      <div class="owasp-series-card reveal reveal-delay-3" onclick="openArticle('broken-auth-guide')">
+        <div class="osc-num">A07 · 2021</div>
+        <div class="osc-icon"></div>
+        <div class="osc-title">Auth Failures</div>
+        <div class="osc-status"><div class="osc-dot" style="background:var(--green)"></div><span style="color:var(--green)">Published</span></div>
+      </div>
+      <div class="owasp-series-card reveal reveal-delay-4">
+        <div class="osc-num">A08 · 2021</div>
+        <div class="osc-icon"></div>
+        <div class="osc-title">Data Integrity Failures</div>
+        <div class="osc-status"><div class="osc-dot" style="background:var(--muted)"></div><span style="color:var(--muted)">Planned</span></div>
+      </div>
+      <div class="owasp-series-card reveal reveal-delay-4">
+        <div class="osc-num">A09 · 2021</div>
+        <div class="osc-icon"></div>
+        <div class="osc-title">Logging Failures</div>
+        <div class="osc-status"><div class="osc-dot" style="background:var(--muted)"></div><span style="color:var(--muted)">Planned</span></div>
+      </div>
+      <div class="owasp-series-card reveal reveal-delay-4">
+        <div class="osc-num">A10 · 2021</div>
+        <div class="osc-icon"></div>
+        <div class="osc-title">SSRF</div>
+        <div class="osc-status"><div class="osc-dot" style="background:var(--muted)"></div><span style="color:var(--muted)">Planned</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     QUICK TIPS
+     ============================================================ -->
+<section id="quick-tips">
+  <div class="container">
+    <div class="qt-header reveal">
+      <div class="section-label" style="justify-content:center;margin-bottom:14px;">
+        <div class="section-label-line"></div>
+        <span class="section-label-text">Quick wins</span>
+        <div class="section-label-line"></div>
+      </div>
+      <h2 class="display-lg">Security fixes you can<br/>ship in 10 minutes</h2>
+      <p style="color:var(--muted2);">Small changes with a big impact on your security score.</p>
+    </div>
+    <div class="qt-grid">
+      <div class="qt-card reveal">
+        <div class="qt-icon"></div>
+        <div class="qt-title">Add HSTS Header</div>
+        <div class="qt-body">Forces HTTPS on all future visits. One of the highest-impact headers you can add in under 2 minutes.</div>
+        <div class="qt-code">Strict-Transport-Security:<br/>max-age=31536000;<br/>includeSubDomains</div>
+        <div class="qt-difficulty"> Easy — 2 minutes</div>
+      </div>
+      <div class="qt-card reveal reveal-delay-1">
+        <div class="qt-icon"></div>
+        <div class="qt-title">Set X-Frame-Options</div>
+        <div class="qt-body">Prevents clickjacking attacks where your site is embedded in an invisible frame on an attacker's page.</div>
+        <div class="qt-code">X-Frame-Options: DENY<br/># or SAMEORIGIN if you<br/># need iframes</div>
+        <div class="qt-difficulty"> Easy — 1 minute</div>
+      </div>
+      <div class="qt-card reveal reveal-delay-2">
+        <div class="qt-icon"></div>
+        <div class="qt-title">Secure Your Cookies</div>
+        <div class="qt-body">Three cookie flags that prevent session theft, CSRF, and interception over insecure connections.</div>
+        <div class="qt-code">Set-Cookie: session=abc;<br/>HttpOnly; Secure;<br/>SameSite=Strict</div>
+        <div class="qt-difficulty"> Easy — 5 minutes</div>
+      </div>
+      <div class="qt-card reveal reveal-delay-3">
+        <div class="qt-icon"></div>
+        <div class="qt-title">Add Content-Security-Policy</div>
+        <div class="qt-body">Prevents inline XSS attacks by restricting which scripts, styles, and resources can be loaded on your pages.</div>
+        <div class="qt-code">Content-Security-Policy:<br/>default-src 'self';<br/>script-src 'self'</div>
+        <div class="qt-difficulty"> Moderate — 30 minutes</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     VULNERABILITY GLOSSARY
+     ============================================================ -->
+<section id="glossary">
+  <div class="container">
+    <div class="glossary-header reveal">
+      <div>
+        <div class="section-label"><div class="section-label-line"></div><span class="section-label-text">Reference</span></div>
+        <h2 class="display-lg">Security Glossary</h2>
+      </div>
+      <div class="glossary-search">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.4"/><path d="M10 10l2.5 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <input type="text" id="glossarySearch" placeholder="Search terms..." />
+      </div>
+    </div>
+
+    <div class="alpha-tabs reveal" id="alphaTabs">
+      <button class="alpha-tab active" data-letter="all">All</button>
+      <button class="alpha-tab has-items" data-letter="B">B</button>
+      <button class="alpha-tab has-items" data-letter="C">C</button>
+      <button class="alpha-tab has-items" data-letter="D">D</button>
+      <button class="alpha-tab has-items" data-letter="E">E</button>
+      <button class="alpha-tab has-items" data-letter="H">H</button>
+      <button class="alpha-tab has-items" data-letter="I">I</button>
+      <button class="alpha-tab has-items" data-letter="M">M</button>
+      <button class="alpha-tab has-items" data-letter="O">O</button>
+      <button class="alpha-tab has-items" data-letter="P">P</button>
+      <button class="alpha-tab has-items" data-letter="R">R</button>
+      <button class="alpha-tab has-items" data-letter="S">S</button>
+      <button class="alpha-tab has-items" data-letter="T">T</button>
+      <button class="alpha-tab has-items" data-letter="X">X</button>
+      <button class="alpha-tab has-items" data-letter="Z">Z</button>
+    </div>
+
+    <div class="glossary-grid reveal" id="glossaryGrid">
+      <!-- B -->
+      <div class="glossary-letter-group" data-letter="B">
+        <div class="glossary-letter">B</div>
+        <div class="glossary-items">
+          <div class="glossary-item"><div class="gi-term">Brute Force Attack</div><div class="gi-def">An attack that tries every possible combination of passwords or keys until the correct one is found. Mitigated by rate limiting, lockout policies, and multi-factor authentication.</div><div class="gi-tags"><span class="tag tag-red" style="font-size:0.6rem;padding:2px 7px;">Auth</span><span class="tag tag-orange" style="font-size:0.6rem;padding:2px 7px;">OWASP A07</span></div></div>
+          <div class="glossary-item"><div class="gi-term">Buffer Overflow</div><div class="gi-def">A vulnerability where a program writes more data to a buffer than it can hold, potentially overwriting adjacent memory and allowing arbitrary code execution.</div><div class="gi-tags"><span class="tag tag-red" style="font-size:0.6rem;padding:2px 7px;">Memory</span></div></div>
+        </div>
+      </div>
+      <!-- C -->
+      <div class="glossary-letter-group" data-letter="C">
+        <div class="glossary-letter">C</div>
+        <div class="glossary-items">
+          <div class="glossary-item"><div class="gi-term">CORS (Cross-Origin Resource Sharing)</div><div class="gi-def">A browser mechanism that controls how resources on one origin can be accessed by scripts from another origin. Misconfigured CORS allows unauthorized cross-origin access to sensitive data.</div><div class="gi-tags"><span class="tag tag-cyan" style="font-size:0.6rem;padding:2px 7px;">Headers</span></div></div>
+          <div class="glossary-item"><div class="gi-term">CSRF (Cross-Site Request Forgery)</div><div class="gi-def">An attack that tricks authenticated users into unknowingly submitting malicious requests. Fixed with CSRF tokens and SameSite cookie attributes.</div><div class="gi-tags"><span class="tag tag-orange" style="font-size:0.6rem;padding:2px 7px;">OWASP</span></div></div>
+          <div class="glossary-item"><div class="gi-term">CVE (Common Vulnerabilities and Exposures)</div><div class="gi-def">A publicly disclosed cybersecurity vulnerability assigned a unique identifier (e.g., CVE-2021-44228). Each CVE has a CVSS score indicating severity.</div><div class="gi-tags"><span class="tag tag-cyan" style="font-size:0.6rem;padding:2px 7px;">Reference</span></div></div>
+          <div class="glossary-item"><div class="gi-term">CVSS (Common Vulnerability Scoring System)</div><div class="gi-def">A numerical score (0–10) that rates vulnerability severity. Critical = 9.0–10.0, High = 7.0–8.9, Medium = 4.0–6.9, Low = 0.1–3.9.</div><div class="gi-tags"><span class="tag tag-green" style="font-size:0.6rem;padding:2px 7px;">Scoring</span></div></div>
+        </div>
+      </div>
+      <!-- H -->
+      <div class="glossary-letter-group" data-letter="H">
+        <div class="glossary-letter">H</div>
+        <div class="glossary-items">
+          <div class="glossary-item"><div class="gi-term">HSTS (HTTP Strict Transport Security)</div><div class="gi-def">An HTTP header that tells browsers to always use HTTPS for a domain, preventing protocol downgrade attacks and cookie hijacking.</div><div class="gi-tags"><span class="tag tag-cyan" style="font-size:0.6rem;padding:2px 7px;">Headers</span><span class="tag tag-green" style="font-size:0.6rem;padding:2px 7px;"> Easy Fix</span></div></div>
+          <div class="glossary-item"><div class="gi-term">HTTP Header Injection</div><div class="gi-def">An attack where user-supplied input is included in HTTP response headers without proper sanitization, potentially enabling response splitting or cache poisoning.</div><div class="gi-tags"><span class="tag tag-red" style="font-size:0.6rem;padding:2px 7px;">Injection</span></div></div>
+        </div>
+      </div>
+      <!-- I -->
+      <div class="glossary-letter-group" data-letter="I">
+        <div class="glossary-letter">I</div>
+        <div class="glossary-items">
+          <div class="glossary-item"><div class="gi-term">IDOR (Insecure Direct Object Reference)</div><div class="gi-def">A vulnerability where user-supplied input is used to access objects (files, records) directly, without proper authorization checks. Changing /user/123 to /user/124 to access another user's data.</div><div class="gi-tags"><span class="tag tag-red" style="font-size:0.6rem;padding:2px 7px;">OWASP A01</span></div></div>
+          <div class="glossary-item"><div class="gi-term">Information Disclosure</div><div class="gi-def">When a system unintentionally reveals sensitive information to unauthorized users — stack traces, debug pages, server version headers, or internal paths.</div><div class="gi-tags"><span class="tag tag-orange" style="font-size:0.6rem;padding:2px 7px;">Exposure</span></div></div>
+        </div>
+      </div>
+      <!-- S -->
+      <div class="glossary-letter-group" data-letter="S">
+        <div class="glossary-letter">S</div>
+        <div class="glossary-items">
+          <div class="glossary-item"><div class="gi-term">SQL Injection</div><div class="gi-def">An attack where malicious SQL code is inserted into an input field and executed by the database. Can read, modify, or delete database contents. Only possible on apps that use SQL databases — not Node.js ORM apps with no raw queries.</div><div class="gi-tags"><span class="tag tag-red" style="font-size:0.6rem;padding:2px 7px;">OWASP A03</span></div></div>
+          <div class="glossary-item"><div class="gi-term">SSRF (Server-Side Request Forgery)</div><div class="gi-def">An attack that tricks the server into making HTTP requests to internal resources or external systems, potentially exposing internal services or cloud metadata APIs.</div><div class="gi-tags"><span class="tag tag-red" style="font-size:0.6rem;padding:2px 7px;">OWASP A10</span></div></div>
+        </div>
+      </div>
+      <!-- X -->
+      <div class="glossary-letter-group" data-letter="X">
+        <div class="glossary-letter">X</div>
+        <div class="glossary-items">
+          <div class="glossary-item"><div class="gi-term">XSS (Cross-Site Scripting)</div><div class="gi-def">An attack that injects malicious scripts into web pages viewed by other users. Three types: Stored (persisted in DB), Reflected (in URL), DOM-based (client-side manipulation).</div><div class="gi-tags"><span class="tag tag-orange" style="font-size:0.6rem;padding:2px 7px;">OWASP A03</span></div></div>
+          <div class="glossary-item"><div class="gi-term">XXE (XML External Entity)</div><div class="gi-def">An attack against XML parsers that allows attackers to read local files, make server-side requests, or cause denial of service through malformed XML with external entity declarations.</div><div class="gi-tags"><span class="tag tag-red" style="font-size:0.6rem;padding:2px 7px;">Injection</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     NEWSLETTER
+     ============================================================ -->
+<section id="blog-newsletter">
+  <div class="container">
+    <div class="bn-inner reveal">
+      <div class="section-label" style="justify-content:center;margin-bottom:14px;">
+        <div class="section-label-line"></div>
+        <span class="section-label-text">Stay sharp</span>
+        <div class="section-label-line"></div>
+      </div>
+      <h2 class="display-lg">Security insights,<br/>every week.</h2>
+      <p>New vulnerability breakdowns, quick tips, and OWASP deep dives delivered to your inbox. Free forever.</p>
+      <div class="bn-form">
+        <input type="email" class="bn-input" id="bnInput" placeholder="Enter your email address" />
+        <button class="btn btn-primary" onclick="subscribeNewsletter('bnInput','bnSuccess')">Subscribe Free →</button>
+      </div>
+      <div class="bn-success" id="bnSuccess"> Welcome! Your first issue arrives this week.</div>
+      <div class="bn-note">No spam. No fluff. Unsubscribe with one click, anytime.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="footer-logo-icon">PC</div>
+          <div class="footer-logo-text">Pen<span>Checker</span></div>
+        </div>
+        <p class="footer-brand-desc">The world's most accurate web security scanner. Based in the US. Real findings, real evidence, real solutions.</p>
+        <div class="footer-socials">
+          <a href="#" class="footer-social">𝕏</a>
+          <a href="#" class="footer-social">in</a>
+          <a href="#" class="footer-social">gh</a>
+          <a href="#" class="footer-social">wa</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="index.html#how">How it works</a></li>
+          <li><a href="changelog.html">Changelog</a></li>
+          <li><a href="contact.html">Support</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Learn</h4>
+        <ul>
+          <li><a href="blog.html">All Articles</a></li>
+          <li><a href="#learning-paths">Learning Paths</a></li>
+          <li><a href="#owasp-series">OWASP Series</a></li>
+          <li><a href="#glossary">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="legal/terms.html">Terms of Service</a></li>
+          <li><a href="legal/privacy.html">Privacy Policy</a></li>
+          <li><a href="legal/acceptable-use.html">Acceptable Use</a></li>
+          <li><a href="legal/dmca.html">DMCA</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copyright">© 2025 <span>PenChecker</span>. All rights reserved.</p>
+      <div class="footer-pay"><div class="footer-pay-dot"></div>Secure payments worldwide</div>
+      <div class="footer-legal">
+        <a href="legal/privacy.html">Privacy</a>
+        <span class="footer-legal-sep">·</span>
+        <a href="legal/terms.html">Terms</a>
+        <span class="footer-legal-sep">·</span>
+        <a href="legal/acceptable-use.html">Acceptable Use</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+'use strict';
+
+// ============================================================
+// NAVBAR
+// ============================================================
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 20));
+
+// ============================================================
+// MOBILE MENU
+// ============================================================
+document.getElementById('menuBtn').addEventListener('click', () => document.getElementById('mobileMenu').classList.add('open'));
+document.getElementById('menuClose').addEventListener('click', () => document.getElementById('mobileMenu').classList.remove('open'));
+function closeMobileMenu() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+// ============================================================
+// THEME SWITCHER
+// ============================================================
+const themeToggle = document.getElementById('themeToggle');
+function updateThemeBtn() {
+  if (!themeToggle) return;
+  const isLight = document.body.classList.contains('light-theme');
+  const sunIcon = `<svg class="theme-btn-svg" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+  const moonIcon = `<svg class="theme-btn-svg" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+  themeToggle.innerHTML = (isLight ? sunIcon : moonIcon) + ' ' + (isLight ? 'Light' : 'Dark');
+}
+function setTheme(light) {
+  document.body.classList.toggle('light-theme', light);
+  localStorage.setItem('pencheckerTheme', light ? 'light' : 'dark');
+  updateThemeBtn();
+}
+if (themeToggle) themeToggle.addEventListener('click', () => setTheme(!document.body.classList.contains('light-theme')));
+(function restoreTheme() {
+  const saved = localStorage.getItem('pencheckerTheme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  setTheme(saved === 'light' || (!saved && prefersLight));
+})();
+
+// ============================================================
+// SCROLL REVEAL
+// ============================================================
+const revObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); } });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+// ============================================================
+// ARTICLE FILTER + SEARCH
+// ============================================================
+let currentCat = 'all';
+let currentSearch = '';
+
+function filterArticles() {
+  const cards = document.querySelectorAll('.articles-grid .article-card, .featured-article');
+  let visible = 0;
+  cards.forEach(card => {
+    const cats   = (card.dataset.cat || '').toLowerCase();
+    const title  = card.querySelector('.featured-title, .article-card-title')?.textContent.toLowerCase() || '';
+    const excerpt= card.querySelector('.featured-excerpt, .article-card-excerpt')?.textContent.toLowerCase() || '';
+    const matchCat  = currentCat === 'all' || cats.includes(currentCat);
+    const matchSearch = !currentSearch || title.includes(currentSearch) || excerpt.includes(currentSearch);
+    const show = matchCat && matchSearch;
+    card.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  const noRes = document.getElementById('noResults');
+  if (noRes) noRes.style.display = visible === 0 ? 'block' : 'none';
+  const countEl = document.getElementById('filterCount');
+  if (countEl) countEl.textContent = `Showing ${visible} article${visible !== 1 ? 's' : ''}`;
+}
+
+// Filter tag buttons
+document.querySelectorAll('.filter-tag').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-tag').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentCat = btn.dataset.cat;
+    filterArticles();
+  });
+});
+
+// Search input
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+  searchInput.addEventListener('input', () => {
+    currentSearch = searchInput.value.toLowerCase().trim();
+    filterArticles();
+  });
+}
+
+// ============================================================
+// GLOSSARY — alphabet filter + search
+// ============================================================
+const alphaTabBtns = document.querySelectorAll('.alpha-tab');
+alphaTabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    alphaTabBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const letter = btn.dataset.letter;
+    document.querySelectorAll('.glossary-letter-group').forEach(group => {
+      group.style.display = (letter === 'all' || group.dataset.letter === letter) ? '' : 'none';
+    });
+  });
+});
+
+const glossarySearchInput = document.getElementById('glossarySearch');
+if (glossarySearchInput) {
+  glossarySearchInput.addEventListener('input', () => {
+    const q = glossarySearchInput.value.toLowerCase();
+    document.querySelectorAll('.glossary-item').forEach(item => {
+      const text = item.textContent.toLowerCase();
+      item.style.display = !q || text.includes(q) ? '' : 'none';
+    });
+  });
+}
+
+// ============================================================
+// LEARNING PATH PROGRESS (localStorage)
+// ============================================================
+function loadLPProgress() {
+  const prog = JSON.parse(localStorage.getItem('lpProgress') || '{}');
+  const paths = { lpBeginner: prog.beginner || 0, lpIntermediate: prog.intermediate || 0, lpAdvanced: prog.advanced || 0 };
+  const labels = { lpBeginner: 'beginner', lpIntermediate: 'intermediate', lpAdvanced: 'advanced' };
+  Object.keys(paths).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      const pct = (paths[id] / 5) * 100;
+      el.style.width = pct + '%';
+      const card = el.closest('.lp-card');
+      if (card) {
+        const label = card.querySelector('.lp-progress-label');
+        if (label) label.textContent = `${paths[id]} / 5 complete`;
+      }
+    }
+  });
+}
+loadLPProgress();
+
+// Animate LP bars on scroll
+const lpObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { loadLPProgress(); lpObs.unobserve(e.target); }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.lp-card').forEach(c => lpObs.observe(c));
+
+// ============================================================
+// ARTICLE NAVIGATION — navigates to full article page
+// ============================================================
+function openArticle(slug) {
+  window.location.href = `article.html?slug=${slug}`;
+}
+
+// ============================================================
+// NEWSLETTER SUBSCRIBE
+// ============================================================
+function subscribeNewsletter(inputId, successId) {
+  const input = document.getElementById(inputId);
+  const success = document.getElementById(successId);
+  if (!input) return;
+  const email = input.value.trim();
+  if (!email || !email.includes('@')) {
+    input.style.borderColor = 'var(--red)';
+    setTimeout(() => input.style.borderColor = '', 2000);
+    return;
+  }
+  // Store subscription locally (in production would send to Supabase)
+  const subs = JSON.parse(localStorage.getItem('newsletterSubs') || '[]');
+  if (!subs.includes(email)) {
+    subs.push(email);
+    localStorage.setItem('newsletterSubs', JSON.stringify(subs));
+  }
+  input.style.display = 'none';
+  if (success) { success.style.display = 'block'; }
+  showToast(' Subscribed successfully!');
+}
+
+// ============================================================
+// PAGINATION
+// ============================================================
+function changePage(page) {
+  document.querySelectorAll('.pg-btn').forEach(btn => btn.classList.remove('active'));
+  showToast(`Loading page ${page}...`);
+  window.scrollTo({ top: document.getElementById('blog-main').offsetTop - 100, behavior: 'smooth' });
+}
+
+// ============================================================
+// TOAST NOTIFICATION
+// ============================================================
+function showToast(msg) {
+  let toast = document.getElementById('toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'toast';
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);color:var(--white);padding:12px 22px;border-radius:10px;font-size:0.85rem;z-index:10000;font-family:var(--font-body);box-shadow:0 8px 32px rgba(0,0,0,0.4);transition:opacity 0.3s;';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => { toast.style.opacity = '0'; }, 2800);
+}
+</script>
+</body>
+</html>

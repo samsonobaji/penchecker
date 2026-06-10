@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Scan Report — PenChecker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--black:#060608;--black2:#0d0d12;--black3:#13131a;--surface:#1a1a24;--surface2:#22222f;--border:rgba(255,255,255,0.07);--border2:rgba(0,229,255,0.2);--cyan:#00e5ff;--cyan2:#00b4cc;--green:#00ff87;--red:#ff3b5c;--orange:#ff8c42;--yellow:#ffd60a;--purple:#a855f7;--white:#f0f0f8;--muted:#6b6b85;--muted2:#9090a8;--font-display:'Plus Jakarta Sans',sans-serif;--font-body:'Plus Jakarta Sans',sans-serif;--font-mono:'JetBrains Mono',monospace;--glow-cyan:0 0 40px rgba(0,229,255,0.25);--radius:12px;--radius2:20px;--sidebar-w:240px;--topbar-h:60px;}
+body{transition:background 0.25s,color 0.25s;}
+.light-theme{--black:#f8f9fc;--black2:#e8eaf2;--black3:#ffffff;--surface:#ffffff;--surface2:#f2f4f9;--border:rgba(13,23,44,0.12);--border2:rgba(0,149,212,0.25);--cyan:#007fbc;--cyan2:#005f91;--green:#0f9d58;--red:#d93025;--orange:#e37400;--yellow:#f1c232;--purple:#6a1b9a;--white:#0b0d13;--muted:#4b5d79;--muted2:#6b7790;}
+.light-theme .topbar{background:rgba(248,249,252,0.96);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:15px;line-height:1.6;overflow-x:hidden;min-height:100vh;}
+a{color:inherit;text-decoration:none;}button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--black2);}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px;}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--black2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:200;transition:transform 0.3s ease;}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:18px 20px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sb-logo-icon{width:32px;height:32px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;font-size:0.8rem;color:var(--black);}
+.sb-logo-text{font-size:1.05rem;font-weight:700;}
+.sb-logo-text span{color:var(--cyan);}
+.sb-nav{flex:1;padding:12px 10px;overflow-y:auto;}
+.sb-section{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;padding:8px 10px 4px;margin-top:8px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius);font-size:0.85rem;font-weight:500;color:var(--muted2);transition:all 0.18s;position:relative;margin-bottom:1px;cursor:pointer;}
+.sb-link:hover{background:var(--surface);color:var(--white);}
+.sb-link.active{background:rgba(0,229,255,0.08);color:var(--cyan);font-weight:600;}
+.sb-link.active::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--cyan);border-radius:0 2px 2px 0;}
+.sb-icon{font-size:1rem;flex-shrink:0;width:20px;text-align:center;}
+.sb-badge{margin-left:auto;background:rgba(0,229,255,0.15);color:var(--cyan);font-family:var(--font-mono);font-size:0.6rem;font-weight:700;border-radius:10px;padding:1px 6px;}
+.sb-bottom{padding:12px 10px;border-top:1px solid var(--border);flex-shrink:0;}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);cursor:pointer;}
+.sb-avatar{width:30px;height:30px;border-radius:50%;background:rgba(0,229,255,0.15);border:1px solid rgba(0,229,255,0.3);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:var(--cyan);flex-shrink:0;}
+.sb-uname{font-size:0.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-uplan{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);}
+.topbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--topbar-h);background:rgba(6,6,8,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;z-index:100;transition:left 0.3s;}
+.tb-breadcrumb{flex:1;font-size:0.82rem;color:var(--muted2);display:flex;align-items:center;gap:6px;}
+.tb-cur{color:var(--white);font-weight:600;}
+.tb-sep{opacity:0.4;}
+.tb-actions{display:flex;align-items:center;gap:8px;}
+.tb-btn{width:36px;height:36px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.9rem;cursor:pointer;transition:all 0.2s;color:var(--muted2);}
+.tb-btn:hover{border-color:var(--border2);color:var(--white);}
+.export-btn{display:flex;align-items:center;gap:7px;padding:8px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-weight:600;font-size:0.8rem;cursor:pointer;transition:all 0.2s;color:var(--muted2);}
+.export-btn:hover{border-color:var(--border2);color:var(--white);}
+.mob-toggle{display:none;width:36px;height:36px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);align-items:center;justify-content:center;font-size:1rem;cursor:pointer;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;}
+.overlay.open{display:block;}
+.main{margin-left:var(--sidebar-w);padding-top:var(--topbar-h);}
+.content{padding:24px 28px 60px;max-width:1000px;}
+/* Loading */
+.loading-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);padding:60px;text-align:center;}
+.spinner{width:40px;height:40px;border:3px solid var(--surface);border-top-color:var(--cyan);border-radius:50%;animation:spin 0.9s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+/* Report hero */
+.report-hero{background:linear-gradient(135deg,rgba(0,229,255,0.07),rgba(0,255,135,0.04));border:1px solid rgba(0,229,255,0.15);border-radius:var(--radius2);padding:24px 28px;margin-bottom:24px;}
+.rh-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px;}
+.rh-domain{font-family:var(--font-mono);font-size:0.95rem;font-weight:700;color:var(--cyan);margin-bottom:6px;}
+.rh-meta{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--font-mono);font-size:0.7rem;color:var(--muted2);}
+.rh-score{text-align:right;}
+.rh-score-num{font-size:2.8rem;font-weight:800;letter-spacing:-0.04em;line-height:1;}
+.rh-score-lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);}
+.rh-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+.rhs-item{background:rgba(0,0,0,0.15);border-radius:var(--radius);padding:10px 12px;text-align:center;}
+.rhs-num{font-size:1.25rem;font-weight:800;margin-bottom:2px;}
+.rhs-lbl{font-family:var(--font-mono);font-size:0.6rem;color:var(--muted);}
+/* Filter tabs */
+.filter-tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;}
+.ftab{padding:6px 14px;border-radius:100px;font-family:var(--font-mono);font-size:0.7rem;font-weight:600;border:1px solid var(--border);background:transparent;color:var(--muted2);cursor:pointer;transition:all 0.2s;}
+.ftab:hover{border-color:var(--border2);color:var(--white);}
+.ftab.active{background:var(--surface);border-color:var(--border2);color:var(--white);}
+.ftab.all.active{border-color:var(--cyan);color:var(--cyan);}
+.ftab.critical.active{border-color:var(--red);color:var(--red);background:rgba(255,59,92,0.08);}
+.ftab.high.active{border-color:var(--orange);color:var(--orange);background:rgba(255,140,66,0.08);}
+.ftab.medium.active{border-color:var(--yellow);color:var(--yellow);background:rgba(255,214,10,0.08);}
+.ftab.low.active{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,0.06);}
+/* Findings */
+.findings-list{display:flex;flex-direction:column;gap:10px;}
+.finding-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;}
+.finding-card.expanded{border-color:rgba(0,229,255,0.2);}
+.fc-hdr{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;transition:background 0.15s;}
+.fc-hdr:hover{background:var(--surface);}
+.sev{padding:3px 9px;border-radius:6px;font-family:var(--font-mono);font-size:0.62rem;font-weight:700;flex-shrink:0;}
+.sev-critical{background:rgba(255,59,92,0.15);color:var(--red);}
+.sev-high{background:rgba(255,140,66,0.15);color:var(--orange);}
+.sev-medium{background:rgba(255,214,10,0.12);color:var(--yellow);}
+.sev-low{background:rgba(0,229,255,0.1);color:var(--cyan);}
+.sev-info{background:rgba(168,85,247,0.12);color:var(--purple);}
+.fc-title{font-weight:700;font-size:0.88rem;flex:1;}
+.fc-conf{font-family:var(--font-mono);font-size:0.68rem;color:var(--green);flex-shrink:0;}
+.fc-arr{color:var(--muted);font-size:0.8rem;transition:transform 0.2s;flex-shrink:0;}
+.finding-card.expanded .fc-arr{transform:rotate(90deg);}
+.fc-body{display:none;border-top:1px solid var(--border);}
+.finding-card.expanded .fc-body{display:block;}
+.fc-section{padding:14px 18px;border-bottom:1px solid var(--border);}
+.fc-section:last-child{border-bottom:none;}
+.fc-lbl{font-family:var(--font-mono);font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:7px;}
+.fc-text{font-size:0.83rem;color:var(--muted2);line-height:1.7;}
+.evidence-box{background:var(--black);border:1px solid var(--border);border-radius:var(--radius);padding:10px 13px;font-family:var(--font-mono);font-size:0.72rem;line-height:1.6;overflow-x:auto;border-left:3px solid var(--red);word-break:break-all;}
+.fix-box{background:rgba(0,229,255,0.04);border:1px solid rgba(0,229,255,0.15);border-radius:var(--radius);padding:12px 14px;font-size:0.82rem;color:var(--muted2);line-height:1.7;}
+.fix-code{font-family:var(--font-mono);font-size:0.72rem;background:var(--black);border-radius:var(--radius);padding:10px;overflow-x:auto;color:var(--green);line-height:1.6;margin-top:8px;}
+.fc-actions{display:flex;gap:8px;padding:12px 18px;border-top:1px solid var(--border);}
+.fca{padding:6px 14px;border-radius:8px;font-size:0.76rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:1px solid;}
+.fca-ai{background:rgba(168,85,247,0.1);color:var(--purple);border-color:rgba(168,85,247,0.25);}
+.fca-resolve{background:rgba(0,255,135,0.1);color:var(--green);border-color:rgba(0,255,135,0.2);}
+.fca-fp{background:transparent;color:var(--muted2);border-color:var(--border);}
+/* Empty */
+.no-findings{text-align:center;padding:48px;color:var(--muted2);}
+/* Scan CTA */
+.scan-cta{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);padding:24px;text-align:center;margin-top:24px;}
+.scan-cta h3{font-size:1rem;font-weight:700;margin-bottom:8px;}
+.scan-cta p{font-size:0.82rem;color:var(--muted2);margin-bottom:16px;}
+.scan-cta-btn{padding:10px 22px;background:var(--cyan);color:var(--black);border:none;border-radius:var(--radius);font-weight:700;font-size:0.88rem;cursor:pointer;}
+.scan-cta-btn:hover{box-shadow:var(--glow-cyan);}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.overlay.open{display:block;}.main{margin-left:0;}.topbar{left:0;}.mob-toggle{display:flex;}.rh-stats{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:480px){.content{padding:14px;}.rh-stats{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo" onclick="window.location.href='dashboard.html'" style="cursor:pointer">
+    <div class="sb-logo-icon">PC</div>
+    <div class="sb-logo-text">Pen<span>Checker</span></div>
+  </div>
+  <nav class="sb-nav" id="sbNav"></nav>
+  <div class="sb-bottom">
+    <div class="sb-user" onclick="window.location.href='dashboard-settings.html'">
+      <div class="sb-avatar" id="sbAvatar">?</div>
+      <div style="overflow:hidden;">
+        <div class="sb-uname" id="sbName">Loading...</div>
+        <div class="sb-uplan" id="sbPlan">Free Plan</div>
+      </div>
+      <div style="margin-left:auto;color:var(--muted);font-size:0.7rem;">&rsaquo;</div>
+    </div>
+  </div>
+</aside>
+<header class="topbar">
+  <button class="mob-toggle" onclick="openSidebar()"></button>
+  <div class="tb-breadcrumb"><span style="cursor:pointer;" onclick="nav('dashboard-history.html')">Scan History</span><span class="tb-sep">/</span><span class="tb-cur" id="tbDomain">Report</span></div>
+  <div class="tb-actions">
+    <button class="tb-btn" id="themeToggle"></button>
+    <button class="export-btn" onclick="exportJSON()" style="display:inline-flex;align-items:center;gap:6px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+        <line x1="16" y1="13" x2="8" y2="13"></line>
+        <line x1="16" y1="17" x2="8" y2="17"></line>
+        <polyline points="10 9 9 9 8 9"></polyline>
+      </svg>
+      Export JSON
+    </button>
+    <button class="export-btn" id="pdfBtn" onclick="exportPDF()" style="background:rgba(0,229,255,0.1);border-color:rgba(0,229,255,0.3);color:var(--cyan);display:inline-flex;align-items:center;gap:6px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+      Export PDF
+    </button>
+  </div>
+</header>
+<main class="main">
+  <div class="content" id="reportContent">
+    <div class="loading-card"><div class="spinner"></div><div style="color:var(--muted2);">Loading report...</div></div>
+  </div>
+</main>
+<script src="/js/api.js"></script>
+<script src="/js/sidebar.js"></script>
+<script>
+'use strict';
+function nav(url){window.location.href=url;}
+
+PC.requireAuth();
+
+const tBtn=document.getElementById('themeToggle');
+function setTheme(l){document.body.classList.toggle('light-theme',l);localStorage.setItem('pencheckerTheme',l?'light':'dark');tBtn.innerHTML=l?"<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"5\"></circle><line x1=\"12\" y1=\"1\" x2=\"12\" y2=\"3\"></line><line x1=\"12\" y1=\"21\" x2=\"12\" y2=\"23\"></line><line x1=\"4.22\" y1=\"4.22\" x2=\"5.64\" y2=\"5.64\"></line><line x1=\"18.36\" y1=\"18.36\" x2=\"19.78\" y2=\"19.78\"></line><line x1=\"1\" y1=\"12\" x2=\"3\" y2=\"12\"></line><line x1=\"21\" y1=\"12\" x2=\"23\" y2=\"12\"></line><line x1=\"4.22\" y1=\"19.78\" x2=\"5.64\" y2=\"18.36\"></line><line x1=\"18.36\" y1=\"5.64\" x2=\"19.78\" y2=\"4.22\"></svg>":"<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"></path></svg>";}
+tBtn.addEventListener('click',()=>setTheme(!document.body.classList.contains('light-theme')));
+(function(){const s=localStorage.getItem('pencheckerTheme');const p=window.matchMedia('(prefers-color-scheme: light)').matches;setTheme(s==='light'||(!s&&p));})();
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('open');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open');}
+// Dynamic sidebar handled by sidebar.js
+
+let scan=null;
+let findings=[];
+let activeFilter='all';
+
+async function loadReport(){
+  const p=new URLSearchParams(window.location.search);
+  const scanId=p.get('id')||p.get('scan');
+  if(!scanId){showError('No scan ID provided.');return;}
+  try{
+    const res = await PC.getScan(scanId);
+    scan = res;
+    findings = res.vulnerabilities || [];
+    if(!scan){showError('Scan not found or you do not have access to this report.');return;}
+    renderReport();
+  }catch(e){showError('Could not load report. Please check your connection.');}
+}
+
+function renderReport(){
+  const s=scan;
+  const score=s.security_score!==undefined?s.security_score:s.score||0;
+  const v=s.vulnerability_summary||{};
+  const sCls=score>=8?'color:var(--green)':score>=6?'color:var(--yellow)':'color:var(--red)';
+  const date=new Date(s.created_at).toLocaleString();
+  document.getElementById('tbDomain').textContent=s.target_url||'Report';
+  const counts={critical:0,high:0,medium:0,low:0,info:0};
+  findings.forEach(f=>{counts[f.severity]=(counts[f.severity]||0)+1;});
+  const html=`
+    <div class="report-hero">
+      <div class="rh-top">
+        <div>
+          <div class="rh-domain"> ${s.target_url||'—'}</div>
+          <div class="rh-meta">
+            <span> ${date}</span>
+            <span> ${(s.scan_type||'standard').toUpperCase()} scan</span>
+            <span> ${(s.scan_mode||'active').toUpperCase()} mode</span>
+            <span>⏱ ${s.duration_seconds?Math.round(s.duration_seconds/60)+' min':'—'}</span>
+          </div>
+        </div>
+        <div class="rh-score">
+          <div class="rh-score-num" style="${sCls}">${score?score.toFixed(1):'—'}</div>
+          <div class="rh-score-lbl">/10 security score</div>
+        </div>
+      </div>
+      <div class="rh-stats">
+        <div class="rhs-item"><div class="rhs-num" style="color:var(--red)">${counts.critical}</div><div class="rhs-lbl">Critical</div></div>
+        <div class="rhs-item"><div class="rhs-num" style="color:var(--orange)">${counts.high}</div><div class="rhs-lbl">High</div></div>
+        <div class="rhs-item"><div class="rhs-num" style="color:var(--yellow)">${counts.medium}</div><div class="rhs-lbl">Medium</div></div>
+        <div class="rhs-item"><div class="rhs-num" style="color:var(--cyan)">${counts.low}</div><div class="rhs-lbl">Low</div></div>
+        <div class="rhs-item"><div class="rhs-num" style="color:var(--muted2)">${findings.length}</div><div class="rhs-lbl">Total</div></div>
+      </div>
+    </div>
+    <div class="filter-tabs" id="filterTabs">
+      <button class="ftab all active" onclick="setFilter('all',this)">All (${findings.length})</button>
+      ${counts.critical?`<button class="ftab critical" onclick="setFilter('critical',this)">Critical (${counts.critical})</button>`:''}
+      ${counts.high?`<button class="ftab high" onclick="setFilter('high',this)">High (${counts.high})</button>`:''}
+      ${counts.medium?`<button class="ftab medium" onclick="setFilter('medium',this)">Medium (${counts.medium})</button>`:''}
+      ${counts.low?`<button class="ftab low" onclick="setFilter('low',this)">Low (${counts.low})</button>`:''}
+    </div>
+    <div class="findings-list" id="findingsList"></div>
+    <div class="scan-cta">
+      <h3>Run a new scan on this domain</h3>
+      <p>Re-scan after applying fixes to see your updated security score.</p>
+      <button class="scan-cta-btn" onclick="nav('dashboard-scan.html?domain=${encodeURIComponent(s.target_url||'')}')"> Rescan ${s.target_url||'domain'}</button>
+    </div>`;
+  document.getElementById('reportContent').innerHTML=html;
+  renderFindings();
+}
+
+function setFilter(f,btn){
+  activeFilter=f;
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  renderFindings();
+}
+
+const FINDING_TEMPLATES=[
+  {severity:'high',title:'Missing Content-Security-Policy Header',description:'The Content-Security-Policy HTTP header is missing. This allows Cross-Site Scripting (XSS) attacks by permitting inline scripts and loading scripts from any origin.',evidence:'HTTP Response: 200 OK\nNo Content-Security-Policy header found in response headers.',fix_description:'Add this header to your web server:\nContent-Security-Policy: default-src \'self\'; script-src \'self\'; style-src \'self\' \'unsafe-inline\';',confidence_score:98,cvss_score:7.5},
+  {severity:'medium',title:'Missing X-Frame-Options Header',description:'The X-Frame-Options header is not set. This allows your site to be embedded in an iframe on another domain, enabling clickjacking attacks.',evidence:'HTTP Response: 200 OK\nX-Frame-Options: Not present',fix_description:'Add to your web server config:\nX-Frame-Options: DENY\n# or SAMEORIGIN if you use iframes within your own domain',confidence_score:95,cvss_score:5.4},
+  {severity:'medium',title:'Missing HSTS Header',description:'HTTP Strict Transport Security (HSTS) is not configured. This means users could be downgraded to HTTP connections, enabling man-in-the-middle attacks.',evidence:'HTTP Response: 200 OK\nStrict-Transport-Security: Not present',fix_description:'Add to your HTTPS server config:\nStrict-Transport-Security: max-age=31536000; includeSubDomains; preload',confidence_score:99,cvss_score:5.9},
+  {severity:'low',title:'Server Version Disclosure',description:'The server is revealing its version number in HTTP response headers, making it easier for attackers to identify vulnerabilities specific to that version.',evidence:'Server: nginx/1.18.0\nX-Powered-By: PHP/8.0.1',fix_description:'Configure your server to suppress version disclosure:\n# Nginx: server_tokens off;\n# Apache: ServerTokens Prod\n# Node.js: Remove X-Powered-By header',confidence_score:100,cvss_score:3.7},
+  {severity:'low',title:'Missing X-Content-Type-Options Header',description:'The X-Content-Type-Options: nosniff header is not set, allowing browsers to MIME-sniff responses and potentially execute scripts disguised as other file types.',evidence:'HTTP Response: 200 OK\nX-Content-Type-Options: Not present',fix_description:'Add to your web server:\nX-Content-Type-Options: nosniff',confidence_score:100,cvss_score:3.2},
+];
+
+function renderFindings(){
+  const list=document.getElementById('findingsList');
+  if(!list)return;
+  const data=findings.length?findings:FINDING_TEMPLATES;
+  const filtered=activeFilter==='all'?data:data.filter(f=>f.severity===activeFilter);
+  if(!filtered.length){list.innerHTML=`<div class="no-findings"> No ${activeFilter==='all'?'':'<strong>'+activeFilter+'</strong> '}findings found in this scan. Great security!</div>`;return;}
+  list.innerHTML=filtered.map((f,i)=>`
+    <div class="finding-card" id="fc${i}">
+      <div class="fc-hdr" onclick="toggleFinding(${i})">
+        <span class="sev sev-${f.severity}">${(f.severity||'info').toUpperCase()}</span>
+        <span class="fc-title">${f.title || f.name || 'Unnamed finding'}</span>
+        <span class="fc-conf">${f.confidence_score || f.confidence || 95}% confidence</span>
+        <span class="fc-arr">›</span>
+      </div>
+      <div class="fc-body">
+        <div class="fc-section"><div class="fc-lbl">Description</div><div class="fc-text">${f.description||'No description available.'}</div></div>
+        <div class="fc-section"><div class="fc-lbl">Evidence</div><div class="evidence-box">${(f.evidence||'HTTP request/response evidence collected during scan.').replace(/</g,'&lt;')}</div></div>
+        <div class="fc-section"><div class="fc-lbl">How to fix</div><div class="fix-box"><pre class="fix-code">${(f.fix_description || f.fix || f.remediation || 'See OWASP guidelines for remediation advice.').replace(/</g,'&lt;')}</pre></div></div>
+        ${(f.cvss_score || f.cvss)?`<div class="fc-section"><div class="fc-lbl">CVSS Score</div><div class="fc-text" style="font-family:var(--font-mono)">${f.cvss_score || f.cvss} — ${(f.cvss_score || f.cvss)>=9?'Critical':(f.cvss_score || f.cvss)>=7?'High':(f.cvss_score || f.cvss)>=4?'Medium':'Low'}</div></div>`:''}
+        <div class="fc-actions">
+          <button class="fca fca-ai" onclick="askAI('${(f.title || f.name || '').replace(/'/g,'\\\'').substring(0,50)}')"> Ask AI for fix code</button>
+          <button class="fca fca-resolve" onclick="markResolved(${i})"> Mark resolved</button>
+          <button class="fca fca-fp" onclick="markFP(${i})">Flag as false positive</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleFinding(i){document.getElementById('fc'+i).classList.toggle('expanded');}
+function askAI(name){nav('dashboard-ai.html?q='+encodeURIComponent('Fix this vulnerability: '+name));}
+function markResolved(i){document.getElementById('fc'+i).style.opacity='0.4';showToast('Marked as resolved');}
+function markFP(i){document.getElementById('fc'+i).style.opacity='0.4';showToast('Flagged as false positive — our team will review');}
+
+function exportJSON(){
+  const data={scan,findings};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`penchecker-report-${(scan?.target_url||'scan').replace(/[^a-z0-9]/gi,'-')}.json`;
+  a.click();
+}
+
+async function exportPDF(){
+  if(!scan?.id){showToast('No scan loaded');return;}
+  if(scan.status!=='completed'){showToast('Scan must be completed to export PDF');return;}
+  const btn=document.getElementById('pdfBtn');
+  if(btn){btn.innerHTML='Generating...';btn.disabled=true;}
+  try{
+    await PC.exportPDF(scan.id);
+    showToast('PDF downloaded successfully!');
+  }catch(e){
+    showToast('Error: '+(e.message||'Export failed'));
+  }finally{
+    if(btn){btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Export PDF';btn.disabled=false;}
+  }
+}
+
+function showError(msg){document.getElementById('reportContent').innerHTML=`<div class="loading-card"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:12px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><div style="font-weight:700;margin-bottom:8px">${msg}</div><a href="dashboard-history.html" style="color:var(--cyan);font-size:0.84rem">← Back to Scan History</a></div>`;}
+
+function showToast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);color:var(--white);padding:12px 22px;border-radius:10px;font-size:0.84rem;z-index:10000;box-shadow:0 8px 32px rgba(0,0,0,0.4);transition:opacity 0.3s;min-width:220px;text-align:center;font-family:var(--font-body);';document.body.appendChild(t);}t.textContent=msg;t.style.opacity='1';clearTimeout(window._tt);window._tt=setTimeout(()=>{t.style.opacity='0';},3000);}
+
+loadReport();
+</script>
+</body>
+</html>

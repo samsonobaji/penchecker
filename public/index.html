@@ -1,0 +1,2638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PenChecker — Real-Time Security Scanner</title>
+<meta name="description" content="PenChecker finds real vulnerabilities in your website with AI-powered accuracy. No templates. No guesses. Just truth." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   CSS VARIABLES & RESET
+   ============================================================ */
+:root {
+  --black: #060608;
+  --black2: #0d0d12;
+  --black3: #13131a;
+  --surface: #1a1a24;
+  --surface2: #22222f;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(0,229,255,0.2);
+  --cyan: #00e5ff;
+  --cyan2: #00b4cc;
+  --green: #00ff87;
+  --green2: #00cc6a;
+  --red: #ff3b5c;
+  --orange: #ff8c42;
+  --yellow: #ffd60a;
+  --white: #f0f0f8;
+  --muted: #6b6b85;
+  --muted2: #9090a8;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --glow-cyan: 0 0 30px rgba(0,229,255,0.3);
+  --glow-green: 0 0 30px rgba(0,255,135,0.3);
+  --radius: 12px;
+  --radius2: 20px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button { cursor: pointer; font-family: inherit; border: none; outline: none; }
+
+/* ============================================================
+   NOISE OVERLAY
+   ============================================================ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--black2); }
+::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--cyan2); }
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+.display-xl {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+}
+.display-lg {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.display-md {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.mono { font-family: var(--font-mono); }
+.text-cyan { color: var(--cyan); }
+.text-green { color: var(--green); }
+.text-muted { color: var(--muted2); }
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.container-wide {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+section { position: relative; }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: var(--radius);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: white;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.btn:hover::after { opacity: 0.06; }
+
+.btn-primary {
+  background: var(--cyan);
+  color: var(--black);
+  box-shadow: 0 0 40px rgba(0,229,255,0.25);
+}
+.btn-primary:hover {
+  box-shadow: 0 0 60px rgba(0,229,255,0.45);
+  transform: translateY(-1px);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--white);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+.btn-green {
+  background: var(--green);
+  color: var(--black);
+  box-shadow: 0 0 40px rgba(0,255,135,0.2);
+}
+.btn-green:hover {
+  box-shadow: 0 0 60px rgba(0,255,135,0.4);
+  transform: translateY(-1px);
+}
+.btn-lg { padding: 18px 36px; font-size: 1.05rem; border-radius: 14px; }
+.btn-sm { padding: 10px 20px; font-size: 0.85rem; }
+
+/* ============================================================
+   BADGES / TAGS
+   ============================================================ */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.tag-cyan {
+  background: rgba(0,229,255,0.1);
+  color: var(--cyan);
+  border: 1px solid rgba(0,229,255,0.2);
+}
+.tag-green {
+  background: rgba(0,255,135,0.1);
+  color: var(--green);
+  border: 1px solid rgba(0,255,135,0.2);
+}
+.tag-red {
+  background: rgba(255,59,92,0.1);
+  color: var(--red);
+  border: 1px solid rgba(255,59,92,0.2);
+}
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  padding: 28px;
+  transition: all 0.3s ease;
+}
+.card:hover {
+  border-color: rgba(0,229,255,0.2);
+  background: var(--surface2);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   SECTION LABELS
+   ============================================================ */
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.section-label-line {
+  width: 40px;
+  height: 2px;
+  background: var(--cyan);
+}
+.section-label-text {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--cyan);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+#navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 0 24px;
+  transition: all 0.3s ease;
+}
+#navbar.scrolled {
+  background: rgba(6,6,8,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.nav-logo-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--cyan);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--black);
+}
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.nav-logo-text span { color: var(--cyan); }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 0.9rem;
+  color: var(--muted2);
+  transition: color 0.2s;
+  font-weight: 500;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-actions { display: flex; align-items: center; gap: 12px; }
+.nav-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--white);
+  cursor: pointer;
+  padding: 8px;
+}
+.mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--black2);
+  z-index: 999;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--white);
+  transition: color 0.2s;
+}
+.mobile-menu a:hover { color: var(--cyan); }
+.mobile-menu-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+/* ============================================================
+   HERO SECTION
+   ============================================================ */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: 70px;
+  position: relative;
+  overflow: visible;
+}
+
+/* Grid background */
+#hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+  pointer-events: none;
+}
+
+/* Glow orb */
+#hero::after {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(0,229,255,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  padding: 80px 0;
+  position: relative;
+  z-index: 1;
+}
+.hero-left { position: relative; z-index: 2; }
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.hero-eyebrow-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,135,0.6); }
+  50% { box-shadow: 0 0 0 8px rgba(0,255,135,0); }
+}
+.hero-eyebrow-text {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--green);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.hero-title { margin-bottom: 24px; }
+.hero-title .line-1 { display: block; color: var(--white); }
+.hero-title .line-2 {
+  display: block;
+  color: transparent;
+  background: linear-gradient(135deg, var(--cyan) 0%, var(--green) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.hero-title .line-3 { display: block; color: var(--white); }
+
+.hero-desc {
+  font-size: 1.1rem;
+  color: var(--muted2);
+  line-height: 1.7;
+  margin-bottom: 36px;
+  max-width: 500px;
+}
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+.hero-stats {
+  display: flex;
+  gap: 36px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+.hero-stat-num {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -0.03em;
+}
+.hero-stat-num span { color: var(--cyan); }
+.hero-stat-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* Hero right — contains terminal + floating badges */
+.hero-right {
+  position: relative;
+  z-index: 2;
+  /* Padding gives room for the floating badges around the terminal */
+  padding: 36px 36px 36px 36px;
+}
+
+.hero-terminal {
+  background: var(--black3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 60px rgba(0,229,255,0.08);
+  animation: float 6s ease-in-out infinite;
+  position: relative;
+  z-index: 2;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 18px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+.terminal-dot-red { background: #ff5f57; }
+.terminal-dot-yellow { background: #febc2e; }
+.terminal-dot-green { background: #28c840; }
+.terminal-title {
+  flex: 1;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.terminal-body { padding: 20px; min-height: 340px; }
+.terminal-line {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.8;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  opacity: 0;
+  animation: typeIn 0.3s ease forwards;
+  flex-wrap: wrap;
+}
+.terminal-prompt { color: var(--cyan); flex-shrink: 0; }
+.terminal-cmd { color: var(--white); word-break: break-all; }
+.terminal-output { color: var(--muted2); padding-left: 16px; width: 100%; }
+.terminal-success { color: var(--green); padding-left: 16px; width: 100%; }
+.terminal-warn { color: var(--orange); padding-left: 16px; width: 100%; }
+.terminal-critical { color: var(--red); padding-left: 16px; width: 100%; }
+.terminal-info { color: var(--cyan); padding-left: 16px; width: 100%; }
+
+@keyframes typeIn {
+  from { opacity: 0; transform: translateX(-4px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.terminal-line:nth-child(1)  { animation-delay: 0.2s; }
+.terminal-line:nth-child(2)  { animation-delay: 0.8s; }
+.terminal-line:nth-child(3)  { animation-delay: 1.3s; }
+.terminal-line:nth-child(4)  { animation-delay: 1.7s; }
+.terminal-line:nth-child(5)  { animation-delay: 2.1s; }
+.terminal-line:nth-child(6)  { animation-delay: 2.5s; }
+.terminal-line:nth-child(7)  { animation-delay: 2.9s; }
+.terminal-line:nth-child(8)  { animation-delay: 3.3s; }
+.terminal-line:nth-child(9)  { animation-delay: 3.7s; }
+.terminal-line:nth-child(10) { animation-delay: 4.1s; }
+.terminal-line:nth-child(11) { animation-delay: 4.5s; }
+.terminal-line:nth-child(12) { animation-delay: 4.9s; }
+.terminal-line:nth-child(13) { animation-delay: 5.3s; }
+.terminal-line:nth-child(14) { animation-delay: 5.7s; }
+.terminal-line:nth-child(15) { animation-delay: 6.1s; }
+
+.terminal-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  background: var(--cyan);
+  margin-left: 2px;
+  vertical-align: middle;
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* Floating badges — positioned relative to .hero-right padding area */
+.hero-badge-float {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: var(--green);
+  color: var(--black);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.82rem;
+  box-shadow: var(--glow-green);
+  animation: floatBadge 4s ease-in-out infinite 1s;
+  z-index: 3;
+  white-space: nowrap;
+}
+.hero-badge-float2 {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: floatBadge 5s ease-in-out infinite 0.5s;
+  z-index: 3;
+}
+@keyframes floatBadge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.badge-float-icon { font-size: 1.3rem; }
+.badge-float-text { font-family: var(--font-mono); font-size: 0.72rem; }
+.badge-float-text strong { display: block; color: var(--white); font-size: 0.82rem; }
+.badge-float-text span { color: var(--muted2); }
+
+/* ============================================================
+   TICKER / MARQUEE
+   ============================================================ */
+.ticker-wrap {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+  overflow: hidden;
+}
+.ticker-track {
+  display: flex;
+  gap: 0;
+  animation: ticker 30s linear infinite;
+  width: max-content;
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 36px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  border-right: 1px solid var(--border);
+}
+.ticker-item-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   WHAT SECTION
+   ============================================================ */
+#what {
+  padding: 120px 0;
+}
+.what-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.what-left {}
+.what-title { margin-bottom: 20px; }
+.what-desc { color: var(--muted2); font-size: 1.05rem; line-height: 1.8; margin-bottom: 32px; }
+.what-points { display: flex; flex-direction: column; gap: 16px; }
+.what-point {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.what-point-icon {
+  width: 36px; height: 36px;
+  background: rgba(0,229,255,0.1);
+  border: 1px solid rgba(0,229,255,0.2);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.what-point-icon svg {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.what-point:hover .what-point-icon {
+  background: rgba(0,229,255,0.18);
+  border-color: rgba(0,229,255,0.45);
+  box-shadow: 0 4px 10px rgba(0,229,255,0.1);
+}
+.what-point:hover .what-point-icon svg {
+  transform: scale(1.15);
+}
+.what-point-text strong {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.what-point-text span { font-size: 0.9rem; color: var(--muted2); }
+
+/* Comparison table */
+.comparison-box {
+  background: var(--black3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  overflow: hidden;
+}
+.comparison-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  padding: 16px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted2);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.comparison-header .col-pen { color: var(--cyan); }
+.comparison-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+  align-items: center;
+  transition: background 0.2s;
+}
+.comparison-row:hover { background: var(--surface); }
+.comparison-row:last-child { border-bottom: none; }
+.comparison-row .feature-name { color: var(--muted2); }
+.comparison-row .check-yes { color: var(--green); text-align: center; font-size: 1.1rem; }
+.comparison-row .check-no { color: var(--red); text-align: center; opacity: 0.6; }
+.comparison-row .col-center { text-align: center; }
+
+/* ============================================================
+   FEATURES SECTION
+   ============================================================ */
+#features {
+  padding: 120px 0;
+  background: var(--black2);
+}
+#features::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.features-header {
+  text-align: center;
+  margin-bottom: 72px;
+  position: relative;
+}
+.features-header .display-lg { margin-bottom: 16px; }
+.features-header p { font-size: 1.05rem; color: var(--muted2); max-width: 540px; margin: 0 auto; }
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  position: relative;
+}
+.feature-card {
+  background: var(--black3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  padding: 32px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.feature-card:hover {
+  border-color: rgba(0,229,255,0.2);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.feature-card:hover::before { opacity: 1; }
+.feature-card-large {
+  grid-column: span 2;
+}
+.feature-icon {
+  width: 52px; height: 52px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.feature-icon svg {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.3s ease;
+}
+.feature-card:hover .feature-icon {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255,255,255,0.03);
+}
+.feature-card:hover .feature-icon svg {
+  transform: scale(1.15) rotate(4deg);
+}
+.icon-cyan { background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.2); }
+.icon-green { background: rgba(0,255,135,0.1); border: 1px solid rgba(0,255,135,0.2); }
+.icon-red { background: rgba(255,59,92,0.1); border: 1px solid rgba(255,59,92,0.2); }
+.icon-orange { background: rgba(255,140,66,0.1); border: 1px solid rgba(255,140,66,0.2); }
+.icon-yellow { background: rgba(255,214,10,0.1); border: 1px solid rgba(255,214,10,0.2); }
+.icon-purple { background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.2); }
+.feature-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.feature-card p { font-size: 0.9rem; color: var(--muted2); line-height: 1.7; }
+
+/* Feature card large layout */
+.feature-card-large .feature-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+.feature-scan-demo {
+  background: var(--black2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.scan-demo-url {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--cyan);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.scan-demo-bar {
+  height: 6px;
+  background: var(--surface);
+  border-radius: 3px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.scan-demo-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--cyan), var(--green));
+  animation: scanProgress 3s ease-in-out infinite;
+}
+@keyframes scanProgress {
+  0% { width: 0%; }
+  70% { width: 100%; }
+  100% { width: 100%; }
+}
+.scan-demo-vulns {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+.scan-vuln-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 10px;
+  background: var(--surface);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+.vuln-sev {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+.sev-critical { background: rgba(255,59,92,0.2); color: var(--red); }
+.sev-high { background: rgba(255,140,66,0.2); color: var(--orange); }
+.sev-medium { background: rgba(255,214,10,0.2); color: var(--yellow); }
+.sev-low { background: rgba(0,255,135,0.2); color: var(--green); }
+
+/* ============================================================
+   HOW IT WORKS
+   ============================================================ */
+#how {
+  padding: 120px 0;
+}
+.how-header {
+  text-align: center;
+  margin-bottom: 72px;
+}
+.how-header .display-lg { margin-bottom: 16px; }
+.how-header p { color: var(--muted2); max-width: 500px; margin: 0 auto; }
+.how-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  position: relative;
+}
+.how-steps::before {
+  content: '';
+  position: absolute;
+  top: 40px;
+  left: calc(16.66% + 20px);
+  right: calc(16.66% + 20px);
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--green));
+  opacity: 0.3;
+}
+.how-step {
+  padding: 0 32px;
+  text-align: center;
+}
+.how-step-number-wrap {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 24px;
+}
+.how-step-circle {
+  width: 80px;
+  height: 80px;
+  background: var(--black3);
+  border: 2px solid var(--border2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--cyan);
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+.how-step:hover .how-step-circle {
+  background: var(--cyan);
+  color: var(--black);
+  box-shadow: var(--glow-cyan);
+}
+.how-step h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.how-step p { font-size: 0.9rem; color: var(--muted2); line-height: 1.7; }
+
+/* ============================================================
+   INDUSTRIES
+   ============================================================ */
+#industries {
+  padding: 120px 0;
+  background: var(--black2);
+}
+.industries-header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.industries-header .display-lg { margin-bottom: 16px; }
+.industries-header p { color: var(--muted2); max-width: 500px; margin: 0 auto; }
+.industries-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.industry-card {
+  background: var(--black3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  padding: 28px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.industry-card:hover, .industry-card.active {
+  border-color: var(--cyan);
+  background: rgba(0,229,255,0.05);
+  transform: translateY(-3px);
+}
+.industry-icon { font-size: 2.2rem; margin-bottom: 14px; }
+.industry-card h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.industry-card p { font-size: 0.85rem; color: var(--muted2); line-height: 1.6; }
+.industry-checks {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.industry-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted2);
+}
+.industry-check-dot {
+  width: 5px; height: 5px;
+  background: var(--cyan);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   PRICING SECTION
+   ============================================================ */
+#pricing {
+  padding: 120px 0;
+}
+.pricing-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.pricing-header .display-lg { margin-bottom: 16px; }
+.pricing-header p { color: var(--muted2); max-width: 500px; margin: 0 auto; }
+.pricing-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 48px;
+}
+.pricing-toggle-label {
+  font-size: 0.9rem;
+  color: var(--muted2);
+  font-weight: 500;
+}
+.pricing-toggle-label.active { color: var(--white); }
+.toggle-switch {
+  position: relative;
+  width: 52px; height: 28px;
+  background: var(--surface2);
+  border-radius: 14px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: background 0.3s;
+}
+.toggle-switch.on { background: var(--cyan2); }
+.toggle-knob {
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 20px; height: 20px;
+  background: var(--white);
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+.toggle-switch.on .toggle-knob { transform: translateX(24px); }
+.pricing-save-badge {
+  background: rgba(0,255,135,0.15);
+  color: var(--green);
+  border: 1px solid rgba(0,255,135,0.3);
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+}
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.pricing-card {
+  background: var(--black3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  padding: 28px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+.pricing-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.pricing-card.popular {
+  border-color: var(--cyan);
+  background: rgba(0,229,255,0.04);
+  transform: scale(1.02);
+  box-shadow: 0 0 60px rgba(0,229,255,0.1);
+}
+.pricing-popular-badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--cyan);
+  color: var(--black);
+  padding: 4px 16px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.pricing-plan-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 6px;
+  color: var(--muted2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.pricing-price {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 4px;
+}
+.pricing-price sup {
+  font-size: 1rem;
+  vertical-align: top;
+  margin-top: 8px;
+}
+.pricing-price .period {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+.pricing-desc {
+  font-size: 0.85rem;
+  color: var(--muted2);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.pricing-divider { height: 1px; background: var(--border); margin: 20px 0; }
+.pricing-features { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.pricing-feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+}
+.pricing-feature-check { flex-shrink: 0; font-size: 0.9rem; }
+.pricing-feature-check.yes { color: var(--green); }
+.pricing-feature-check.no { color: var(--muted); opacity: 0.4; }
+.pricing-feature span { color: var(--muted2); }
+.pricing-feature.active span { color: var(--white); }
+.pricing-card .btn { width: 100%; justify-content: center; }
+
+/* ============================================================
+   TESTIMONIALS
+   ============================================================ */
+#testimonials {
+  padding: 120px 0;
+  background: var(--black2);
+  overflow: hidden;
+}
+.testi-header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.testi-header .display-lg { margin-bottom: 16px; }
+.testi-header p { color: var(--muted2); }
+.testi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.testi-card {
+  background: var(--black3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  padding: 28px;
+  transition: all 0.3s;
+}
+.testi-card:hover {
+  border-color: rgba(0,229,255,0.2);
+  transform: translateY(-3px);
+}
+.testi-stars {
+  color: var(--yellow);
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  margin-bottom: 14px;
+}
+.testi-quote {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--muted2);
+  margin-bottom: 20px;
+}
+.testi-quote strong { color: var(--white); }
+.testi-author { display: flex; align-items: center; gap: 12px; }
+.testi-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+.testi-author-info strong {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.testi-author-info span {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+/* ============================================================
+   BADGE SHOWCASE
+   ============================================================ */
+#badge {
+  padding: 120px 0;
+}
+.badge-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.badge-left .display-lg { margin-bottom: 16px; }
+.badge-left p { color: var(--muted2); line-height: 1.7; margin-bottom: 24px; }
+.badge-left ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.badge-left ul li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  color: var(--muted2);
+}
+.badge-left ul li::before { content: '→'; color: var(--cyan); font-family: var(--font-mono); }
+.badge-showcase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.badge-display {
+  background: var(--black3);
+  border: 2px solid var(--cyan);
+  border-radius: 20px;
+  padding: 32px 40px;
+  text-align: center;
+  box-shadow: 0 0 60px rgba(0,229,255,0.15);
+  position: relative;
+}
+.badge-display::before {
+  content: 'VERIFIED';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--cyan);
+  color: var(--black);
+  padding: 2px 14px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+.badge-shield { font-size: 3rem; margin-bottom: 10px; }
+.badge-score-num {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--green);
+  letter-spacing: -0.03em;
+}
+.badge-score-sub {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted2);
+  margin-bottom: 10px;
+}
+.badge-domain {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--cyan);
+}
+.badge-embed-box {
+  width: 100%;
+  background: var(--black3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted2);
+  word-break: break-all;
+}
+
+/* ============================================================
+   CTA SECTION
+   ============================================================ */
+#cta {
+  padding: 120px 0;
+  background: var(--black2);
+}
+.cta-inner {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+  position: relative;
+}
+.cta-inner::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(ellipse, rgba(0,229,255,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-inner .display-lg { margin-bottom: 16px; }
+.cta-inner p { color: var(--muted2); font-size: 1.05rem; margin-bottom: 36px; }
+.cta-actions { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.cta-disclaimer {
+  margin-top: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: var(--black);
+  border-top: 1px solid var(--border);
+  padding: 72px 0 32px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 56px;
+}
+.footer-brand { }
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.footer-logo-icon {
+  width: 32px; height: 32px;
+  background: var(--cyan);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.75rem;
+  color: var(--black);
+}
+.footer-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.footer-logo-text span { color: var(--cyan); }
+.footer-brand-desc {
+  font-size: 0.88rem;
+  color: var(--muted2);
+  line-height: 1.7;
+  margin-bottom: 20px;
+  max-width: 300px;
+}
+.footer-socials { display: flex; gap: 10px; }
+.footer-social {
+  width: 36px; height: 36px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem;
+  color: var(--muted2);
+  transition: all 0.2s;
+}
+.footer-social:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: rgba(0,229,255,0.08);
+}
+.footer-col h4 {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted2);
+  margin-bottom: 16px;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-col ul li a {
+  font-size: 0.88rem;
+  color: var(--muted2);
+  transition: color 0.2s;
+}
+.footer-col ul li a:hover { color: var(--white); }
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding-top: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.footer-copyright {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.footer-copyright span { color: var(--cyan); }
+.footer-legal { display: flex; gap: 20px; }
+.footer-legal a {
+  font-size: 0.8rem;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+.footer-legal a:hover { color: var(--muted2); }
+.footer-legal-separator { color: var(--border); }
+.footer-paystack {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.footer-paystack-dot {
+  width: 6px; height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+}
+
+/* Currency indicator */
+.currency-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 8px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--muted2);
+}
+.currency-dot {
+  width: 7px; height: 7px;
+  background: var(--cyan);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.price-sym { font-size: 1.1rem; vertical-align: top; margin-top: 6px; display: inline-block; }
+
+/* ============================================================
+   LIGHT THEME
+   ============================================================ */
+body { transition: background 0.25s, color 0.25s; }
+.light-theme {
+  --black:   #f8f9fc;
+  --black2:  #e8eaf2;
+  --black3:  #ffffff;
+  --surface: #ffffff;
+  --surface2:#f2f4f9;
+  --border:  rgba(13, 23, 44, 0.12);
+  --border2: rgba(0, 149, 212, 0.25);
+  --cyan:    #007fbc;
+  --cyan2:   #005f91;
+  --green:   #0f9d58;
+  --red:     #d93025;
+  --orange:  #e37400;
+  --yellow:  #f1c232;
+  --purple:  #6a1b9a;
+  --white:   #0b0d13;
+  --muted:   #4b5d79;
+  --muted2:  #6b7790;
+}
+.light-theme #navbar.scrolled { background: rgba(248,249,252,0.96); }
+.light-theme body::before { opacity: 0.15; }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+  .pricing-card.popular { transform: scale(1); }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .feature-card-large { grid-column: span 2; }
+}
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-actions .btn-ghost { display: none; }
+  .nav-menu-btn { display: block; }
+  .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+  .hero-right { display: none; }
+  .what-grid { grid-template-columns: 1fr; gap: 48px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .feature-card-large { grid-column: span 1; }
+  .feature-card-large .feature-inner { grid-template-columns: 1fr; }
+  .how-steps { grid-template-columns: 1fr; gap: 40px; }
+  .how-steps::before { display: none; }
+  .industries-grid { grid-template-columns: 1fr 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .testi-grid { grid-template-columns: 1fr; }
+  .badge-inner { grid-template-columns: 1fr; gap: 48px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .comparison-box { overflow-x: auto; }
+}
+
+@media (max-width: 480px) {
+  .industries-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 20px; flex-wrap: wrap; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon" style="background:none;width:36px;height:36px;display:flex;align-items:center;justify-content:center;padding:0;">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="36" height="36">
+    <defs>
+      <linearGradient id="penchecker-grad-nav" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#00e5ff" />
+        <stop offset="50%" stop-color="#7c3aed" />
+        <stop offset="100%" stop-color="#00ff87" />
+      </linearGradient>
+      <filter id="penchecker-glow-nav" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+    </defs>
+    <path d="M50 12 L82 22 V52 C82 70 68 83 50 88 C32 83 18 70 18 52 V22 Z" fill="none" stroke="url(#penchecker-grad-nav)" stroke-width="3" stroke-linejoin="round" filter="url(#penchecker-glow-nav)" />
+    <path d="M30 40 A 24 24 0 0 1 70 40" fill="none" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.8" />
+    <path d="M36 48 A 16 16 0 0 1 64 48" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6" />
+    <path d="M50 28 L62 54 L50 72 L38 54 Z" fill="url(#penchecker-grad-nav)" />
+    <line x1="50" y1="38" x2="50" y2="60" stroke="#060608" stroke-width="2" stroke-linecap="round" />
+    <circle cx="50" cy="34" r="2.5" fill="#00ff87" filter="url(#penchecker-glow-nav)" />
+  </svg>
+</div>
+      <div class="nav-logo-text">Pen<span>Checker</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="features.html">Features</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#industries">Industries</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="blog.html">Blog</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button id="themeToggle" class="btn btn-ghost btn-sm" aria-label="Toggle theme" style="padding:8px 14px;font-size:0.82rem;display:inline-flex;align-items:center;gap:6px;"></button>
+      <a href="login.html" class="btn btn-ghost btn-sm">Sign in</a>
+      <a href="signup.html" class="btn btn-primary btn-sm">Start Free</a>
+    </div>
+    <button class="nav-menu-btn" id="menuBtn" aria-label="Open menu">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" id="menuClose"></button>
+  <a href="features.html" onclick="closeMobileMenu()">Features</a>
+  <a href="#how" onclick="closeMobileMenu()">How it works</a>
+  <a href="#pricing" onclick="closeMobileMenu()">Pricing</a>
+  <a href="login.html" onclick="closeMobileMenu()">Sign in</a>
+  <a href="signup.html" class="btn btn-primary">Start Free</a>
+</div>
+
+<!-- ============================================================
+     HERO SECTION
+     ============================================================ -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-eyebrow">
+          <div class="hero-eyebrow-dot"></div>
+          <span class="hero-eyebrow-text">Real-Time Security Intelligence</span>
+        </div>
+        <h1 class="display-xl hero-title">
+          <span class="line-1">Find Real</span>
+          <span class="line-2">Vulnerabilities.</span>
+          <span class="line-3">Not Guesses.</span>
+        </h1>
+        <p class="hero-desc">
+          PenChecker scans your website the way a real hacker would — 
+          verifying every finding with evidence before it reaches your report. 
+          No templates. No false alarms. Just the truth.
+        </p>
+        <div class="hero-actions">
+          <a href="signup.html" class="btn btn-primary btn-lg">
+            Scan Your Site Free
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <a href="#how" class="btn btn-ghost btn-lg">See how it works</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-num">99<span>%</span></div>
+            <div class="hero-stat-label">Accuracy rate</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">0<span>%</span></div>
+            <div class="hero-stat-label">Template findings</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">10<span>+</span></div>
+            <div class="hero-stat-label">OWASP checks</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-badge-float"> Scan Complete</div>
+        <div class="hero-terminal">
+          <div class="terminal-header">
+            <div class="terminal-dot terminal-dot-red"></div>
+            <div class="terminal-dot terminal-dot-yellow"></div>
+            <div class="terminal-dot terminal-dot-green"></div>
+            <div class="terminal-title">penchecker — live scan</div>
+          </div>
+          <div class="terminal-body">
+            <div class="terminal-line">
+              <span class="terminal-prompt">$</span>
+              <span class="terminal-cmd">penchecker scan https://yoursite.com --deep</span>
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-output">→ Fingerprinting technology stack...</span>
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-info">   Detected: Node.js 18, React, Nginx 1.24</span>
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-output">→ Crawling pages [████████░░] 14 found</span>
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-output">→ Checking HTTP security headers...</span>
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-warn">   Missing: Content-Security-Policy</span>
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-warn">   Missing: X-Frame-Options</span>
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-output">→ Testing for injection vulnerabilities...</span>
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-success">   SQL Injection: Not detected (Node.js ORM confirmed)</span>
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-output">→ Testing SSL/TLS configuration...</span>
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-success">   Certificate valid until 2026-08-15</span>
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-critical">   TLS 1.0 enabled — CRITICAL (CVE-2011-3389)</span>
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-output">→ Generating verified report...</span>
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-success">   Report ready: 3 verified findings</span>
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-prompt">$</span>
+              <span class="terminal-cursor"></span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-badge-float2">
+          <div class="badge-float-icon"></div>
+          <div class="badge-float-text">
+            <strong>3 findings verified</strong>
+            <span>Evidence attached to each</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TICKER
+     ============================================================ -->
+<div class="ticker-wrap">
+  <div class="ticker-track" id="ticker">
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--red)"></div>SQL Injection Detection</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--orange)"></div>XSS Vulnerability Testing</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--cyan)"></div>SSL/TLS Analysis</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--green)"></div>HTTP Header Verification</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--yellow)"></div>CSRF Protection Check</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--red)"></div>Broken Authentication Scan</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--cyan)"></div>API Security Testing</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--green)"></div>Subdomain Discovery</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--orange)"></div>Port Scanning</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--yellow)"></div>OWASP Top 10 Coverage</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--red)"></div>CVE Database Matching</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--cyan)"></div>Real-Time AI Analysis</div>
+    <!-- Duplicate for seamless loop -->
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--red)"></div>SQL Injection Detection</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--orange)"></div>XSS Vulnerability Testing</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--cyan)"></div>SSL/TLS Analysis</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--green)"></div>HTTP Header Verification</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--yellow)"></div>CSRF Protection Check</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--red)"></div>Broken Authentication Scan</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--cyan)"></div>API Security Testing</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--green)"></div>Subdomain Discovery</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--orange)"></div>Port Scanning</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--yellow)"></div>OWASP Top 10 Coverage</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--red)"></div>CVE Database Matching</div>
+    <div class="ticker-item"><div class="ticker-item-dot" style="background:var(--cyan)"></div>Real-Time AI Analysis</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     WHAT SECTION
+     ============================================================ -->
+<section id="what">
+  <div class="container">
+    <div class="what-grid">
+      <div class="what-left reveal">
+        <div class="section-label">
+          <div class="section-label-line"></div>
+          <span class="section-label-text">Why PenChecker</span>
+        </div>
+        <h2 class="display-lg what-title">The problem with<br/>most scanners</h2>
+        <p class="what-desc">
+          Most security scanners run the same template against every website and 
+          output the same list of "vulnerabilities" — regardless of whether your 
+          site actually has them. We saw SQL injection reported on a site with no 
+          database. That's not security. That's noise.
+        </p>
+        <div class="what-points">
+          <div class="what-point">
+            <div class="what-point-icon">
+              <svg class="wp-svg" viewBox="0 0 24 24" width="16" height="16" stroke="#00e5ff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            </div>
+            <div class="what-point-text">
+              <strong>Technology-aware scanning</strong>
+              <span>We detect your stack first, then only run tests that actually apply to it.</span>
+            </div>
+          </div>
+          <div class="what-point">
+            <div class="what-point-icon">
+              <svg class="wp-svg" viewBox="0 0 24 24" width="16" height="16" stroke="#00e5ff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 11 11 13 15 9"></polyline></svg>
+            </div>
+            <div class="what-point-text">
+              <strong>Double-verified findings</strong>
+              <span>Every critical finding is verified twice before appearing in your report.</span>
+            </div>
+          </div>
+          <div class="what-point">
+            <div class="what-point-icon">
+              <svg class="wp-svg" viewBox="0 0 24 24" width="16" height="16" stroke="#00e5ff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><polyline points="9 14 11 16 15 12"></polyline></svg>
+            </div>
+            <div class="what-point-text">
+              <strong>Evidence attached</strong>
+              <span>Every vulnerability comes with the actual server response that triggered it.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="what-right reveal reveal-delay-2">
+        <div class="comparison-box">
+          <div class="comparison-header">
+            <span>Feature</span>
+            <span class="col-pen">PenChecker</span>
+            <span style="text-align:center">Others</span>
+          </div>
+          <div class="comparison-row">
+            <span class="feature-name">Technology fingerprinting first</span>
+            <span class="check-yes col-center"></span>
+            <span class="check-no col-center"></span>
+          </div>
+          <div class="comparison-row">
+            <span class="feature-name">Evidence per finding</span>
+            <span class="check-yes col-center"></span>
+            <span class="check-no col-center"></span>
+          </div>
+          <div class="comparison-row">
+            <span class="feature-name">Confidence score per finding</span>
+            <span class="check-yes col-center"></span>
+            <span class="check-no col-center"></span>
+          </div>
+          <div class="comparison-row">
+            <span class="feature-name">No template results</span>
+            <span class="check-yes col-center"></span>
+            <span class="check-no col-center"></span>
+          </div>
+          <div class="comparison-row">
+            <span class="feature-name">AI fix suggestions with code</span>
+            <span class="check-yes col-center"></span>
+            <span class="check-no col-center"></span>
+          </div>
+          <div class="comparison-row">
+            <span class="feature-name">Plain English reports</span>
+            <span class="check-yes col-center"></span>
+            <span class="check-no col-center"></span>
+          </div>
+          <div class="comparison-row">
+            <span class="feature-name">Local currency pricing</span>
+            <span class="check-yes col-center"></span>
+            <span class="check-no col-center"></span>
+          </div>
+          <div class="comparison-row">
+            <span class="feature-name">Security badge for your site</span>
+            <span class="check-yes col-center"></span>
+            <span class="check-no col-center"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FEATURES SECTION
+     ============================================================ -->
+<section id="features">
+  <div class="container">
+    <div class="features-header reveal">
+      <div class="section-label" style="justify-content:center">
+        <div class="section-label-line"></div>
+        <span class="section-label-text">What we check</span>
+        <div class="section-label-line"></div>
+      </div>
+      <h2 class="display-lg">Everything a hacker would try.<br/>Nothing they'd miss.</h2>
+      <p>Every scan covers the full OWASP Top 10 and beyond — verified in real time against your actual technology.</p>
+    </div>
+    <div class="features-grid">
+
+      <div class="feature-card feature-card-large reveal">
+        <div class="feature-inner">
+          <div>
+            <div class="feature-icon icon-cyan">
+              <svg viewBox="0 0 24 24" width="22" height="22" stroke="#00e5ff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="15" x2="23" y2="15"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="15" x2="4" y2="15"></line></svg>
+            </div>
+            <h3>Real-Time Scanner Engine</h3>
+            <p>Our engine fingerprints your technology stack before running a single test — so it never reports PHP vulnerabilities on a Node.js site, or SQL injection where there's no database.</p>
+            <br/>
+            <div class="tag tag-cyan">Zero false positives target</div>
+          </div>
+          <div class="feature-scan-demo">
+            <div class="scan-demo-url">
+              <span>●</span> Scanning: yoursite.com
+            </div>
+            <div class="scan-demo-bar">
+              <div class="scan-demo-bar-fill"></div>
+            </div>
+            <div class="scan-demo-vulns">
+              <div class="scan-vuln-item">
+                <span>Missing CSP Header</span>
+                <span class="vuln-sev sev-high">HIGH</span>
+              </div>
+              <div class="scan-vuln-item">
+                <span>TLS 1.0 Enabled</span>
+                <span class="vuln-sev sev-critical">CRITICAL</span>
+              </div>
+              <div class="scan-vuln-item">
+                <span>Open Redirect /auth</span>
+                <span class="vuln-sev sev-medium">MEDIUM</span>
+              </div>
+              <div class="scan-vuln-item">
+                <span>X-Frame-Options Missing</span>
+                <span class="vuln-sev sev-low">LOW</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-icon icon-green">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="#00ff87" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707-.707M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"></path></svg>
+        </div>
+        <h3>AI Security Assistant</h3>
+        <p>Chat with an AI that knows your entire scan. Ask it to explain vulnerabilities, generate fix code in your stack, or walk you through remediation step by step.</p>
+      </div>
+
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-icon icon-orange">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="#ff8c42" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+        </div>
+        <h3>Web Crawler</h3>
+        <p>Discovers every page, endpoint, API route, and form on your website before testing begins. Nothing gets missed.</p>
+      </div>
+
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-icon icon-cyan">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="#00e5ff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        </div>
+        <h3>SSL / TLS Analysis</h3>
+        <p>Checks your certificate validity, expiry date, cipher strength, and protocol versions. Flags weak configurations with evidence.</p>
+      </div>
+
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-icon icon-yellow">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="#ffd60a" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line><line x1="20" y1="6" x2="20.01" y2="6"></line><line x1="20" y1="18" x2="20.01" y2="18"></line></svg>
+        </div>
+        <h3>Port Scanner</h3>
+        <p>Scans common and custom ports for unexpected open services that could expose your infrastructure to attackers.</p>
+      </div>
+
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="feature-icon icon-red">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="#ff3b5c" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+        </div>
+        <h3>Injection Testing</h3>
+        <p>Tests for SQL, command, and LDAP injection only on parameters and forms that actually exist — not hypothetical ones.</p>
+      </div>
+
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="feature-icon icon-purple">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="#a855f7" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+        </div>
+        <h3>Security Score & Badge</h3>
+        <p>Get a verified security score and shareable badge for your website. Show your users you take their safety seriously.</p>
+      </div>
+
+      <div class="feature-card reveal reveal-delay-4">
+        <div class="feature-icon icon-green">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="#00ff87" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        </div>
+        <h3>Export Reports</h3>
+        <p>Download scan reports as PDF or JSON. Team and Enterprise plans can generate white-label reports with your own branding.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     HOW IT WORKS
+     ============================================================ -->
+<section id="how">
+  <div class="container">
+    <div class="how-header reveal">
+      <div class="section-label" style="justify-content:center">
+        <div class="section-label-line"></div>
+        <span class="section-label-text">The process</span>
+        <div class="section-label-line"></div>
+      </div>
+      <h2 class="display-lg">From URL to verified report<br/>in minutes</h2>
+      <p>No setup. No configuration. Just paste your URL and let PenChecker do the work.</p>
+    </div>
+    <div class="how-steps">
+      <div class="how-step reveal">
+        <div class="how-step-number-wrap">
+          <div class="how-step-circle">1</div>
+        </div>
+        <h3>Enter Your URL</h3>
+        <p>Paste your website address, confirm you own it, choose your scan depth and industry profile. Takes 30 seconds.</p>
+      </div>
+      <div class="how-step reveal reveal-delay-2">
+        <div class="how-step-number-wrap">
+          <div class="how-step-circle">2</div>
+        </div>
+        <h3>We Scan & Verify</h3>
+        <p>PenChecker crawls your site, fingerprints your technology, runs targeted tests, and double-verifies every critical finding before logging it.</p>
+      </div>
+      <div class="how-step reveal reveal-delay-4">
+        <div class="how-step-number-wrap">
+          <div class="how-step-circle">3</div>
+        </div>
+        <h3>Get Your Report</h3>
+        <p>Receive a detailed, evidence-backed report with AI-generated fix instructions. Export it, share it, or ask the AI to help you fix each issue.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     INDUSTRIES
+     ============================================================ -->
+<section id="industries">
+  <div class="container">
+    <div class="industries-header reveal">
+      <div class="section-label" style="justify-content:center">
+        <div class="section-label-line"></div>
+        <span class="section-label-text">Industry profiles</span>
+        <div class="section-label-line"></div>
+      </div>
+      <h2 class="display-lg">Built for your industry,<br/>not a generic template</h2>
+      <p>Select your sector and PenChecker runs the checks that actually matter for your type of business.</p>
+    </div>
+    <div class="industries-grid">
+      <div class="industry-card active reveal">
+        <div class="industry-icon"></div>
+        <h3>E-Commerce</h3>
+        <p>Payment security, cart injection, and PCI-DSS risk areas.</p>
+        <div class="industry-checks">
+          <div class="industry-check"><div class="industry-check-dot"></div>Payment form security</div>
+          <div class="industry-check"><div class="industry-check-dot"></div>Cart parameter testing</div>
+          <div class="industry-check"><div class="industry-check-dot"></div>Checkout SSL verification</div>
+        </div>
+      </div>
+      <div class="industry-card reveal reveal-delay-1">
+        <div class="industry-icon"></div>
+        <h3>Healthcare</h3>
+        <p>Patient data protection and HIPAA-related misconfigurations.</p>
+        <div class="industry-checks">
+          <div class="industry-check"><div class="industry-check-dot"></div>Data exposure testing</div>
+          <div class="industry-check"><div class="industry-check-dot"></div>Auth security checks</div>
+          <div class="industry-check"><div class="industry-check-dot"></div>Encryption verification</div>
+        </div>
+      </div>
+      <div class="industry-card reveal reveal-delay-2">
+        <div class="industry-icon"></div>
+        <h3>Fintech</h3>
+        <p>API security, transaction endpoints, and financial data protection.</p>
+        <div class="industry-checks">
+          <div class="industry-check"><div class="industry-check-dot"></div>API auth testing</div>
+          <div class="industry-check"><div class="industry-check-dot"></div>Transaction security</div>
+          <div class="industry-check"><div class="industry-check-dot"></div>Token validation</div>
+        </div>
+      </div>
+      <div class="industry-card reveal reveal-delay-1">
+        <div class="industry-icon"></div>
+        <h3>Blog / Media</h3>
+        <p>Content injection, comment XSS, and CMS vulnerability checks.</p>
+        <div class="industry-checks">
+          <div class="industry-check"><div class="industry-check-dot"></div>Comment injection test</div>
+          <div class="industry-check"><div class="industry-check-dot"></div>CMS plugin scan</div>
+          <div class="industry-check"><div class="industry-check-dot"></div>Upload security check</div>
+        </div>
+      </div>
+      <div class="industry-card reveal reveal-delay-2">
+        <div class="industry-icon"></div>
+        <h3>SaaS / Startup</h3>
+        <p>Auth flows, user data APIs, and subscription security testing.</p>
+        <div class="industry-checks">
+          <div class="industry-check"><div class="industry-check-dot"></div>Login flow testing</div>
+          <div class="industry-check"><div class="industry-check-dot"></div>API endpoint scan</div>
+          <div class="industry-check"><div class="industry-check-dot"></div>Session security</div>
+        </div>
+      </div>
+      <div class="industry-card reveal reveal-delay-3">
+        <div class="industry-icon"></div>
+        <h3>General / Other</h3>
+        <p>Full OWASP Top 10 coverage for any website or web application.</p>
+        <div class="industry-checks">
+          <div class="industry-check"><div class="industry-check-dot"></div>Full OWASP coverage</div>
+          <div class="industry-check"><div class="industry-check-dot"></div>Headers & SSL check</div>
+          <div class="industry-check"><div class="industry-check-dot"></div>Port & subdomain scan</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PRICING SECTION
+     ============================================================ -->
+<section id="pricing">
+  <div class="container">
+    <div class="pricing-header reveal">
+      <div class="section-label" style="justify-content:center">
+        <div class="section-label-line"></div>
+        <span class="section-label-text">Simple pricing</span>
+        <div class="section-label-line"></div>
+      </div>
+      <h2 class="display-lg">Simple pricing.<br/>Built for the world.</h2>
+      <p>Security testing shouldn't cost a fortune. Prices shown in your local currency. Choose the plan that fits your team.</p>
+      <div class="currency-indicator" id="currencyIndicator">
+        <div class="currency-dot"></div>
+        <span id="currencyLabel">Detecting your location...</span>
+      </div>
+    </div>
+    <div class="pricing-toggle">
+      <span class="pricing-toggle-label active" id="monthlyLabel">Monthly</span>
+      <div class="toggle-switch" id="billingToggle" onclick="toggleBilling()">
+        <div class="toggle-knob"></div>
+      </div>
+      <span class="pricing-toggle-label" id="yearlyLabel">Yearly</span>
+      <span class="pricing-save-badge">Save 20%</span>
+    </div>
+    <div class="pricing-grid">
+
+      <!-- Free -->
+      <div class="pricing-card reveal">
+        <div class="pricing-plan-name">Free</div>
+        <div class="pricing-price">$0<span class="period">/mo</span></div>
+        <p class="pricing-desc">Perfect to try PenChecker with no commitment.</p>
+        <div class="pricing-divider"></div>
+        <div class="pricing-features">
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>3 scans per week</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>Basic vulnerability scan</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>Security score</span></div>
+          <div class="pricing-feature"><span class="pricing-feature-check no"></span><span>Report export</span></div>
+          <div class="pricing-feature"><span class="pricing-feature-check no"></span><span>AI chat assistant</span></div>
+          <div class="pricing-feature"><span class="pricing-feature-check no"></span><span>Deep scan mode</span></div>
+          <div class="pricing-feature"><span class="pricing-feature-check no"></span><span>Continuous monitoring</span></div>
+        </div>
+        <a href="signup.html" class="btn btn-ghost">Get Started Free</a>
+      </div>
+
+      <!-- Individual -->
+      <div class="pricing-card reveal reveal-delay-1">
+        <div class="pricing-plan-name">Individual</div>
+        <div class="pricing-price" id="indPrice"><span class="price-sym">$</span><span class="price-val">9.99</span><span class="period">/mo</span></div>
+        <p class="pricing-desc">For solo developers and freelancers who take security seriously.</p>
+        <div class="pricing-divider"></div>
+        <div class="pricing-features">
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>Unlimited scans</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>Full vulnerability scan</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>PDF & JSON export</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>AI chat assistant</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>Deep scan mode</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>Security badge</span></div>
+          <div class="pricing-feature"><span class="pricing-feature-check no"></span><span>Team dashboard</span></div>
+        </div>
+        <a href="signup.html?plan=individual" class="btn btn-ghost">Start Individual</a>
+      </div>
+
+      <!-- Team - Popular -->
+      <div class="pricing-card popular reveal reveal-delay-2">
+        <div class="pricing-popular-badge">Most Popular</div>
+        <div class="pricing-plan-name">Team</div>
+        <div class="pricing-price" id="teamPrice"><span class="price-sym">$</span><span class="price-val">29.99</span><span class="period">/mo</span></div>
+        <p class="pricing-desc">For small teams that need shared visibility and collaboration.</p>
+        <div class="pricing-divider"></div>
+        <div class="pricing-features">
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>Up to 10 members</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>5 scans/week per member</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>Team dashboard</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>Admin export reports</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>AI chat assistant</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>Continuous monitoring</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>API access</span></div>
+        </div>
+        <a href="signup.html?plan=team" class="btn btn-primary">Start Team Plan</a>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="pricing-card reveal reveal-delay-3">
+        <div class="pricing-plan-name">Enterprise</div>
+        <div class="pricing-price" id="entPrice"><span class="price-sym">$</span><span class="price-val">99.99</span><span class="period">/mo</span></div>
+        <p class="pricing-desc">For organizations that need unlimited power and full control.</p>
+        <div class="pricing-divider"></div>
+        <div class="pricing-features">
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>Unlimited members</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>Unlimited scans</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>3 sub-admins</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>White-label reports</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>Audit logs</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>Priority support</span></div>
+          <div class="pricing-feature active"><span class="pricing-feature-check yes"></span><span>CI/CD integration</span></div>
+        </div>
+        <a href="signup.html?plan=enterprise" class="btn btn-green">Start Enterprise</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TESTIMONIALS
+     ============================================================ -->
+<section id="testimonials">
+  <div class="container">
+    <div class="testi-header reveal">
+      <div class="section-label" style="justify-content:center">
+        <div class="section-label-line"></div>
+        <span class="section-label-text">What users say</span>
+        <div class="section-label-line"></div>
+      </div>
+      <h2 class="display-lg">Trusted by developers<br/>worldwide</h2>
+      <p style="color:var(--muted2)">From solo developers to growing startups.</p>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="testi-stars"></div>
+        <p class="testi-quote">Every other scanner I tried reported SQL injection on my Node.js app. <strong>PenChecker actually checked my stack first</strong> and gave me 4 real findings I could actually fix.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:rgba(0,229,255,0.15);color:var(--cyan)">AO</div>
+          <div class="testi-author-info">
+            <strong>Adeola Okonkwo</strong>
+            <span>Fullstack Dev, Austin TX</span>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-stars"></div>
+        <p class="testi-quote">The <strong>AI chat is insane</strong>. I clicked on a vulnerability, asked it to write the fix in Express.js, and it gave me the exact code. Deployed in 10 minutes.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:rgba(0,255,135,0.15);color:var(--green)">KM</div>
+          <div class="testi-author-info">
+            <strong>Kofi Mensah</strong>
+            <span>CTO, New York</span>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="testi-stars"></div>
+        <p class="testi-quote">We use it for client audits. The <strong>white-label report feature</strong> means I send our clients a branded PDF that looks completely professional. Game changer for our agency.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:rgba(255,140,66,0.15);color:var(--orange)">FN</div>
+          <div class="testi-author-info">
+            <strong>Fatima Ndiaye</strong>
+            <span>IT Consultant, London</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     BADGE SHOWCASE
+     ============================================================ -->
+<section id="badge">
+  <div class="container">
+    <div class="badge-inner">
+      <div class="badge-left reveal">
+        <div class="section-label">
+          <div class="section-label-line"></div>
+          <span class="section-label-text">Security Badge</span>
+        </div>
+        <h2 class="display-lg">Show your visitors<br/>you're protected</h2>
+        <p>Every successful scan earns you a verified PenChecker Security Badge. Embed it on your site to prove to your users that their safety matters to you.</p>
+        <ul>
+          <li>Automatically updates when you rescan</li>
+          <li>Disappears if your score drops — motivates you to stay secure</li>
+          <li>Links to your public verified scan summary</li>
+          <li>Free on Individual plan and above</li>
+        </ul>
+        <a href="signup.html" class="btn btn-primary">Earn Your Badge</a>
+      </div>
+      <div class="badge-right reveal reveal-delay-2">
+        <div class="badge-showcase">
+          <div class="badge-display">
+            <div class="badge-shield"></div>
+            <div class="badge-score-num">8.7</div>
+            <div class="badge-score-sub">Security Score / 10</div>
+            <div class="badge-domain">yoursite.com</div>
+          </div>
+          <div class="badge-embed-box">
+            &lt;a href="https://penchecker.io/badge/abc123"&gt;<br/>
+            &nbsp;&nbsp;&lt;img src="https://penchecker.io/badge/abc123.svg"/&gt;<br/>
+            &lt;/a&gt;
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CTA SECTION
+     ============================================================ -->
+<section id="cta">
+  <div class="container">
+    <div class="cta-inner reveal">
+      <div class="section-label" style="justify-content:center; margin-bottom:20px;">
+        <div class="section-label-line"></div>
+        <span class="section-label-text">Get started today</span>
+        <div class="section-label-line"></div>
+      </div>
+      <h2 class="display-lg">Your website has vulnerabilities.<br/>Let's find the real ones.</h2>
+      <p>Join thousands of developers who trust PenChecker to scan, verify, and secure their websites — not just generate reports that look scary.</p>
+      <div class="cta-actions">
+        <a href="signup.html" class="btn btn-primary btn-lg">
+          Scan Your Site Free
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="contact.html" class="btn btn-ghost btn-lg">Talk to us</a>
+      </div>
+      <p class="cta-disclaimer">Free plan includes 3 scans/week. No credit card required.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-icon" style="background:none;width:32px;height:32px;display:flex;align-items:center;justify-content:center;padding:0;">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32">
+    <defs>
+      <linearGradient id="penchecker-grad-footer" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#00e5ff" />
+        <stop offset="50%" stop-color="#7c3aed" />
+        <stop offset="100%" stop-color="#00ff87" />
+      </linearGradient>
+      <filter id="penchecker-glow-footer" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+    </defs>
+    <path d="M50 12 L82 22 V52 C82 70 68 83 50 88 C32 83 18 70 18 52 V22 Z" fill="none" stroke="url(#penchecker-grad-footer)" stroke-width="3" stroke-linejoin="round" filter="url(#penchecker-glow-footer)" />
+    <path d="M30 40 A 24 24 0 0 1 70 40" fill="none" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.8" />
+    <path d="M36 48 A 16 16 0 0 1 64 48" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6" />
+    <path d="M50 28 L62 54 L50 72 L38 54 Z" fill="url(#penchecker-grad-footer)" />
+    <line x1="50" y1="38" x2="50" y2="60" stroke="#060608" stroke-width="2" stroke-linecap="round" />
+    <circle cx="50" cy="34" r="2.5" fill="#00ff87" filter="url(#penchecker-glow-footer)" />
+  </svg>
+</div>
+          <div class="footer-logo-text">Pen<span>Checker</span></div>
+        </div>
+        <p class="footer-brand-desc">
+          The world's most accurate web security scanner. Real findings, real evidence, real solutions.
+        </p>
+        <div class="footer-socials">
+          <a href="#" class="footer-social">𝕏</a>
+          <a href="#" class="footer-social">in</a>
+          <a href="#" class="footer-social">gh</a>
+          <a href="#" class="footer-social">wa</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="changelog.html">Changelog</a></li>
+          <li><a href="badge.html">Security Badge</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About us</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="contact.html">Careers</a></li>
+          <li><a href="affiliates.html">Affiliates</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="legal/terms.html">Terms of Service</a></li>
+          <li><a href="legal/privacy.html">Privacy Policy</a></li>
+          <li><a href="legal/acceptable-use.html">Acceptable Use</a></li>
+          <li><a href="legal/dmca.html">DMCA</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copyright">© 2025 <span>PenChecker</span>. All rights reserved.</p>
+      <div class="footer-paystack">
+        <div class="footer-paystack-dot"></div>
+        Secure payments worldwide
+      </div>
+      <div class="footer-legal">
+        <a href="legal/privacy.html">Privacy</a>
+        <span class="footer-legal-separator">·</span>
+        <a href="legal/terms.html">Terms</a>
+        <span class="footer-legal-separator">·</span>
+        <a href="legal/acceptable-use.html">Acceptable Use</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+// ============================================================
+// NAVBAR SCROLL EFFECT
+// ============================================================
+const navbar = document.getElementById('navbar')
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 20)
+})
+
+// ============================================================
+// MOBILE MENU
+// ============================================================
+const menuBtn = document.getElementById('menuBtn')
+const mobileMenu = document.getElementById('mobileMenu')
+const menuClose = document.getElementById('menuClose')
+menuBtn.addEventListener('click', () => mobileMenu.classList.add('open'))
+menuClose.addEventListener('click', () => mobileMenu.classList.remove('open'))
+function closeMobileMenu() { mobileMenu.classList.remove('open') }
+
+// ============================================================
+// CURRENCY DETECTION & CONVERSION
+// ============================================================
+
+// Base prices in USD
+const BASE_PRICES = {
+  ind:  { monthly: 9.99,  yearly: 7.99  },
+  team: { monthly: 29.99, yearly: 23.99 },
+  ent:  { monthly: 99.99, yearly: 79.99 }
+}
+
+// Currency symbols & formatting config
+const CURRENCY_CONFIG = {
+  USD: { symbol: '$',   name: 'US Dollar',       decimals: 2, position: 'before' },
+  EUR: { symbol: '€',   name: 'Euro',             decimals: 2, position: 'before' },
+  GBP: { symbol: '£',   name: 'British Pound',    decimals: 2, position: 'before' },
+  NGN: { symbol: '₦',   name: 'Nigerian Naira',   decimals: 0, position: 'before' },
+  GHS: { symbol: 'GH₵', name: 'Ghanaian Cedi',    decimals: 2, position: 'before' },
+  KES: { symbol: 'KSh', name: 'Kenyan Shilling',  decimals: 0, position: 'before' },
+  ZAR: { symbol: 'R',   name: 'South African Rand', decimals: 2, position: 'before' },
+  EGP: { symbol: 'E£',  name: 'Egyptian Pound',   decimals: 2, position: 'before' },
+  INR: { symbol: '₹',   name: 'Indian Rupee',     decimals: 0, position: 'before' },
+  CAD: { symbol: 'CA$', name: 'Canadian Dollar',  decimals: 2, position: 'before' },
+  AUD: { symbol: 'A$',  name: 'Australian Dollar', decimals: 2, position: 'before' },
+  JPY: { symbol: '¥',   name: 'Japanese Yen',     decimals: 0, position: 'before' },
+  BRL: { symbol: 'R$',  name: 'Brazilian Real',   decimals: 2, position: 'before' },
+  MXN: { symbol: 'MX$', name: 'Mexican Peso',     decimals: 2, position: 'before' },
+  PKR: { symbol: '₨',   name: 'Pakistani Rupee',  decimals: 0, position: 'before' },
+  SGD: { symbol: 'S$',  name: 'Singapore Dollar', decimals: 2, position: 'before' },
+  AED: { symbol: 'AED', name: 'UAE Dirham',       decimals: 2, position: 'before' },
+  TZS: { symbol: 'TSh', name: 'Tanzanian Shilling', decimals: 0, position: 'before' },
+  UGX: { symbol: 'USh', name: 'Ugandan Shilling', decimals: 0, position: 'before' },
+  XOF: { symbol: 'CFA', name: 'West African CFA', decimals: 0, position: 'before' },
+}
+
+// Country → currency map for common countries
+const COUNTRY_CURRENCY = {
+  US: 'USD', GB: 'GBP', DE: 'EUR', FR: 'EUR', IT: 'EUR', ES: 'EUR',
+  NL: 'EUR', BE: 'EUR', AT: 'EUR', PT: 'EUR', IE: 'EUR', FI: 'EUR',
+  GR: 'EUR', NG: 'NGN', GH: 'GHS', KE: 'KES', ZA: 'ZAR', EG: 'EGP',
+  IN: 'INR', CA: 'CAD', AU: 'AUD', JP: 'JPY', BR: 'BRL', MX: 'MXN',
+  PK: 'PKR', SG: 'SGD', AE: 'AED', TZ: 'TZS', UG: 'UGX', SN: 'XOF',
+  CI: 'XOF', ML: 'XOF', BF: 'XOF', TG: 'XOF', BJ: 'XOF',
+}
+
+let currentCurrency = 'USD'
+let currentRates = { USD: 1 }
+let isYearly = false
+
+// Format a price with the right symbol and decimals
+function formatPrice(amountUSD, currency) {
+  const cfg = CURRENCY_CONFIG[currency] || CURRENCY_CONFIG['USD']
+  const rate = currentRates[currency] || 1
+  const converted = amountUSD * rate
+  const formatted = converted.toLocaleString('en-US', {
+    minimumFractionDigits: cfg.decimals,
+    maximumFractionDigits: cfg.decimals
+  })
+  return { symbol: cfg.symbol, value: formatted }
+}
+
+// Render prices into the 3 pricing cards
+function renderPrices() {
+  const key = isYearly ? 'yearly' : 'monthly'
+  const plans = [
+    { id: 'indPrice',  usd: BASE_PRICES.ind[key]  },
+    { id: 'teamPrice', usd: BASE_PRICES.team[key] },
+    { id: 'entPrice',  usd: BASE_PRICES.ent[key]  },
+  ]
+  plans.forEach(plan => {
+    const el = document.getElementById(plan.id)
+    if (!el) return
+    const { symbol, value } = formatPrice(plan.usd, currentCurrency)
+    el.innerHTML = `<span class="price-sym">${symbol}</span><span class="price-val">${value}</span><span class="period">/mo</span>`
+  })
+}
+
+// Update the currency indicator badge
+function updateIndicator(countryName, currencyCode, currencyName) {
+  const el = document.getElementById('currencyLabel')
+  const dot = document.querySelector('.currency-dot')
+  if (el) el.textContent = `Showing prices in ${currencyCode} — ${currencyName} (${countryName})`
+  if (dot) dot.style.background = 'var(--green)'
+}
+
+// Main: detect location → get rates → render
+async function initCurrency() {
+  try {
+    // Step 1: Detect user's country via IP geolocation (free, no key needed)
+    const geoRes = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(5000) })
+    const geo = await geoRes.json()
+    const countryCode = geo.country_code || 'US'
+    const countryName = geo.country_name || 'United States'
+    const detectedCurrency = COUNTRY_CURRENCY[countryCode] || 'USD'
+
+    // Step 2: Fetch live exchange rates from USD (free API, no key needed)
+    const ratesRes = await fetch('https://open.er-api.com/v6/latest/USD', { signal: AbortSignal.timeout(5000) })
+    const ratesData = await ratesRes.json()
+
+    if (ratesData && ratesData.rates) {
+      currentRates = ratesData.rates
+      currentRates['USD'] = 1
+    }
+
+    // Step 3: Apply and render
+    currentCurrency = detectedCurrency
+    const cfg = CURRENCY_CONFIG[currentCurrency] || CURRENCY_CONFIG['USD']
+    renderPrices()
+    updateIndicator(countryName, currentCurrency, cfg.name)
+
+  } catch (err) {
+    // Graceful fallback to USD if anything fails
+    currentCurrency = 'USD'
+    renderPrices()
+    const el = document.getElementById('currencyLabel')
+    if (el) el.textContent = 'Showing prices in USD'
+    const dot = document.querySelector('.currency-dot')
+    if (dot) dot.style.background = 'var(--muted)'
+  }
+}
+
+// ============================================================
+// BILLING TOGGLE (Monthly / Yearly)
+// ============================================================
+function toggleBilling() {
+  isYearly = !isYearly
+  const toggle = document.getElementById('billingToggle')
+  toggle.classList.toggle('on', isYearly)
+  document.getElementById('monthlyLabel').classList.toggle('active', !isYearly)
+  document.getElementById('yearlyLabel').classList.toggle('active', isYearly)
+  renderPrices()
+}
+
+// ============================================================
+// SCROLL REVEAL
+// ============================================================
+const reveals = document.querySelectorAll('.reveal')
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible')
+      revealObserver.unobserve(entry.target)
+    }
+  })
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' })
+reveals.forEach(el => revealObserver.observe(el))
+
+// ============================================================
+// INDUSTRY CARD TOGGLE
+// ============================================================
+const industryCards = document.querySelectorAll('.industry-card')
+industryCards.forEach(card => {
+  card.addEventListener('click', () => {
+    industryCards.forEach(c => c.classList.remove('active'))
+    card.classList.add('active')
+  })
+})
+
+// ============================================================
+// SMOOTH SCROLL
+// ============================================================
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const href = a.getAttribute('href')
+    if (href === '#') return
+    const target = document.querySelector(href)
+    if (target) {
+      e.preventDefault()
+      target.scrollIntoView({ behavior: 'smooth' })
+    }
+  })
+})
+
+// ============================================================
+// INIT
+// ============================================================
+// Render USD prices immediately (instant display, no flash)
+renderPrices()
+// Then detect location and update to local currency
+initCurrency()
+// ============================================================
+// THEME SWITCHER
+// ============================================================
+const themeToggle = document.getElementById('themeToggle');
+function updateThemeBtn() {
+  if (!themeToggle) return;
+  const isLight = document.body.classList.contains('light-theme');
+  const sunIcon = `<svg class="theme-btn-svg" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+  const moonIcon = `<svg class="theme-btn-svg" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+  themeToggle.innerHTML = (isLight ? sunIcon : moonIcon) + ' ' + (isLight ? 'Light' : 'Dark');
+}
+function setTheme(light) {
+  document.body.classList.toggle('light-theme', light);
+  localStorage.setItem('pencheckerTheme', light ? 'light' : 'dark');
+  updateThemeBtn();
+}
+if (themeToggle) {
+  themeToggle.addEventListener('click', () => setTheme(!document.body.classList.contains('light-theme')));
+}
+// Restore on load
+(function restoreTheme() {
+  const saved = localStorage.getItem('pencheckerTheme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  setTheme(saved === 'light' || (!saved && prefersLight));
+})();
+</script>
+</body>
+</html>

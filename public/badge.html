@@ -1,0 +1,648 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Security Badge Builder — PenChecker</title>
+<meta name="description" content="Generate a live PenChecker security badge for your website. Show visitors your security score with a beautiful embeddable SVG badge."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--black:#060608;--black2:#0d0d12;--black3:#13131a;--surface:#1a1a24;--surface2:#22222f;--border:rgba(255,255,255,0.07);--border2:rgba(0,229,255,0.2);--cyan:#00e5ff;--green:#00ff87;--red:#ff3b5c;--orange:#ff8c42;--yellow:#ffd60a;--purple:#a855f7;--white:#f0f0f8;--muted:#6b6b85;--muted2:#9090a8;--font-body:"Plus Jakarta Sans",sans-serif;--font-mono:"JetBrains Mono",monospace;--radius:12px;--radius2:20px;}
+.light-theme{--black:#f8f9fc;--black2:#e8eaf2;--black3:#ffffff;--surface:#ffffff;--surface2:#f2f4f9;--border:rgba(13,23,44,0.12);--border2:rgba(0,149,212,0.25);--cyan:#007fbc;--green:#0f9d58;--red:#d93025;--orange:#e37400;--yellow:#f1c232;--purple:#6a1b9a;--white:#0b0d13;--muted:#4b5d79;--muted2:#6b7790;}
+.light-theme #navbar{background:rgba(248,249,252,0.96);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:16px;line-height:1.7;overflow-x:hidden;transition:background 0.25s,color 0.25s;}
+a{color:var(--cyan);text-decoration:none;}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+body::after{content:"";position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.02) 1px,transparent 1px);background-size:50px 50px;mask-image:radial-gradient(ellipse 80% 80% at 50% 20%,black,transparent);pointer-events:none;z-index:0;}
+/* Navbar */
+#navbar{position:sticky;top:0;z-index:100;padding:0 24px;background:rgba(6,6,8,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1100px;margin:0 auto;height:64px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-icon{width:34px;height:34px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;font-size:0.82rem;color:var(--black);}
+.nav-logo-text{font-size:1.1rem;font-weight:700;letter-spacing:-0.02em;color:var(--white);}
+.nav-logo-text span{color:var(--cyan);}
+.nav-links{display:flex;align-items:center;gap:22px;font-size:0.88rem;}
+.nav-links a{color:var(--muted2);transition:color 0.2s;text-decoration:none;}
+.nav-links a:hover{color:var(--white);}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.btn-nav{padding:8px 18px;border-radius:8px;font-size:0.85rem;font-weight:600;text-decoration:none;transition:all 0.2s;}
+.btn-ghost{border:1px solid var(--border);color:var(--muted2);}
+.btn-ghost:hover{border-color:var(--border2);color:var(--white);}
+.btn-solid{background:var(--cyan);color:var(--black);}
+.btn-solid:hover{box-shadow:0 0 24px rgba(0,229,255,0.35);}
+.theme-btn{background:none;border:1px solid var(--border);color:var(--muted2);padding:7px 14px;border-radius:8px;font-size:0.8rem;transition:all 0.2s;}
+.theme-btn:hover{border-color:var(--border2);color:var(--white);}
+/* Page layout */
+.page-wrap{max-width:1100px;margin:0 auto;padding:72px 24px 100px;position:relative;z-index:1;}
+/* Hero */
+.hero{text-align:center;margin-bottom:72px;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(0,229,255,0.07);border:1px solid rgba(0,229,255,0.18);border-radius:100px;font-family:var(--font-mono);font-size:0.7rem;color:var(--cyan);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:20px;}
+.hero-title{font-size:clamp(2.2rem,5.5vw,3.8rem);font-weight:800;letter-spacing:-0.04em;line-height:1.1;margin-bottom:16px;}
+.hero-title span{color:var(--cyan);}
+.hero-sub{font-size:1rem;color:var(--muted2);max-width:500px;margin:0 auto 28px;line-height:1.7;}
+.hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-primary{display:inline-flex;align-items:center;gap:7px;padding:13px 26px;background:var(--cyan);color:var(--black);border-radius:var(--radius);font-weight:700;font-size:0.95rem;transition:all 0.25s;text-decoration:none;}
+.btn-primary:hover{box-shadow:0 0 28px rgba(0,229,255,0.4);transform:translateY(-1px);}
+.btn-outline{display:inline-flex;align-items:center;gap:7px;padding:13px 26px;background:transparent;color:var(--muted2);border:1px solid var(--border);border-radius:var(--radius);font-weight:600;font-size:0.95rem;transition:all 0.2s;text-decoration:none;}
+.btn-outline:hover{border-color:var(--border2);color:var(--white);}
+/* Builder */
+.builder-wrap{display:grid;grid-template-columns:340px 1fr;gap:28px;margin-bottom:80px;align-items:start;}
+/* Controls panel */
+.controls-panel{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);padding:28px;position:sticky;top:84px;}
+.panel-title{font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);font-family:var(--font-mono);margin-bottom:22px;}
+.ctrl-group{margin-bottom:24px;}
+.ctrl-label{font-size:0.82rem;font-weight:600;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+.ctrl-value{font-family:var(--font-mono);font-size:0.82rem;color:var(--cyan);}
+.score-slider{width:100%;height:5px;appearance:none;background:linear-gradient(to right,var(--red),var(--orange),var(--yellow),var(--green));border-radius:3px;outline:none;cursor:pointer;margin-bottom:6px;}
+.score-slider::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:var(--white);box-shadow:0 0 8px rgba(0,229,255,0.5),0 2px 6px rgba(0,0,0,0.4);cursor:pointer;border:2px solid var(--cyan);}
+.score-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--white);box-shadow:0 0 8px rgba(0,229,255,0.5);cursor:pointer;border:2px solid var(--cyan);}
+.score-input-row{display:flex;gap:8px;align-items:center;margin-top:4px;}
+.score-input{width:70px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-family:var(--font-mono);font-size:0.85rem;color:var(--white);text-align:center;outline:none;transition:border-color 0.2s;}
+.score-input:focus{border-color:var(--cyan);}
+.score-tier-badge{padding:3px 12px;border-radius:6px;font-family:var(--font-mono);font-size:0.65rem;font-weight:700;letter-spacing:0.06em;}
+/* Style selector */
+.style-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.style-btn{padding:10px 8px;border-radius:10px;background:var(--surface);border:2px solid transparent;font-size:0.78rem;font-weight:600;color:var(--muted2);transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.style-btn:hover{border-color:var(--border2);color:var(--white);}
+.style-btn.active{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,0.06);}
+.style-btn-icon{font-size:1.1rem;}
+/* Domain input */
+.domain-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-family:var(--font-mono);font-size:0.82rem;color:var(--white);outline:none;transition:border-color 0.2s;}
+.domain-input:focus{border-color:var(--cyan);}
+.domain-input::placeholder{color:var(--muted);}
+/* Copy button */
+.copy-btn{width:100%;padding:12px;background:var(--cyan);color:var(--black);border-radius:var(--radius);font-weight:700;font-size:0.9rem;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;}
+.copy-btn:hover{box-shadow:0 0 24px rgba(0,229,255,0.35);}
+.copy-btn.copied{background:var(--green);color:var(--black);}
+/* Preview panel */
+.preview-panel{display:flex;flex-direction:column;gap:20px;}
+.preview-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;transition:border-color 0.3s;}
+.preview-card.active-style{border-color:rgba(0,229,255,0.3);box-shadow:0 0 24px rgba(0,229,255,0.06);}
+.preview-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.preview-label{font-family:var(--font-mono);font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);}
+.preview-tag{font-family:var(--font-mono);font-size:0.6rem;padding:2px 8px;border-radius:5px;background:rgba(0,229,255,0.1);color:var(--cyan);}
+.preview-body{padding:24px 20px;display:flex;align-items:center;justify-content:center;min-height:100px;}
+.preview-body.dark-bg{background:#111;}
+.preview-body.light-bg{background:#f0f0f0;}
+.preview-body.checkered{background-image:linear-gradient(45deg,rgba(255,255,255,0.05) 25%,transparent 25%),linear-gradient(-45deg,rgba(255,255,255,0.05) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(255,255,255,0.05) 75%),linear-gradient(-45deg,transparent 75%,rgba(255,255,255,0.05) 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0;}
+.code-section{padding:14px 20px;border-top:1px solid var(--border);}
+.code-label{font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.08em;}
+.code-block{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:0.72rem;color:var(--muted2);line-height:1.5;word-break:break-all;max-height:80px;overflow-y:auto;scrollbar-width:thin;}
+/* How it works */
+.section{margin-bottom:80px;}
+.section-eyebrow{font-family:var(--font-mono);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--cyan);margin-bottom:10px;}
+.section-title{font-size:1.8rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:10px;}
+.section-sub{font-size:0.9rem;color:var(--muted2);margin-bottom:36px;max-width:520px;}
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.how-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);padding:26px;position:relative;overflow:hidden;}
+.how-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--purple));}
+.how-num{font-family:var(--font-mono);font-size:2.5rem;font-weight:800;color:var(--surface2);position:absolute;top:14px;right:16px;line-height:1;}
+.how-icon{font-size:1.8rem;margin-bottom:14px;}
+.how-title{font-weight:700;font-size:0.95rem;margin-bottom:8px;}
+.how-text{font-size:0.83rem;color:var(--muted2);line-height:1.65;}
+/* Badge examples showcase */
+.showcase-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:80px;}
+.showcase-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);padding:24px;}
+.showcase-header{margin-bottom:16px;}
+.showcase-site{font-weight:700;font-size:0.95rem;margin-bottom:4px;}
+.showcase-score{font-family:var(--font-mono);font-size:0.78rem;color:var(--green);}
+.showcase-badge-area{display:flex;justify-content:flex-start;}
+/* Verification section */
+.verify-card{background:linear-gradient(135deg,rgba(0,229,255,0.05),rgba(168,85,247,0.04));border:1px solid rgba(0,229,255,0.15);border-radius:var(--radius2);padding:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:80px;align-items:center;}
+.verify-title{font-size:1.4rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:12px;}
+.verify-text{font-size:0.88rem;color:var(--muted2);line-height:1.75;margin-bottom:20px;}
+.verify-list{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.verify-list li{display:flex;align-items:flex-start;gap:10px;font-size:0.84rem;color:var(--muted2);}
+.verify-list li::before{content:"";width:18px;height:18px;border-radius:50%;background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.verify-visual{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center;}
+.verify-domain{font-family:var(--font-mono);font-size:0.8rem;color:var(--muted2);margin-bottom:16px;}
+.verify-score-ring{width:80px;height:80px;margin:0 auto 14px;}
+/* CTA */
+.cta-card{background:linear-gradient(135deg,rgba(0,229,255,0.07),rgba(168,85,247,0.05));border:1px solid rgba(0,229,255,0.2);border-radius:var(--radius2);padding:56px 40px;text-align:center;}
+.cta-title{font-size:1.7rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:12px;}
+.cta-sub{font-size:0.95rem;color:var(--muted2);margin-bottom:28px;max-width:420px;margin-left:auto;margin-right:auto;}
+/* Footer */
+footer{background:var(--black2);border-top:1px solid var(--border);padding:48px 24px;}
+.footer-inner{max-width:1100px;margin:0 auto;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:32px;}
+.footer-brand p{font-size:0.82rem;color:var(--muted2);line-height:1.7;margin-top:10px;max-width:260px;}
+.footer-col h4{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:14px;font-family:var(--font-mono);}
+.footer-col ul{list-style:none;}
+.footer-col li{margin-bottom:9px;}
+.footer-col a{font-size:0.84rem;color:var(--muted2);transition:color 0.2s;text-decoration:none;}
+.footer-col a:hover{color:var(--white);}
+.footer-bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.footer-copy{font-size:0.79rem;color:var(--muted);}
+.footer-legal{display:flex;gap:16px;}
+.footer-legal a{font-size:0.79rem;color:var(--muted);text-decoration:none;}
+.footer-legal a:hover{color:var(--white);}
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.55s ease,transform 0.55s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:0.1s;}
+.reveal-delay-2{transition-delay:0.2s;}
+.reveal-delay-3{transition-delay:0.3s;}
+/* Toast */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);color:var(--white);padding:12px 24px;border-radius:10px;font-size:0.84rem;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.5);transition:opacity 0.3s;min-width:240px;text-align:center;display:none;}
+@media(max-width:960px){.builder-wrap{grid-template-columns:1fr;}.controls-panel{position:static;}.how-grid{grid-template-columns:1fr 1fr;}.showcase-grid{grid-template-columns:1fr;}.verify-card{grid-template-columns:1fr;gap:24px;}}
+@media(max-width:768px){.nav-links{display:none;}.footer-grid{grid-template-columns:1fr 1fr;}.footer-brand{grid-column:1/-1;}.how-grid{grid-template-columns:1fr;}}
+@media(max-width:480px){.page-wrap{padding:48px 16px 80px;}.hero-actions{flex-direction:column;align-items:center;}.style-grid{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon" style="background:none;width:36px;height:36px;display:flex;align-items:center;justify-content:center;padding:0;">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="36" height="36">
+    <defs>
+      <linearGradient id="penchecker-grad-nav" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#00e5ff" />
+        <stop offset="50%" stop-color="#7c3aed" />
+        <stop offset="100%" stop-color="#00ff87" />
+      </linearGradient>
+      <filter id="penchecker-glow-nav" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+    </defs>
+    <path d="M50 12 L82 22 V52 C82 70 68 83 50 88 C32 83 18 70 18 52 V22 Z" fill="none" stroke="url(#penchecker-grad-nav)" stroke-width="3" stroke-linejoin="round" filter="url(#penchecker-glow-nav)" />
+    <path d="M30 40 A 24 24 0 0 1 70 40" fill="none" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.8" />
+    <path d="M36 48 A 16 16 0 0 1 64 48" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6" />
+    <path d="M50 28 L62 54 L50 72 L38 54 Z" fill="url(#penchecker-grad-nav)" />
+    <line x1="50" y1="38" x2="50" y2="60" stroke="#060608" stroke-width="2" stroke-linecap="round" />
+    <circle cx="50" cy="34" r="2.5" fill="#00ff87" filter="url(#penchecker-glow-nav)" />
+  </svg>
+</div>
+      <div class="nav-logo-text">Pen<span>Checker</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="features.html">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="how.html">How it works</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About</a>
+    </div>
+    <div class="nav-right">
+      <button class="theme-btn" id="themeToggle"></button>
+      <a href="login.html" class="btn-nav btn-ghost">Sign in</a>
+      <a href="signup.html" class="btn-nav btn-solid">Get started</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- Hero -->
+  <div class="hero reveal">
+    <div class="hero-eyebrow">Security Badges</div>
+    <h1 class="hero-title">Show your users<br>you are <span>secure</span></h1>
+    <p class="hero-sub">Embed a live PenChecker badge on your website. Your score updates automatically after every scan. Visitors can click to verify it is real.</p>
+    <div class="hero-actions">
+      <a href="#builder" class="btn-primary">Build your badge</a>
+      <a href="signup.html" class="btn-outline">Run a free scan first</a>
+    </div>
+  </div>
+
+  <!-- Builder -->
+  <div class="builder-wrap reveal reveal-delay-1" id="builder">
+
+    <!-- Controls -->
+    <div class="controls-panel">
+      <div class="panel-title">Badge Builder</div>
+
+      <!-- Score slider -->
+      <div class="ctrl-group">
+        <label class="ctrl-label">
+          Security Score
+          <span class="ctrl-value" id="sliderDisplay">8.5 / 10</span>
+        </label>
+        <input type="range" class="score-slider" id="scoreSlider" min="0" max="10" step="0.1" value="8.5" oninput="onSlider(this.value)"/>
+        <div class="score-input-row">
+          <input type="number" class="score-input" id="scoreInput" min="0" max="10" step="0.1" value="8.5" oninput="onInput(this.value)" placeholder="0-10"/>
+          <span class="score-tier-badge" id="scoreTierBadge" style="background:rgba(0,255,135,0.12);color:#00ff87;">GOOD</span>
+        </div>
+      </div>
+
+      <!-- Domain -->
+      <div class="ctrl-group">
+        <label class="ctrl-label">Your Domain</label>
+        <input type="text" class="domain-input" id="domainInput" value="yoursite.com" placeholder="yoursite.com" oninput="updateAllBadges()"/>
+      </div>
+
+      <!-- Style -->
+      <div class="ctrl-group">
+        <label class="ctrl-label">Badge Style</label>
+        <div class="style-grid">
+          <button class="style-btn active" data-style="dark" onclick="setStyle('dark',this)">
+            <span class="style-btn-icon"></span>Dark
+          </button>
+          <button class="style-btn" data-style="light" onclick="setStyle('light',this)">
+            <span class="style-btn-icon"></span>Light
+          </button>
+          <button class="style-btn" data-style="compact" onclick="setStyle('compact',this)">
+            <span class="style-btn-icon"></span>Compact
+          </button>
+          <button class="style-btn" data-style="detailed" onclick="setStyle('detailed',this)">
+            <span class="style-btn-icon"></span>Detailed
+          </button>
+        </div>
+      </div>
+
+      <!-- Copy button -->
+      <button class="copy-btn" id="copyBtn" onclick="copyEmbed()">
+        Copy Embed Code
+      </button>
+      <p style="font-size:0.72rem;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5;">Paste anywhere in your HTML. Badge updates live after every scan.</p>
+    </div>
+
+    <!-- Preview panel -->
+    <div class="preview-panel">
+
+      <!-- Dark badge -->
+      <div class="preview-card" id="card-dark">
+        <div class="preview-header">
+          <span class="preview-label">Dark</span>
+          <span class="preview-tag">DEFAULT</span>
+        </div>
+        <div class="preview-body dark-bg" id="prev-dark"></div>
+        <div class="code-section">
+          <div class="code-label">Embed code</div>
+          <div class="code-block" id="code-dark"></div>
+        </div>
+      </div>
+
+      <!-- Light badge -->
+      <div class="preview-card" id="card-light">
+        <div class="preview-header">
+          <span class="preview-label">Light</span>
+          <span class="preview-tag">LIGHT BG</span>
+        </div>
+        <div class="preview-body light-bg" id="prev-light"></div>
+        <div class="code-section">
+          <div class="code-label">Embed code</div>
+          <div class="code-block" id="code-light"></div>
+        </div>
+      </div>
+
+      <!-- Compact badge -->
+      <div class="preview-card" id="card-compact">
+        <div class="preview-header">
+          <span class="preview-label">Compact</span>
+          <span class="preview-tag">MINIMAL</span>
+        </div>
+        <div class="preview-body checkered" id="prev-compact"></div>
+        <div class="code-section">
+          <div class="code-label">Embed code</div>
+          <div class="code-block" id="code-compact"></div>
+        </div>
+      </div>
+
+      <!-- Detailed badge -->
+      <div class="preview-card" id="card-detailed">
+        <div class="preview-header">
+          <span class="preview-label">Detailed</span>
+          <span class="preview-tag">FULL INFO</span>
+        </div>
+        <div class="preview-body dark-bg" id="prev-detailed"></div>
+        <div class="code-section">
+          <div class="code-label">Embed code</div>
+          <div class="code-block" id="code-detailed"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="section reveal">
+    <div class="section-eyebrow">How it works</div>
+    <div class="section-title">Live badges that prove your security</div>
+    <p class="section-sub">Unlike screenshots or self-reported scores, PenChecker badges are verified in real time and link back to your public scan record.</p>
+    <div class="how-grid">
+      <div class="how-card reveal">
+        <div class="how-num">01</div>
+        <div class="how-icon"></div>
+        <div class="how-title">Scan your website</div>
+        <div class="how-text">Run a PenChecker scan on your domain. When it completes, your security score is stored in our database against your verified domain.</div>
+      </div>
+      <div class="how-card reveal reveal-delay-1">
+        <div class="how-num">02</div>
+        <div class="how-icon"></div>
+        <div class="how-title">Customise your badge</div>
+        <div class="how-text">Pick a style above — Dark, Light, Compact, or Detailed. The builder shows a live preview. Copy the embed code with one click.</div>
+      </div>
+      <div class="how-card reveal reveal-delay-2">
+        <div class="how-num">03</div>
+        <div class="how-icon"></div>
+        <div class="how-title">Paste and it stays live</div>
+        <div class="how-text">Add the code to your site. Your badge score updates automatically after every scan — no need to update the embed code ever again.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Verification section -->
+  <div class="verify-card reveal">
+    <div>
+      <div class="section-eyebrow">Verification</div>
+      <div class="verify-title">Every badge is verifiable by your visitors</div>
+      <p class="verify-text">When a visitor clicks your badge, they are taken to a public verification page showing your domain, scan date, score, and a breakdown of what was tested. No way to fake it.</p>
+      <ul class="verify-list">
+        <li><strong style="color:var(--white);">Cryptographically signed</strong> — each badge carries a unique token tied to your verified domain</li>
+        <li><strong style="color:var(--white);">Publicly accessible</strong> — the verification page is available to anyone with the link</li>
+        <li><strong style="color:var(--white);">Score history shown</strong> — visitors can see your last 5 scan scores, not just the latest</li>
+        <li><strong style="color:var(--white);">Auto-expires if unscanned</strong> — badge dims after 90 days without a new scan, keeping scores honest</li>
+      </ul>
+    </div>
+    <div class="verify-visual">
+      <div class="verify-domain" id="verifyDomain">yoursite.com</div>
+      <svg class="verify-score-ring" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="7"/>
+        <circle cx="40" cy="40" r="34" fill="none" stroke="#00ff87" stroke-width="7" stroke-linecap="round" stroke-dasharray="213.6" id="verifyArc" stroke-dashoffset="42.7" transform="rotate(-90 40 40)"/>
+        <text x="40" y="40" text-anchor="middle" dominant-baseline="middle" fill="#f0f0f8" font-size="16" font-weight="800" font-family="Plus Jakarta Sans,sans-serif" id="verifyScore">8.5</text>
+      </svg>
+      <div style="font-size:0.78rem;color:var(--muted2);margin-bottom:10px;" id="verifyLabel">Good — 91st percentile</div>
+      <div style="display:flex;gap:8px;justify-content:center;font-family:var(--font-mono);font-size:0.62rem;flex-wrap:wrap;">
+        <span style="background:rgba(0,229,255,0.1);color:var(--cyan);padding:3px 10px;border-radius:5px;">VERIFIED</span>
+        <span style="background:rgba(0,255,135,0.1);color:var(--green);padding:3px 10px;border-radius:5px;">OWASP TESTED</span>
+        <span style="background:rgba(168,85,247,0.1);color:var(--purple);padding:3px 10px;border-radius:5px;">AI REVIEWED</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-card reveal">
+    <div class="cta-title">Ready to earn your badge?</div>
+    <p class="cta-sub">Run your first free scan. Get your score. Embed your badge in minutes.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="signup.html" class="btn-primary">Start scanning for free</a>
+      <a href="dashboard.html" class="btn-outline">Go to dashboard</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" style="display:inline-flex;">
+          <div class="nav-logo-icon" style="background:none;width:36px;height:36px;display:flex;align-items:center;justify-content:center;padding:0;">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="36" height="36">
+    <defs>
+      <linearGradient id="penchecker-grad-nav" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#00e5ff" />
+        <stop offset="50%" stop-color="#7c3aed" />
+        <stop offset="100%" stop-color="#00ff87" />
+      </linearGradient>
+      <filter id="penchecker-glow-nav" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+    </defs>
+    <path d="M50 12 L82 22 V52 C82 70 68 83 50 88 C32 83 18 70 18 52 V22 Z" fill="none" stroke="url(#penchecker-grad-nav)" stroke-width="3" stroke-linejoin="round" filter="url(#penchecker-glow-nav)" />
+    <path d="M30 40 A 24 24 0 0 1 70 40" fill="none" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.8" />
+    <path d="M36 48 A 16 16 0 0 1 64 48" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6" />
+    <path d="M50 28 L62 54 L50 72 L38 54 Z" fill="url(#penchecker-grad-nav)" />
+    <line x1="50" y1="38" x2="50" y2="60" stroke="#060608" stroke-width="2" stroke-linecap="round" />
+    <circle cx="50" cy="34" r="2.5" fill="#00ff87" filter="url(#penchecker-glow-nav)" />
+  </svg>
+</div>
+          <div class="nav-logo-text" style="margin-left:10px;">Pen<span>Checker</span></div>
+        </a>
+        <p>The world most accurate web security scanner. Zero false positives. AI-powered fix recommendations.</p>
+      </div>
+      <div class="footer-col"><h4>Product</h4><ul><li><a href="features.html">Features</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="how.html">How it works</a></li><li><a href="changelog.html">Changelog</a></li><li><a href="affiliates.html">Affiliates</a></li></ul></div>
+      <div class="footer-col"><h4>Account</h4><ul><li><a href="signup.html">Sign up free</a></li><li><a href="login.html">Sign in</a></li><li><a href="dashboard.html">Dashboard</a></li><li><a href="contact.html">Support</a></li><li><a href="blog.html">Blog</a></li></ul></div>
+      <div class="footer-col"><h4>Legal</h4><ul><li><a href="legal/terms.html">Terms of Service</a></li><li><a href="legal/privacy.html">Privacy Policy</a></li><li><a href="legal/acceptable-use.html">Acceptable Use</a></li><li><a href="legal/dmca.html">DMCA</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">2025 PenChecker, Inc. All rights reserved. United States. Serving 190 plus countries.</div>
+      <div class="footer-legal"><a href="legal/terms.html">Terms</a><a href="legal/privacy.html">Privacy</a><a href="legal/dmca.html">DMCA</a></div>
+    </div>
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<script>
+var currentStyle = 'dark';
+var currentScore = 8.5;
+
+// Score colour based on value
+function scoreColor(s){
+  if(s >= 9.0) return '#00ff87';
+  if(s >= 7.5) return '#00e5ff';
+  if(s >= 5.0) return '#ffd60a';
+  return '#ff3b5c';
+}
+function scoreTier(s){
+  if(s >= 9.0) return {label:'EXCELLENT', bg:'rgba(0,255,135,0.12)', color:'#00ff87'};
+  if(s >= 7.5) return {label:'GOOD',      bg:'rgba(0,229,255,0.12)', color:'#00e5ff'};
+  if(s >= 5.0) return {label:'FAIR',      bg:'rgba(255,213,10,0.12)', color:'#ffd60a'};
+  return              {label:'NEEDS WORK',bg:'rgba(255,59,92,0.12)',  color:'#ff3b5c'};
+}
+function scorePercentile(s){
+  if(s >= 9.0) return '98th percentile';
+  if(s >= 7.5) return '91st percentile';
+  if(s >= 5.0) return '62nd percentile';
+  return '28th percentile';
+}
+
+// SVG badge generators
+function makeDarkBadge(score, domain){
+  var col = scoreColor(score);
+  var s = score.toFixed(1);
+  return '<svg xmlns="http://www.w3.org/2000/svg" width="220" height="54" viewBox="0 0 220 54">' +
+    '<defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0d0d12"/><stop offset="100%" stop-color="#13131a"/></linearGradient></defs>' +
+    '<rect width="220" height="54" rx="10" fill="url(#bg)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>' +
+    '<rect width="68" height="54" rx="0" fill="' + col + '" fill-opacity="0.12"/>' +
+    '<rect width="68" height="54" rx="10" fill="' + col + '" fill-opacity="0.12"/>' +
+    '<rect x="58" width="10" height="54" fill="' + col + '" fill-opacity="0.12"/>' +
+    '<text x="34" y="22" text-anchor="middle" fill="' + col + '" font-size="15" font-weight="800" font-family="Plus Jakarta Sans,sans-serif">' + s + '</text>' +
+    '<text x="34" y="37" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="8" font-family="Plus Jakarta Sans,sans-serif">/10</text>' +
+    '<text x="80" y="22" fill="#f0f0f8" font-size="10" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">PenChecker</text>' +
+    '<text x="80" y="36" fill="rgba(255,255,255,0.5)" font-size="8" font-family="Plus Jakarta Sans,sans-serif">Security Verified</text>' +
+    '<text x="80" y="47" fill="rgba(255,255,255,0.35)" font-size="7" font-family="JetBrains Mono,monospace">' + domain + '</text>' +
+    '</svg>';
+}
+function makeLightBadge(score, domain){
+  var col = scoreColor(score);
+  var s = score.toFixed(1);
+  // Use darker versions for light badge
+  var darkCol = col === '#00ff87' ? '#0f9d58' : col === '#00e5ff' ? '#007fbc' : col === '#ffd60a' ? '#f1c232' : '#d93025';
+  return '<svg xmlns="http://www.w3.org/2000/svg" width="220" height="54" viewBox="0 0 220 54">' +
+    '<rect width="220" height="54" rx="10" fill="#f0f4f8" stroke="rgba(0,0,0,0.12)" stroke-width="1"/>' +
+    '<rect width="68" height="54" rx="0" fill="' + darkCol + '" fill-opacity="0.1"/>' +
+    '<rect width="68" height="54" rx="10" fill="' + darkCol + '" fill-opacity="0.1"/>' +
+    '<rect x="58" width="10" height="54" fill="' + darkCol + '" fill-opacity="0.1"/>' +
+    '<text x="34" y="22" text-anchor="middle" fill="' + darkCol + '" font-size="15" font-weight="800" font-family="Plus Jakarta Sans,sans-serif">' + s + '</text>' +
+    '<text x="34" y="37" text-anchor="middle" fill="rgba(0,0,0,0.4)" font-size="8" font-family="Plus Jakarta Sans,sans-serif">/10</text>' +
+    '<text x="80" y="22" fill="#0b0d13" font-size="10" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">PenChecker</text>' +
+    '<text x="80" y="36" fill="rgba(0,0,0,0.5)" font-size="8" font-family="Plus Jakarta Sans,sans-serif">Security Verified</text>' +
+    '<text x="80" y="47" fill="rgba(0,0,0,0.35)" font-size="7" font-family="JetBrains Mono,monospace">' + domain + '</text>' +
+    '</svg>';
+}
+function makeCompactBadge(score, domain){
+  var col = scoreColor(score);
+  var s = score.toFixed(1);
+  return '<svg xmlns="http://www.w3.org/2000/svg" width="140" height="30" viewBox="0 0 140 30">' +
+    '<rect width="140" height="30" rx="6" fill="#0d0d12" stroke="' + col + '" stroke-width="1" stroke-opacity="0.4"/>' +
+    '<rect width="38" height="30" rx="6" fill="' + col + '" fill-opacity="0.15"/>' +
+    '<rect x="28" width="10" height="30" fill="' + col + '" fill-opacity="0.15"/>' +
+    '<text x="19" y="19" text-anchor="middle" fill="' + col + '" font-size="11" font-weight="800" font-family="Plus Jakarta Sans,sans-serif">' + s + '</text>' +
+    '<text x="50" y="12" fill="#f0f0f8" font-size="7.5" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">PenChecker</text>' +
+    '<text x="50" y="22" fill="rgba(255,255,255,0.4)" font-size="6.5" font-family="JetBrains Mono,monospace">' + domain.substring(0,18) + '</text>' +
+    '</svg>';
+}
+function makeDetailedBadge(score, domain){
+  var col = scoreColor(score);
+  var tier = scoreTier(score);
+  var s = score.toFixed(1);
+  var pct = scorePercentile(score);
+  // Animated score ring
+  var circumference = 2 * Math.PI * 22;
+  var dashoffset = circumference * (1 - score/10);
+  return '<svg xmlns="http://www.w3.org/2000/svg" width="260" height="80" viewBox="0 0 260 80">' +
+    '<defs><linearGradient id="dbg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0d0d12"/><stop offset="100%" stop-color="#13131a"/></linearGradient></defs>' +
+    '<rect width="260" height="80" rx="12" fill="url(#dbg)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>' +
+    '<circle cx="48" cy="40" r="22" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5"/>' +
+    '<circle cx="48" cy="40" r="22" fill="none" stroke="' + col + '" stroke-width="5" stroke-linecap="round" stroke-dasharray="' + circumference.toFixed(1) + '" stroke-dashoffset="' + dashoffset.toFixed(1) + '" transform="rotate(-90 48 40)"/>' +
+    '<text x="48" y="37" text-anchor="middle" fill="' + col + '" font-size="12" font-weight="800" font-family="Plus Jakarta Sans,sans-serif">' + s + '</text>' +
+    '<text x="48" y="49" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="7" font-family="Plus Jakarta Sans,sans-serif">/10</text>' +
+    '<text x="84" y="22" fill="#f0f0f8" font-size="11" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">PenChecker Verified</text>' +
+    '<text x="84" y="36" fill="rgba(255,255,255,0.45)" font-size="8" font-family="Plus Jakarta Sans,sans-serif">Security Score: ' + s + '/10 • ' + pct + '</text>' +
+    '<text x="84" y="49" fill="rgba(255,255,255,0.35)" font-size="7.5" font-family="JetBrains Mono,monospace">' + domain + '</text>' +
+    '<rect x="84" y="56" width="55" height="14" rx="4" fill="' + col + '" fill-opacity="0.12"/>' +
+    '<text x="111" y="66" text-anchor="middle" fill="' + col + '" font-size="7" font-weight="700" font-family="JetBrains Mono,monospace">' + tier.label + '</text>' +
+    '<rect x="145" y="56" width="60" height="14" rx="4" fill="rgba(0,229,255,0.08)"/>' +
+    '<text x="175" y="66" text-anchor="middle" fill="rgba(0,229,255,0.7)" font-size="7" font-weight="700" font-family="JetBrains Mono,monospace">OWASP TESTED</text>' +
+    '</svg>';
+}
+
+// Embed code generator
+function makeEmbedCode(style, score, domain){
+  var s = score.toFixed(1);
+  // In production, this would be a hosted SVG endpoint
+  return '<!-- PenChecker Security Badge -->
+<a href="https://penchecker.io/verify/' + domain + '" target="_blank" rel="noopener" title="Verified by PenChecker - Score: ' + s + '/10">
+  ' + getBadgeSVG(style, score, domain).replace(/
+/g,'') + '
+</a>';
+}
+
+function getBadgeSVG(style, score, domain){
+  if(style === 'light') return makeLightBadge(score, domain);
+  if(style === 'compact') return makeCompactBadge(score, domain);
+  if(style === 'detailed') return makeDetailedBadge(score, domain);
+  return makeDarkBadge(score, domain);
+}
+
+function updateAllBadges(){
+  var score = parseFloat(document.getElementById('scoreSlider').value) || 8.5;
+  var domain = document.getElementById('domainInput').value.trim() || 'yoursite.com';
+  currentScore = score;
+
+  // Update all 4 previews
+  var styles = ['dark','light','compact','detailed'];
+  styles.forEach(function(style){
+    var svg = getBadgeSVG(style, score, domain);
+    document.getElementById('prev-' + style).innerHTML = svg;
+    document.getElementById('code-' + style).textContent = makeEmbedCode(style, score, domain);
+    document.getElementById('card-' + style).classList.toggle('active-style', style === currentStyle);
+  });
+
+  // Update controls
+  document.getElementById('sliderDisplay').textContent = score.toFixed(1) + ' / 10';
+  document.getElementById('scoreInput').value = score.toFixed(1);
+  var tier = scoreTier(score);
+  var badge = document.getElementById('scoreTierBadge');
+  badge.textContent = tier.label;
+  badge.style.background = tier.bg;
+  badge.style.color = tier.color;
+
+  // Update verification visual
+  var arc = document.getElementById('verifyArc');
+  var circumference = 2 * Math.PI * 34;
+  var offset = circumference * (1 - score/10);
+  arc.setAttribute('stroke', scoreColor(score));
+  arc.setAttribute('stroke-dashoffset', offset.toFixed(1));
+  document.getElementById('verifyScore').textContent = score.toFixed(1);
+  document.getElementById('verifyScore').setAttribute('fill', scoreColor(score));
+  var verLabel = document.getElementById('verifyLabel');
+  if(verLabel) verLabel.textContent = tier.label.charAt(0) + tier.label.slice(1).toLowerCase() + ' — ' + scorePercentile(score);
+  var verDomain = document.getElementById('verifyDomain');
+  if(verDomain) verDomain.textContent = domain;
+}
+
+function onSlider(val){
+  document.getElementById('scoreInput').value = parseFloat(val).toFixed(1);
+  updateAllBadges();
+}
+function onInput(val){
+  var v = Math.max(0, Math.min(10, parseFloat(val)||0));
+  document.getElementById('scoreSlider').value = v;
+  updateAllBadges();
+}
+
+function setStyle(style, btn){
+  currentStyle = style;
+  document.querySelectorAll('.style-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.preview-card').forEach(function(c){ c.classList.remove('active-style'); });
+  var activeCard = document.getElementById('card-' + style);
+  if(activeCard) activeCard.classList.add('active-style');
+}
+
+function copyEmbed(){
+  var score = parseFloat(document.getElementById('scoreSlider').value) || 8.5;
+  var domain = document.getElementById('domainInput').value.trim() || 'yoursite.com';
+  var code = makeEmbedCode(currentStyle, score, domain);
+  navigator.clipboard.writeText(code).then(function(){
+    var btn = document.getElementById('copyBtn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    showToast('Embed code copied to clipboard!');
+    setTimeout(function(){ btn.textContent = 'Copy Embed Code'; btn.classList.remove('copied'); }, 2000);
+  }).catch(function(){
+    // Fallback
+    var ta = document.createElement('textarea');
+    ta.value = code; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Embed code copied!');
+  });
+}
+
+function showToast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block'; t.style.opacity = '1';
+  clearTimeout(window._tt);
+  window._tt = setTimeout(function(){ t.style.opacity='0'; setTimeout(function(){t.style.display='none';},300); }, 3000);
+}
+
+// Theme
+var tBtn = document.getElementById('themeToggle');
+function setTheme(l){ document.body.classList.toggle('light-theme',l); localStorage.setItem('pencheckerTheme',l?'light':'dark'); if(tBtn)tBtn.innerHTML=(l?'<svg viewBox='0 0 24 24' width='14' height='14' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round' style='display:inline-block;vertical-align:middle;'><circle cx='12' cy='12' r='5'/><line x1='12' y1='1' x2='12' y2='3'/><line x1='12' y1='21' x2='12' y2='23'/><line x1='4.22' y1='4.22' x2='5.64' y2='5.64'/><line x1='18.36' y1='18.36' x2='19.78' y2='19.78'/><line x1='1' y1='12' x2='3' y2='12'/><line x1='21' y1='12' x2='23' y2='12'/><line x1='4.22' y1='19.78' x2='5.64' y2='18.36'/><line x1='18.36' y1='5.64' x2='19.78' y2='4.22'/></svg>':'<svg viewBox='0 0 24 24' width='14' height='14' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round' style='display:inline-block;vertical-align:middle;'><path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/></svg>')+'&nbsp;'+(l?'Light':'Dark'); }
+tBtn.addEventListener('click', function(){ setTheme(!document.body.classList.contains('light-theme')); });
+(function(){ var s=localStorage.getItem('pencheckerTheme'); var p=window.matchMedia('(prefers-color-scheme: light)').matches; setTheme(s==='light'||(!s&&p)); })();
+
+// Scroll reveal
+(function(){
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  },{threshold:0.08});
+  document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+})();
+
+// Init
+updateAllBadges();
+</script>
+</body>
+</html>

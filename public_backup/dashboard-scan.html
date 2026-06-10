@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>New Scan — PenChecker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--black:#060608;--black2:#0d0d12;--black3:#13131a;--surface:#1a1a24;--surface2:#22222f;--border:rgba(255,255,255,0.07);--border2:rgba(0,229,255,0.2);--cyan:#00e5ff;--cyan2:#00b4cc;--green:#00ff87;--red:#ff3b5c;--orange:#ff8c42;--yellow:#ffd60a;--purple:#a855f7;--white:#f0f0f8;--muted:#6b6b85;--muted2:#9090a8;--font-display:'Plus Jakarta Sans',sans-serif;--font-body:'Plus Jakarta Sans',sans-serif;--font-mono:'JetBrains Mono',monospace;--glow-cyan:0 0 40px rgba(0,229,255,0.25);--radius:12px;--radius2:20px;--sidebar-w:240px;--topbar-h:60px;}
+body{transition:background 0.25s,color 0.25s;}
+.light-theme{--black:#f8f9fc;--black2:#e8eaf2;--black3:#ffffff;--surface:#ffffff;--surface2:#f2f4f9;--border:rgba(13,23,44,0.12);--border2:rgba(0,149,212,0.25);--cyan:#007fbc;--cyan2:#005f91;--green:#0f9d58;--red:#d93025;--orange:#e37400;--yellow:#f1c232;--purple:#6a1b9a;--white:#0b0d13;--muted:#4b5d79;--muted2:#6b7790;}
+.light-theme .topbar{background:rgba(248,249,252,0.96);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:15px;line-height:1.6;overflow-x:hidden;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--black2);}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px;}
+
+/* SIDEBAR (same as dashboard) */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--black2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:200;transition:transform 0.3s ease;}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:18px 20px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sb-logo-icon{width:32px;height:32px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;font-size:0.8rem;color:var(--black);}
+.sb-logo-text{font-size:1.05rem;font-weight:700;letter-spacing:-0.02em;}
+.sb-logo-text span{color:var(--cyan);}
+.sb-nav{flex:1;padding:12px 10px;overflow-y:auto;}
+.sb-section{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;padding:8px 10px 4px;margin-top:8px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius);font-size:0.85rem;font-weight:500;color:var(--muted2);transition:all 0.18s;position:relative;margin-bottom:1px;cursor:pointer;}
+.sb-link:hover{background:var(--surface);color:var(--white);}
+.sb-link.active{background:rgba(0,229,255,0.08);color:var(--cyan);font-weight:600;}
+.sb-link.active::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--cyan);border-radius:0 2px 2px 0;}
+.sb-icon{font-size:1rem;flex-shrink:0;width:20px;text-align:center;}
+.sb-badge{margin-left:auto;background:rgba(0,229,255,0.15);color:var(--cyan);font-family:var(--font-mono);font-size:0.6rem;font-weight:700;border-radius:10px;padding:1px 6px;}
+.sb-bottom{padding:12px 10px;border-top:1px solid var(--border);flex-shrink:0;}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:all 0.2s;}
+.sb-user:hover{border-color:var(--border2);}
+.sb-avatar{width:30px;height:30px;border-radius:50%;background:rgba(0,229,255,0.15);border:1px solid rgba(0,229,255,0.3);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:var(--cyan);flex-shrink:0;}
+.sb-uname{font-size:0.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-uplan{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);}
+
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--topbar-h);background:rgba(6,6,8,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;z-index:100;transition:left 0.3s;}
+.tb-breadcrumb{flex:1;font-size:0.82rem;color:var(--muted2);display:flex;align-items:center;gap:6px;}
+.tb-sep{opacity:0.4;}
+.tb-cur{color:var(--white);font-weight:600;}
+.tb-actions{display:flex;align-items:center;gap:8px;}
+.tb-btn{width:36px;height:36px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.9rem;cursor:pointer;transition:all 0.2s;color:var(--muted2);}
+.tb-btn:hover{border-color:var(--border2);color:var(--white);}
+.mob-toggle{display:none;width:36px;height:36px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);align-items:center;justify-content:center;font-size:1rem;cursor:pointer;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;}
+.overlay.open{display:block;}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);padding-top:var(--topbar-h);}
+.content{padding:28px;max-width:900px;}
+.page-header{margin-bottom:28px;}
+.page-title{font-size:1.5rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:6px;}
+.page-sub{font-size:0.88rem;color:var(--muted2);}
+
+/* SCAN STEPS */
+.scan-steps{display:none;}
+.scan-steps.active{display:block;}
+
+/* CARD */
+.scan-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;margin-bottom:20px;}
+.sc-hdr{padding:16px 22px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.sc-hdr-num{width:24px;height:24px;border-radius:50%;background:var(--cyan);color:var(--black);font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sc-hdr-title{font-weight:700;font-size:0.9rem;}
+.sc-hdr-sub{font-size:0.75rem;color:var(--muted2);margin-top:1px;}
+.sc-body{padding:22px;}
+
+/* Domain input */
+.domain-row{display:flex;gap:10px;margin-bottom:14px;}
+.domain-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-family:var(--font-body);font-size:0.9rem;color:var(--white);outline:none;transition:border-color 0.2s;}
+.domain-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,229,255,0.08);}
+.domain-input::placeholder{color:var(--muted);}
+.domain-input.error{border-color:var(--red);}
+.add-domain-btn{padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:0.82rem;font-weight:600;color:var(--muted2);cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.add-domain-btn:hover{border-color:var(--border2);color:var(--cyan);}
+.domain-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;}
+.domain-chip{display:flex;align-items:center;gap:7px;padding:6px 12px;background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);border-radius:100px;font-family:var(--font-mono);font-size:0.72rem;color:var(--cyan);cursor:pointer;}
+.domain-chip.selected{background:var(--cyan);color:var(--black);}
+.domain-chip-remove{font-size:0.7rem;opacity:0.6;}
+.field-err{font-family:var(--font-mono);font-size:0.7rem;color:var(--red);margin-top:5px;display:none;}
+.field-err.show{display:block;}
+
+/* Option grid */
+.option-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.option-btn{padding:14px 12px;background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);text-align:center;cursor:pointer;transition:all 0.2s;position:relative;}
+.option-btn:hover{border-color:rgba(0,229,255,0.2);}
+.option-btn.selected{border-color:var(--cyan);background:rgba(0,229,255,0.06);}
+.option-btn.selected::after{content:'';position:absolute;top:8px;right:10px;color:var(--cyan);font-size:0.7rem;font-weight:700;font-family:var(--font-mono);}
+.ob-icon{font-size:1.4rem;margin-bottom:7px;}
+.ob-title{font-size:0.84rem;font-weight:700;margin-bottom:3px;}
+.ob-sub{font-size:0.7rem;color:var(--muted2);}
+.ob-time{font-family:var(--font-mono);font-size:0.62rem;color:var(--cyan);margin-top:5px;}
+
+/* Advanced toggle */
+.advanced-toggle{display:flex;align-items:center;gap:8px;font-size:0.82rem;color:var(--muted2);cursor:pointer;margin-top:16px;padding:0;background:none;border:none;}
+.advanced-toggle:hover{color:var(--white);}
+.advanced-toggle-icon{transition:transform 0.2s;}
+.advanced-toggle-icon.open{transform:rotate(90deg);}
+.advanced-opts{display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
+.advanced-opts.open{display:block;}
+.adv-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--surface);border-radius:var(--radius);margin-bottom:8px;}
+.adv-left strong{display:block;font-size:0.82rem;font-weight:600;}
+.adv-left span{font-size:0.72rem;color:var(--muted2);}
+.tog{width:38px;height:22px;background:var(--surface2);border-radius:11px;cursor:pointer;position:relative;border:1px solid var(--border);transition:background 0.3s;}
+.tog.on{background:var(--cyan2);}
+.tog-k{position:absolute;top:2px;left:2px;width:16px;height:16px;background:var(--white);border-radius:50%;transition:transform 0.3s;}
+.tog.on .tog-k{transform:translateX(16px);}
+
+/* Consent */
+.consent-row{display:flex;align-items:flex-start;gap:10px;padding:14px 16px;background:rgba(0,229,255,0.04);border:1px solid rgba(0,229,255,0.15);border-radius:var(--radius);margin-bottom:18px;}
+.consent-chk{width:16px;height:16px;border:1.5px solid var(--border);border-radius:4px;flex-shrink:0;margin-top:2px;appearance:none;background:var(--surface);cursor:pointer;position:relative;transition:all 0.2s;}
+.consent-chk:checked{background:var(--cyan);border-color:var(--cyan);}
+.consent-chk:checked::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--black);font-size:0.6rem;font-weight:700;}
+.consent-chk.err{border-color:var(--red);}
+.consent-text{font-size:0.8rem;color:var(--muted2);line-height:1.55;}
+.consent-text strong{color:var(--white);}
+.consent-text a{color:var(--cyan);}
+
+/* Submit */
+.launch-btn{width:100%;padding:15px;background:var(--cyan);color:var(--black);border:none;border-radius:var(--radius);font-family:var(--font-display);font-weight:700;font-size:1.05rem;cursor:pointer;transition:all 0.25s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.launch-btn:hover{box-shadow:var(--glow-cyan);transform:translateY(-1px);}
+.launch-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none;}
+.spin{display:none;width:17px;height:17px;border:2px solid rgba(0,0,0,0.25);border-top-color:var(--black);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* PROGRESS VIEW */
+.progress-view{display:none;}
+.progress-view.active{display:block;}
+.pv-card{background:var(--black3);border:1px solid var(--border2);border-radius:var(--radius2);padding:32px;text-align:center;margin-bottom:20px;}
+.pv-title{font-size:1.25rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;}
+.pv-domain{font-family:var(--font-mono);font-size:0.82rem;color:var(--cyan);margin-bottom:24px;}
+.progress-bar-wrap{width:100%;height:6px;background:var(--surface2);border-radius:3px;margin-bottom:10px;overflow:hidden;}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--cyan),var(--green));border-radius:3px;transition:width 0.6s ease;width:0%;}
+.pv-pct{font-family:var(--font-mono);font-size:0.8rem;color:var(--cyan);margin-bottom:20px;}
+.pv-phases{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px;}
+.phase-item{padding:12px 10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:0.75rem;text-align:center;}
+.phase-item.done{border-color:rgba(0,255,135,0.25);background:rgba(0,255,135,0.05);}
+.phase-item.active{border-color:rgba(0,229,255,0.25);background:rgba(0,229,255,0.05);}
+.phase-icon{font-size:1.2rem;margin-bottom:6px;}
+.phase-name{font-weight:600;color:var(--white);}
+.phase-status{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);margin-top:3px;}
+.phase-item.done .phase-status{color:var(--green);}
+.phase-item.active .phase-status{color:var(--cyan);}
+.terminal{background:var(--black);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:left;max-height:200px;overflow-y:auto;font-family:var(--font-mono);font-size:0.72rem;line-height:1.7;}
+.term-line{display:flex;gap:8px;}
+.term-ts{color:var(--muted);}
+.term-ok{color:var(--green);}
+.term-warn{color:var(--yellow);}
+.term-find{color:var(--red);}
+.term-info{color:var(--cyan);}
+.term-cursor{display:inline-block;width:7px;height:12px;background:var(--cyan);animation:blink2 1s infinite;vertical-align:text-bottom;}
+@keyframes blink2{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* COMPLETE VIEW */
+.complete-view{display:none;}
+.complete-view.active{display:block;}
+.cv-card{background:var(--black3);border:1px solid rgba(0,255,135,0.25);border-radius:var(--radius2);padding:32px;text-align:center;margin-bottom:20px;}
+.cv-icon{font-size:3.5rem;margin-bottom:16px;animation:bounce 0.6s ease;}
+@keyframes bounce{0%{transform:scale(0);}60%{transform:scale(1.15);}100%{transform:scale(1);}}
+.cv-title{font-size:1.3rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;}
+.cv-domain{font-family:var(--font-mono);font-size:0.8rem;color:var(--cyan);margin-bottom:20px;}
+.cv-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
+.cvs-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;}
+.cvs-num{font-size:1.4rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:3px;}
+.cvs-lbl{font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);}
+.cv-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.cv-btn{padding:11px 22px;border-radius:var(--radius);font-family:var(--font-display);font-weight:700;font-size:0.88rem;cursor:pointer;transition:all 0.2s;}
+.cv-btn-primary{background:var(--cyan);color:var(--black);border:none;}
+.cv-btn-primary:hover{box-shadow:var(--glow-cyan);}
+.cv-btn-ghost{background:transparent;color:var(--muted2);border:1px solid var(--border);}
+.cv-btn-ghost:hover{border-color:var(--border2);color:var(--white);}
+
+@media(max-width:900px){.sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.overlay.open{display:block;}.main{margin-left:0;}.topbar{left:0;}.mob-toggle{display:flex;}.option-grid{grid-template-columns:1fr 1fr;}.pv-phases{grid-template-columns:repeat(2,1fr);}.cv-stats{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.content{padding:16px;}.option-grid{grid-template-columns:1fr;}.cv-btns{flex-direction:column;}}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo" onclick="window.location.href='dashboard.html'" style="cursor:pointer">
+    <div class="sb-logo-icon">PC</div>
+    <div class="sb-logo-text">Pen<span>Checker</span></div>
+  </div>
+  <nav class="sb-nav" id="sbNav"></nav>
+  <div class="sb-bottom">
+    <div class="sb-user" onclick="window.location.href='dashboard-settings.html'">
+      <div class="sb-avatar" id="sbAvatar">?</div>
+      <div style="overflow:hidden;">
+        <div class="sb-uname" id="sbName">Loading...</div>
+        <div class="sb-uplan" id="sbPlan">Free Plan</div>
+      </div>
+      <div style="margin-left:auto;color:var(--muted);font-size:0.7rem;">&rsaquo;</div>
+    </div>
+  </div>
+</aside>
+
+<!-- Topbar -->
+<header class="topbar">
+  <button class="mob-toggle" onclick="openSidebar()"></button>
+  <div class="tb-breadcrumb"><span style="cursor:pointer;" onclick="nav('dashboard.html')">Dashboard</span><span class="tb-sep">/</span><span class="tb-cur">New Scan</span></div>
+  <div class="tb-actions">
+    <button class="tb-btn" id="themeToggle"></button>
+  </div>
+</header>
+
+<main class="main">
+  <div class="content">
+
+    <!-- STEP 1: Configure scan -->
+    <div class="scan-steps active" id="configStep">
+      <div class="page-header">
+        <div class="page-title"> Launch New Scan</div>
+        <div class="page-sub">Configure your scan settings and start detecting vulnerabilities.</div>
+      </div>
+
+      <!-- Target domain -->
+      <div class="scan-card">
+        <div class="sc-hdr">
+          <div class="sc-hdr-num">1</div>
+          <div><div class="sc-hdr-title">Select Target Domain</div><div class="sc-hdr-sub">Choose a verified domain or enter a new one</div></div>
+        </div>
+        <div class="sc-body">
+          <div class="domain-row">
+            <input type="text" class="domain-input" id="domainInput" placeholder="e.g. yoursite.com or https://yoursite.com" autocomplete="off"/>
+            <button class="add-domain-btn" onclick="addCustomDomain()">+ Use this domain</button>
+          </div>
+          <span class="field-err" id="domainErr">Please enter a valid domain</span>
+          <div class="domain-chips" id="domainChips">
+            <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);">Loading your domains...</div>
+          </div>
+          <div style="font-family:var(--font-mono);font-size:0.68rem;color:var(--muted);margin-top:10px;"> You must own or have written permission to scan the target domain.</div>
+        </div>
+      </div>
+
+      <!-- Scan type -->
+      <div class="scan-card">
+        <div class="sc-hdr">
+          <div class="sc-hdr-num">2</div>
+          <div><div class="sc-hdr-title">Scan Type</div><div class="sc-hdr-sub">Choose depth and coverage</div></div>
+        </div>
+        <div class="sc-body">
+          <div class="option-grid" id="scanTypeGrid">
+            <div class="option-btn selected" data-val="quick" onclick="selectOpt(this,'scanTypeGrid')">
+              <div class="ob-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color:var(--cyan);"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div>
+              <div class="ob-title">Quick Scan</div>
+              <div class="ob-sub">Headers, TLS, open ports, basic checks</div>
+              <div class="ob-time">~2 minutes</div>
+            </div>
+            <div class="option-btn" data-val="standard" onclick="selectOpt(this,'scanTypeGrid')">
+              <div class="ob-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color:var(--purple);"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+              <div class="ob-title">Standard Scan</div>
+              <div class="ob-sub">Full OWASP checks, XSS, injection, auth</div>
+              <div class="ob-time">~8 minutes</div>
+            </div>
+            <div class="option-btn" data-val="deep" onclick="selectOpt(this,'scanTypeGrid')">
+              <div class="ob-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color:var(--orange);"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg></div>
+              <div class="ob-title">Deep Scan</div>
+              <div class="ob-sub">Everything + crawl, fuzzing, API testing</div>
+              <div class="ob-time">~20+ minutes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scan mode -->
+      <div class="scan-card">
+        <div class="sc-hdr">
+          <div class="sc-hdr-num">3</div>
+          <div><div class="sc-hdr-title">Scan Mode</div><div class="sc-hdr-sub">How actively should the scanner probe?</div></div>
+        </div>
+        <div class="sc-body">
+          <div class="option-grid" id="scanModeGrid">
+            <div class="option-btn selected" data-val="passive" onclick="selectOpt(this,'scanModeGrid')">
+              <div class="ob-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color:var(--green);"><circle cx="12" cy="12" r="10"></circle><path d="M8 12h8"></path></svg></div>
+              <div class="ob-title">Passive</div>
+              <div class="ob-sub">Read-only. Checks headers, certificates, public info. Zero server load.</div>
+            </div>
+            <div class="option-btn" data-val="active" onclick="selectOpt(this,'scanModeGrid')">
+              <div class="ob-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color:var(--red);"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>
+              <div class="ob-title">Active</div>
+              <div class="ob-sub">Sends test payloads. Detects injection, XSS, broken auth. Slight server load.</div>
+            </div>
+            <div class="option-btn" data-val="stealth" onclick="selectOpt(this,'scanModeGrid')">
+              <div class="ob-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color:var(--yellow);"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg></div>
+              <div class="ob-title">Stealth</div>
+              <div class="ob-sub">Active tests with rate limiting. Avoids triggering WAF or rate limits.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Industry profile -->
+      <div class="scan-card">
+        <div class="sc-hdr">
+          <div class="sc-hdr-num">4</div>
+          <div><div class="sc-hdr-title">Industry Profile</div><div class="sc-hdr-sub">Optimises which tests run for your use case</div></div>
+        </div>
+        <div class="sc-body">
+          <div class="option-grid" id="industryGrid" style="grid-template-columns:repeat(3,1fr);">
+            <div class="option-btn selected" data-val="general" onclick="selectOpt(this,'industryGrid')"><div class="ob-icon"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:4px;color:var(--muted2);"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></div><div class="ob-title">General</div></div>
+            <div class="option-btn" data-val="ecommerce" onclick="selectOpt(this,'industryGrid')"><div class="ob-icon"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:4px;color:var(--cyan);"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg></div><div class="ob-title">E-commerce</div></div>
+            <div class="option-btn" data-val="fintech" onclick="selectOpt(this,'industryGrid')"><div class="ob-icon"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:4px;color:var(--green);"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></div><div class="ob-title">Fintech</div></div>
+            <div class="option-btn" data-val="saas" onclick="selectOpt(this,'industryGrid')"><div class="ob-icon"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:4px;color:var(--purple);"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg></div><div class="ob-title">SaaS</div></div>
+            <div class="option-btn" data-val="healthcare" onclick="selectOpt(this,'industryGrid')"><div class="ob-icon"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:4px;color:var(--red);"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg></div><div class="ob-title">Healthcare</div></div>
+            <div class="option-btn" data-val="blog" onclick="selectOpt(this,'industryGrid')"><div class="ob-icon"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:4px;color:var(--orange);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div><div class="ob-title">Blog / CMS</div></div>
+          </div>
+
+          <button class="advanced-toggle" id="advToggle" onclick="toggleAdvanced()">
+            <span class="advanced-toggle-icon" id="advIcon">›</span>
+            Advanced options
+          </button>
+          <div class="advanced-opts" id="advOpts">
+            <div class="adv-row"><div class="adv-left"><strong>Follow redirects</strong><span>Scan redirect targets too</span></div><div class="tog on" onclick="this.classList.toggle('on')"><div class="tog-k"></div></div></div>
+            <div class="adv-row"><div class="adv-left"><strong>Crawl subpages</strong><span>Discover and scan linked pages</span></div><div class="tog on" onclick="this.classList.toggle('on')"><div class="tog-k"></div></div></div>
+            <div class="adv-row"><div class="adv-left"><strong>Test API endpoints</strong><span>Scan discovered REST/GraphQL APIs</span></div><div class="tog" onclick="this.classList.toggle('on')"><div class="tog-k"></div></div></div>
+            <div class="adv-row"><div class="adv-left"><strong>Save to monitoring</strong><span>Add to continuous monitoring after scan</span></div><div class="tog on" onclick="this.classList.toggle('on')"><div class="tog-k"></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Consent + launch -->
+      <div class="consent-row">
+        <input type="checkbox" class="consent-chk" id="scanConsent"/>
+        <div class="consent-text"><strong>I confirm I own or have explicit written permission to scan the target domain.</strong> I understand that unauthorized scanning may be illegal and violates the <a href="legal/acceptable-use.html" target="_blank">Acceptable Use Policy</a>. This consent is permanently logged.</div>
+      </div>
+      <span class="field-err" id="consentErr">You must confirm ownership before scanning</span>
+
+      <button class="launch-btn" id="launchBtn" onclick="launchScan()">
+        <span id="launchText"> Launch Scan</span>
+        <div class="spin" id="launchSpin"></div>
+      </button>
+    </div>
+
+    <!-- STEP 2: Scanning in progress -->
+    <div class="progress-view" id="progressView">
+      <div class="pv-card">
+        <div class="pv-title">Scanning in progress...</div>
+        <div class="pv-domain" id="pvDomain">yoursite.com</div>
+        <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="pv-pct" id="pvPct">0%</div>
+        <div class="pv-phases">
+          <div class="phase-item active" id="ph1"><div class="phase-icon"></div><div class="phase-name">Discovery</div><div class="phase-status" id="ph1s">Running...</div></div>
+          <div class="phase-item" id="ph2"><div class="phase-icon"></div><div class="phase-name">Headers & TLS</div><div class="phase-status" id="ph2s">Waiting</div></div>
+          <div class="phase-item" id="ph3"><div class="phase-icon"></div><div class="phase-name">Injection Tests</div><div class="phase-status" id="ph3s">Waiting</div></div>
+          <div class="phase-item" id="ph4"><div class="phase-icon"></div><div class="phase-name">Auth & Logic</div><div class="phase-status" id="ph4s">Waiting</div></div>
+        </div>
+        <div class="terminal" id="terminal">
+          <div class="term-line"><span class="term-ts">[00:00]</span><span class="term-info">Scanner initializing...</span></div>
+        </div>
+        <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);margin-top:12px;">Do not close this tab. We'll email you when the scan is complete.</div>
+      </div>
+      <button style="display:flex;align-items:center;gap:7px;padding:10px 18px;background:transparent;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font-display);font-weight:600;font-size:0.85rem;color:var(--muted2);cursor:pointer;margin:0 auto;" onclick="cancelScan()">Cancel scan</button>
+    </div>
+
+    <!-- STEP 3: Complete -->
+    <div class="complete-view" id="completeView">
+      <div class="cv-card">
+        <div class="cv-icon"></div>
+        <div class="cv-title">Scan complete!</div>
+        <div class="cv-domain" id="cvDomain">yoursite.com</div>
+        <div class="cv-stats">
+          <div class="cvs-item"><div class="cvs-num" id="cvScore" style="color:var(--green)">—</div><div class="cvs-lbl">Security Score</div></div>
+          <div class="cvs-item"><div class="cvs-num" id="cvCrit" style="color:var(--red)">0</div><div class="cvs-lbl">Critical</div></div>
+          <div class="cvs-item"><div class="cvs-num" id="cvHigh" style="color:var(--orange)">0</div><div class="cvs-lbl">High</div></div>
+          <div class="cvs-item"><div class="cvs-num" id="cvTotal">0</div><div class="cvs-lbl">Total Findings</div></div>
+        </div>
+        <div class="cv-btns">
+          <button class="cv-btn cv-btn-primary" id="viewReportBtn" onclick="viewReport()">View Full Report →</button>
+          <button class="cv-btn cv-btn-ghost" onclick="resetScan()">Run Another Scan</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script src="/js/api.js"></script>
+<script src="/js/sidebar.js"></script>
+<script>
+'use strict';
+
+function nav(url){ window.location.href=url; }
+
+PC.requireAuth();
+
+// Theme
+const tBtn=document.getElementById('themeToggle');
+function setTheme(l){ document.body.classList.toggle('light-theme',l); localStorage.setItem('pencheckerTheme',l?'light':'dark'); tBtn.innerHTML=l?"<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"5\"></circle><line x1=\"12\" y1=\"1\" x2=\"12\" y2=\"3\"></line><line x1=\"12\" y1=\"21\" x2=\"12\" y2=\"23\"></line><line x1=\"4.22\" y1=\"4.22\" x2=\"5.64\" y2=\"5.64\"></line><line x1=\"18.36\" y1=\"18.36\" x2=\"19.78\" y2=\"19.78\"></line><line x1=\"1\" y1=\"12\" x2=\"3\" y2=\"12\"></line><line x1=\"21\" y1=\"12\" x2=\"23\" y2=\"12\"></line><line x1=\"4.22\" y1=\"19.78\" x2=\"5.64\" y2=\"18.36\"></line><line x1=\"18.36\" y1=\"5.64\" x2=\"19.78\" y2=\"4.22\"></svg>":"<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"></path></svg>"; }
+tBtn.addEventListener('click',()=>setTheme(!document.body.classList.contains('light-theme')));
+(function(){ const s=localStorage.getItem('pencheckerTheme'); const p=window.matchMedia('(prefers-color-scheme: light)').matches; setTheme(s==='light'||(!s&&p)); })();
+
+// Sidebar mobile
+function openSidebar(){ document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('open'); }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
+
+// User info
+(function(){
+  const user = PC.getUser();
+  const email = user?.email || localStorage.getItem('pc_user_email') || '';
+  const fullName = user?.full_name || email.split('@')[0];
+  const firstName = fullName.split(' ')[0] || 'User';
+  const disp = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+  document.getElementById('sbName').textContent = user?.full_name || disp;
+  document.getElementById('sbAvatar').textContent = disp.charAt(0);
+  const plan = user?.plan || 'free';
+  document.getElementById('sbPlan').textContent = plan.charAt(0).toUpperCase() + plan.slice(1) + ' Plan';
+})();
+
+// State
+let selectedDomain='';
+let currentScanId=null;
+let scanPollInterval=null;
+
+// Load user domains
+async function loadDomains(){
+  try {
+    const res = await PC.listDomains();
+    const doms = res.domains || [];
+    const chips=document.getElementById('domainChips');
+    if(doms.length){
+      chips.innerHTML=doms.map(d=>`<div class="domain-chip${d.domain===selectedDomain?' selected':''}" data-domain="${d.domain}" onclick="selectDomain('${d.domain}',this)">${d.is_verified?' ':''} ${d.domain}</div>`).join('');
+      // Highlight param domain chip if it matches, else auto-select first
+      const paramD = window._paramDomain;
+      if(paramD){
+        const match = [...chips.querySelectorAll('.domain-chip')].find(c=>c.dataset.domain===paramD);
+        if(match){ match.classList.add('selected'); } else if(!selectedDomain && doms[0]){ selectDomain(doms[0].domain, chips.querySelector('.domain-chip')); }
+      } else if(!selectedDomain && doms[0]){ selectDomain(doms[0].domain, chips.querySelector('.domain-chip')); }
+    } else {
+      chips.innerHTML=`<div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);line-height:1.7;">No saved domains yet. Type any domain above and click <strong style="color:var(--cyan)">+ Use this domain</strong> — or <a href="dashboard-domains.html" style="color:var(--cyan)">add a verified domain →</a></div>`;
+    }
+  } catch {
+    document.getElementById('domainChips').innerHTML=`<div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);">Type a domain above to scan it.</div>`;
+  }
+}
+loadDomains();
+
+// Pre-fill domain from URL param ?domain= or from localStorage (set by Domains page)
+(function prefillFromParam(){
+  const p=new URLSearchParams(window.location.search);
+  const d=p.get("domain");
+  if(d){ const parsed=parseDomain(d)||d; document.getElementById("domainInput").value=parsed; selectedDomain=parsed; window._paramDomain=parsed; }
+  const stored=localStorage.getItem("pc_prescan_domain");
+  if(stored&&!selectedDomain){ const parsed=parseDomain(stored)||stored; document.getElementById("domainInput").value=parsed; selectedDomain=parsed; window._paramDomain=parsed; localStorage.removeItem("pc_prescan_domain"); }
+})();
+
+function selectDomain(domain, el){
+  selectedDomain=domain;
+  document.querySelectorAll('.domain-chip').forEach(c=>c.classList.remove('selected'));
+  if(el) el.classList.add('selected');
+  document.getElementById('domainInput').value=domain;
+}
+function parseDomain(raw){
+  raw=(raw||'').trim();
+  if(!raw) return '';
+  // Add protocol if missing so URL() can parse it
+  if(!/^https?:\/\//i.test(raw)) raw='https://'+raw;
+  try{ return new URL(raw).hostname.replace(/^www\./,''); }catch{ return ''; }
+}
+function addCustomDomain(){
+  const val=parseDomain(document.getElementById('domainInput').value);
+  if(!val||!val.includes('.')){ document.getElementById('domainErr').classList.add('show'); return; }
+  document.getElementById('domainErr').classList.remove('show');
+  selectedDomain=val;
+  document.getElementById('domainInput').value=val;
+  const chips=document.getElementById('domainChips');
+  document.querySelectorAll('.domain-chip').forEach(c=>c.classList.remove('selected'));
+  // Check if chip already exists
+  const existing=[...chips.querySelectorAll('.domain-chip')].find(c=>c.dataset.domain===val);
+  if(existing){ existing.classList.add('selected'); return; }
+  const chip=document.createElement('div');
+  chip.className='domain-chip selected';
+  chip.dataset.domain=val;
+  chip.textContent='+ '+val;
+  chip.onclick=()=>selectDomain(val,chip);
+  chips.appendChild(chip);
+}
+
+function selectOpt(el,gridId){
+  document.querySelectorAll(`#${gridId} .option-btn`).forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function getSelected(gridId){ return document.querySelector(`#${gridId} .option-btn.selected`)?.dataset.val||''; }
+
+function toggleAdvanced(){
+  document.getElementById('advOpts').classList.toggle('open');
+  document.getElementById('advIcon').classList.toggle('open');
+}
+
+// Launch scan
+async function launchScan(){
+  if(!selectedDomain){
+    const inputVal=parseDomain(document.getElementById('domainInput').value);
+    if(!inputVal||!inputVal.includes('.')){ document.getElementById('domainErr').classList.add('show'); return; }
+    selectedDomain=inputVal;
+    document.getElementById('domainInput').value=inputVal;
+  }
+  document.getElementById('domainErr').classList.remove('show');
+  if(!document.getElementById('scanConsent').checked){
+    document.getElementById('consentErr').classList.add('show');
+    document.getElementById('scanConsent').classList.add('err');
+    return;
+  }
+  document.getElementById('consentErr').classList.remove('show');
+
+  const btn=document.getElementById('launchBtn');
+  const txt=document.getElementById('launchText');
+  const spin=document.getElementById('launchSpin');
+  btn.disabled=true; txt.style.display='none'; spin.style.display='block';
+
+  try {
+    const payload = {
+      target_url: selectedDomain,
+      scan_type: getSelected('scanTypeGrid')||'quick',
+      scan_mode: getSelected('scanModeGrid')||'passive',
+      industry_profile: getSelected('industryGrid')||'general'
+    };
+
+    const res = await PC.startScan(payload);
+    currentScanId = res.id;
+
+    // Switch to progress view
+    document.getElementById('configStep').classList.remove('active');
+    document.getElementById('progressView').classList.add('active');
+    document.getElementById('pvDomain').textContent=selectedDomain;
+    document.getElementById('cvDomain').textContent=selectedDomain;
+    
+    startPollingProgress();
+  } catch(e){
+    btn.disabled=false; txt.style.display=''; spin.style.display='none';
+    alert(e.message || 'Could not start scan. Please try again.');
+  }
+}
+
+let lastLogCount = 0;
+function startPollingProgress(){
+  lastLogCount = 0;
+  document.getElementById('terminal').innerHTML = '';
+  
+  for(let i=1; i<=4; i++){
+    document.getElementById('ph'+i).className = 'phase-item';
+    document.getElementById('ph'+i+'s').textContent = 'Waiting';
+  }
+  
+  scanPollInterval = setInterval(async () => {
+    try {
+      const scan = await PC.getScanProgress(currentScanId);
+      
+      const pct = scan.progress || 0;
+      document.getElementById('progressBar').style.width = pct + '%';
+      document.getElementById('pvPct').textContent = pct + '%';
+      
+      const updateStepUI = (stepNum, statusText, isRunning, isDone) => {
+        const el = document.getElementById('ph' + stepNum);
+        const st = document.getElementById('ph' + stepNum + 's');
+        if (el && st) {
+          el.className = 'phase-item' + (isRunning ? ' active' : '') + (isDone ? ' done' : '');
+          st.textContent = statusText;
+        }
+      };
+
+      if (pct <= 25) {
+        updateStepUI(1, 'Running...', true, false);
+      } else if (pct <= 45) {
+        updateStepUI(1, 'Complete', false, true);
+        updateStepUI(2, 'Running...', true, false);
+      } else if (pct <= 70) {
+        updateStepUI(1, 'Complete', false, true);
+        updateStepUI(2, 'Complete', false, true);
+        updateStepUI(3, 'Running...', true, false);
+      } else if (pct < 100) {
+        updateStepUI(1, 'Complete', false, true);
+        updateStepUI(2, 'Complete', false, true);
+        updateStepUI(3, 'Complete', false, true);
+        updateStepUI(4, 'Running...', true, false);
+      }
+      
+      const logs = scan.scan_log || [];
+      if (logs.length > lastLogCount) {
+        for (let i = lastLogCount; i < logs.length; i++) {
+          const logLine = logs[i];
+          const time = logLine.ts ? new Date(logLine.ts).toLocaleTimeString() : 'LOG';
+          addTermLine(time, logLine.msg, logLine.type || 'info');
+        }
+        lastLogCount = logs.length;
+      }
+      
+      if (scan.status === 'completed') {
+        clearInterval(scanPollInterval);
+        updateStepUI(1, 'Complete', false, true);
+        updateStepUI(2, 'Complete', false, true);
+        updateStepUI(3, 'Complete', false, true);
+        updateStepUI(4, 'Complete', false, true);
+        
+        const score = scan.security_score || 0;
+        document.getElementById('cvScore').textContent = score.toFixed(1) + '/10';
+        document.getElementById('cvScore').style.color = score >= 8 ? 'var(--green)' : score >= 6 ? 'var(--yellow)' : 'var(--red)';
+        document.getElementById('cvCrit').textContent = scan.critical_count || 0;
+        document.getElementById('cvHigh').textContent = scan.high_count || 0;
+        document.getElementById('cvTotal').textContent = scan.total_vulnerabilities || 0;
+        
+        document.getElementById('progressView').classList.remove('active');
+        document.getElementById('completeView').classList.add('active');
+      } else if (scan.status === 'failed') {
+        clearInterval(scanPollInterval);
+        addTermLine('ERROR', scan.error_message || 'Scan failed', 'error');
+        alert('Scan failed: ' + (scan.error_message || 'Unknown error'));
+        resetScan();
+      }
+    } catch (err) {
+      console.error('Error polling progress:', err);
+    }
+  }, 2000);
+}
+
+function addTermLine(ts,msg,type='info'){
+  const terminal=document.getElementById('terminal');
+  const line=document.createElement('div');
+  line.className='term-line';
+  const cls=type==='find'?'term-find':type==='warn'?'term-warn':type==='ok'?'term-ok':'term-info';
+  line.innerHTML=`<span class="term-ts">[${ts}]</span><span class="${cls}">${msg}</span>`;
+  terminal.appendChild(line);
+  terminal.scrollTop=terminal.scrollHeight;
+}
+
+function viewReport(){ if(currentScanId) nav('dashboard-report.html?id='+currentScanId); else nav('dashboard-history.html'); }
+function cancelScan(){ if(confirm('Cancel the current scan?')){ window.location.reload(); } }
+function resetScan(){ window.location.reload(); }
+</script>
+</body>
+</html>

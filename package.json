@@ -1,0 +1,29 @@
+{
+  "name": "penchecker",
+  "version": "1.0.0",
+  "description": "PenChecker — AI-powered penetration testing SaaS platform",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "bcryptjs": "^2.4.3",
+    "cheerio": "^1.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "lowdb": "^7.0.1",
+    "multer": "^1.4.5-lts.1",
+    "node-cron": "^4.2.1",
+    "nodemailer": "^6.9.14",
+    "pdfkit": "^0.19.0",
+    "pg": "^8.21.0",
+    "sqlite3": "^6.0.1",
+    "uuid": "^9.0.1"
+  }
+}

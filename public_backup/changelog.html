@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Changelog -- PenChecker</title>
+<meta name="description" content="Every update, fix, and security improvement shipped to PenChecker."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--black:#060608;--black2:#0d0d12;--black3:#13131a;--surface:#1a1a24;--surface2:#22222f;--border:rgba(255,255,255,0.07);--border2:rgba(0,229,255,0.2);--cyan:#00e5ff;--green:#00ff87;--red:#ff3b5c;--orange:#ff8c42;--purple:#a855f7;--white:#f0f0f8;--muted:#6b6b85;--muted2:#9090a8;--font-body:"Plus Jakarta Sans",sans-serif;--font-mono:"JetBrains Mono",monospace;--radius:12px;--radius2:20px;}
+.light-theme{--black:#f8f9fc;--black2:#e8eaf2;--black3:#ffffff;--surface:#ffffff;--surface2:#f2f4f9;--border:rgba(13,23,44,0.12);--border2:rgba(0,149,212,0.25);--cyan:#007fbc;--green:#0f9d58;--red:#d93025;--orange:#e37400;--purple:#6a1b9a;--white:#0b0d13;--muted:#4b5d79;--muted2:#6b7790;}
+.light-theme #navbar{background:rgba(248,249,252,0.96);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:16px;line-height:1.7;overflow-x:hidden;transition:background 0.25s,color 0.25s;}
+a{color:var(--cyan);text-decoration:none;}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+#navbar{position:sticky;top:0;z-index:100;padding:0 24px;background:rgba(6,6,8,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1100px;margin:0 auto;height:64px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-icon{width:34px;height:34px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;font-size:0.82rem;color:var(--black);}
+.nav-logo-text{font-size:1.1rem;font-weight:700;letter-spacing:-0.02em;color:var(--white);}
+.nav-logo-text span{color:var(--cyan);}
+.nav-links{display:flex;align-items:center;gap:22px;font-size:0.88rem;}
+.nav-links a{color:var(--muted2);transition:color 0.2s;text-decoration:none;}
+.nav-links a:hover{color:var(--white);}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.btn-nav{padding:8px 18px;border-radius:8px;font-size:0.85rem;font-weight:600;text-decoration:none;transition:all 0.2s;}
+.btn-ghost{border:1px solid var(--border);color:var(--muted2);}
+.btn-ghost:hover{border-color:var(--border2);color:var(--white);}
+.btn-solid{background:var(--cyan);color:var(--black);}
+.btn-solid:hover{box-shadow:0 0 24px rgba(0,229,255,0.35);}
+.theme-btn{background:none;border:1px solid var(--border);color:var(--muted2);padding:7px 14px;border-radius:8px;font-size:0.8rem;transition:all 0.2s;}
+.theme-btn:hover{border-color:var(--border2);color:var(--white);}
+.page-wrap{max-width:820px;margin:0 auto;padding:80px 24px 120px;position:relative;z-index:1;}
+.hero{text-align:center;margin-bottom:60px;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(0,229,255,0.07);border:1px solid rgba(0,229,255,0.18);border-radius:100px;font-family:var(--font-mono);font-size:0.7rem;color:var(--cyan);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:20px;}
+.hero-eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:pulse-dot 2s infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.hero-title{font-size:clamp(2.4rem,6vw,4rem);font-weight:800;letter-spacing:-0.04em;line-height:1.1;margin-bottom:16px;}
+.hero-title span{color:var(--cyan);}
+.hero-sub{font-size:1rem;color:var(--muted2);max-width:460px;margin:0 auto 30px;line-height:1.7;}
+.subscribe-row{display:flex;gap:8px;max-width:380px;margin:0 auto;}
+.subscribe-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:11px 16px;font-family:var(--font-body);font-size:0.85rem;color:var(--white);outline:none;transition:border-color 0.2s;}
+.subscribe-input:focus{border-color:var(--cyan);}
+.subscribe-input::placeholder{color:var(--muted);}
+.subscribe-btn{padding:11px 20px;background:var(--cyan);color:var(--black);border-radius:var(--radius);font-weight:700;font-size:0.85rem;white-space:nowrap;transition:all 0.2s;}
+.subscribe-btn:hover{box-shadow:0 0 28px rgba(0,229,255,0.35);}
+.stats-strip{display:flex;justify-content:center;gap:36px;flex-wrap:wrap;margin-bottom:50px;padding:20px 28px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);}
+.stat-num{font-family:var(--font-mono);font-size:1.25rem;font-weight:700;color:var(--cyan);}
+.stat-label{font-size:0.7rem;color:var(--muted2);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.06em;}
+.filter-row{display:flex;gap:8px;margin-bottom:44px;flex-wrap:wrap;align-items:center;}
+.filter-label{font-family:var(--font-mono);font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-right:4px;}
+.filter-chip{padding:7px 16px;border-radius:100px;font-family:var(--font-mono);font-size:0.72rem;font-weight:600;border:1px solid var(--border);background:transparent;color:var(--muted2);cursor:pointer;transition:all 0.2s;}
+.filter-chip:hover{border-color:var(--border2);color:var(--white);}
+.filter-chip.active{background:var(--surface);color:var(--cyan);border-color:var(--cyan);}
+.timeline{position:relative;padding-left:36px;}
+.timeline::before{content:"";position:absolute;left:5px;top:8px;bottom:0;width:2px;background:linear-gradient(to bottom,var(--cyan),var(--border) 50%,transparent);}
+.release{position:relative;margin-bottom:52px;}
+.release::before{content:"";position:absolute;left:-36px;top:8px;width:12px;height:12px;border-radius:50%;background:var(--surface);border:2px solid var(--border);}
+.release.major::before{background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 16px rgba(0,229,255,0.5);width:14px;height:14px;left:-37px;top:7px;}
+.release.minor::before{background:var(--green);border-color:var(--green);}
+.release.security::before{background:var(--red);border-color:var(--red);}
+.release.patch::before{background:var(--surface2);border-color:var(--muted);}
+.release.hidden{display:none;}
+.release-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);padding:28px;transition:border-color 0.3s,box-shadow 0.3s;}
+.release-card:hover{border-color:var(--border2);box-shadow:0 4px 32px rgba(0,229,255,0.06);}
+.release.major .release-card{border-color:rgba(0,229,255,0.15);background:linear-gradient(135deg,rgba(0,229,255,0.04),var(--black3));}
+.release.security .release-card{border-color:rgba(255,59,92,0.15);background:linear-gradient(135deg,rgba(255,59,92,0.04),var(--black3));}
+.release-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
+.release-version{font-family:var(--font-mono);font-size:1rem;font-weight:700;}
+.release-badge{padding:3px 10px;border-radius:6px;font-family:var(--font-mono);font-size:0.62rem;font-weight:700;letter-spacing:0.05em;}
+.badge-major{background:rgba(0,229,255,0.12);color:var(--cyan);}
+.badge-minor{background:rgba(0,255,135,0.12);color:var(--green);}
+.badge-patch{background:rgba(255,255,255,0.07);color:var(--muted2);}
+.badge-security{background:rgba(255,59,92,0.12);color:var(--red);}
+.release-date{font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);margin-left:auto;}
+.release-title{font-size:1.1rem;font-weight:700;margin-bottom:8px;}
+.release-summary{font-size:0.87rem;color:var(--muted2);line-height:1.7;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.change-list{display:flex;flex-direction:column;gap:9px;}
+.change-item{display:flex;align-items:flex-start;gap:10px;font-size:0.84rem;}
+.change-tag{font-family:var(--font-mono);font-size:0.6rem;font-weight:700;padding:3px 8px;border-radius:5px;flex-shrink:0;margin-top:3px;letter-spacing:0.04em;}
+.tag-new{background:rgba(0,229,255,0.1);color:var(--cyan);}
+.tag-improved{background:rgba(0,255,135,0.1);color:var(--green);}
+.tag-fixed{background:rgba(255,140,66,0.1);color:var(--orange);}
+.tag-security{background:rgba(255,59,92,0.1);color:var(--red);}
+.change-text{color:var(--muted2);line-height:1.65;}
+.change-text strong{color:var(--white);font-weight:600;}
+.mono{font-family:var(--font-mono);font-size:0.8em;background:var(--surface);padding:1px 6px;border-radius:4px;}
+.upcoming{margin-top:60px;margin-bottom:48px;}
+.upcoming-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.upcoming-title{font-size:1.1rem;font-weight:700;}
+.upcoming-badge{padding:3px 10px;border-radius:6px;font-family:var(--font-mono);font-size:0.63rem;font-weight:700;background:rgba(168,85,247,0.12);color:var(--purple);}
+.upcoming-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.upcoming-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;}
+.upcoming-icon{font-size:1.4rem;margin-bottom:8px;}
+.upcoming-item-title{font-size:0.9rem;font-weight:700;margin-bottom:4px;}
+.upcoming-item-desc{font-size:0.8rem;color:var(--muted2);line-height:1.6;}
+.upcoming-eta{display:inline-block;margin-top:10px;font-family:var(--font-mono);font-size:0.62rem;color:var(--purple);background:rgba(168,85,247,0.08);padding:2px 8px;border-radius:4px;}
+.cta-card{background:linear-gradient(135deg,rgba(0,229,255,0.06),rgba(168,85,247,0.04));border:1px solid rgba(0,229,255,0.18);border-radius:var(--radius2);padding:48px 40px;text-align:center;margin-top:60px;}
+.cta-title{font-size:1.6rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:10px;}
+.cta-sub{font-size:0.92rem;color:var(--muted2);margin-bottom:26px;}
+.cta-btn{display:inline-block;padding:14px 32px;background:var(--cyan);color:var(--black);border-radius:var(--radius);font-weight:700;font-size:0.95rem;transition:all 0.2s;text-decoration:none;}
+.cta-btn:hover{box-shadow:0 0 32px rgba(0,229,255,0.4);}
+footer{background:var(--black2);border-top:1px solid var(--border);padding:48px 24px;}
+.footer-inner{max-width:1100px;margin:0 auto;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:32px;}
+.footer-brand p{font-size:0.82rem;color:var(--muted2);line-height:1.7;margin-top:10px;max-width:260px;}
+.footer-col h4{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:14px;font-family:var(--font-mono);}
+.footer-col ul{list-style:none;}
+.footer-col li{margin-bottom:9px;}
+.footer-col a{font-size:0.84rem;color:var(--muted2);transition:color 0.2s;text-decoration:none;}
+.footer-col a:hover{color:var(--white);}
+.footer-bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.footer-copy{font-size:0.79rem;color:var(--muted);}
+.footer-legal{display:flex;gap:16px;}
+.footer-legal a{font-size:0.79rem;color:var(--muted);text-decoration:none;}
+.footer-legal a:hover{color:var(--white);}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.5s ease,transform 0.5s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:0.1s;}
+.reveal-delay-2{transition-delay:0.2s;}
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);color:var(--white);padding:12px 24px;border-radius:10px;font-size:0.84rem;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.5);transition:opacity 0.3s;min-width:240px;text-align:center;display:none;}
+@media(max-width:768px){.nav-links{display:none;}.footer-grid{grid-template-columns:1fr 1fr;}.footer-brand{grid-column:1/-1;}.upcoming-grid{grid-template-columns:1fr;}.release-date{margin-left:0;width:100%;}}
+@media(max-width:480px){.page-wrap{padding:48px 16px 80px;}.subscribe-row{flex-direction:column;}.release-card{padding:20px 16px;}.stats-strip{gap:20px;}}
+</style>
+</head>
+<body>
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">PC</div>
+      <div class="nav-logo-text">Pen<span>Checker</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="features.html">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="how.html">How it works</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About</a>
+    </div>
+    <div class="nav-right">
+      <button class="theme-btn" id="themeToggle" style="display:inline-flex;align-items:center;gap:6px;"></button>
+      <a href="login.html" class="btn-nav btn-ghost">Sign in</a>
+      <a href="signup.html" class="btn-nav btn-solid">Get started</a>
+    </div>
+  </div>
+</nav>
+<div class="page-wrap">
+  <div class="hero reveal">
+    <div class="hero-eyebrow">Live product updates</div>
+    <h1 class="hero-title">What is new in<br><span>PenChecker</span></h1>
+    <p class="hero-sub">Every feature, fix, and security improvement shipped automatically to all users. No manual updates required.</p>
+    <div class="subscribe-row">
+      <input type="email" class="subscribe-input" id="subEmail" placeholder="your@email.com"/>
+      <button class="subscribe-btn" onclick="subscribe()">Get release notes</button>
+    </div>
+  </div>
+  <div class="stats-strip reveal reveal-delay-1">
+    <div class="stat-item"><div class="stat-num">v1.1.0</div><div class="stat-label">Latest version</div></div>
+    <div class="stat-item"><div class="stat-num">5</div><div class="stat-label">Releases shipped</div></div>
+    <div class="stat-item"><div class="stat-num">40+</div><div class="stat-label">Changes total</div></div>
+    <div class="stat-item"><div class="stat-num">Weekly</div><div class="stat-label">Release cadence</div></div>
+  </div>
+  <div class="filter-row reveal reveal-delay-2">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-chip active" onclick="filterChanges(this,'all')">All releases</button>
+    <button class="filter-chip" onclick="filterChanges(this,'major')">Major</button>
+    <button class="filter-chip" onclick="filterChanges(this,'minor')">Minor</button>
+    <button class="filter-chip" onclick="filterChanges(this,'patch')">Patches</button>
+    <button class="filter-chip" onclick="filterChanges(this,'security')">Security</button>
+  </div>
+  <div class="timeline" id="timeline">
+    <div class="release major reveal" data-type="major">
+      <div class="release-card">
+        <div class="release-header">
+          <span class="release-version">v1.1.0</span>
+          <span class="release-badge badge-major">MAJOR</span>
+          <span class="release-date">May 2025</span>
+        </div>
+        <div class="release-title">Global Launch -- AI Assistant, Security Badges and Continuous Monitoring</div>
+        <div class="release-summary">The biggest release since launch. PenChecker goes worldwide across 190+ countries with live AI-powered security assistance powered by Anthropic Claude, embeddable security badges, and automatic 24-hour monitoring for all verified domains.</div>
+        <div class="change-list">
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>AI Security Assistant</strong> -- Powered by Anthropic Claude. Ask any question about your findings, get plain-English explanations and fix code in your exact tech stack. Full session history saved to database.</span></div>
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>Security Badges</strong> -- Embeddable SVG badges showing your live security score. 4 styles: dark, light, compact, detailed. Auto-updates after every scan. Reads from <span class="mono">security_badges</span> table.</span></div>
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>Continuous Monitoring</strong> -- Verified domains automatically re-scanned every 24 hours. Instant alerts for critical and high-severity findings.</span></div>
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>Multi-currency pricing</strong> -- Live detection via ipapi.co. Prices shown in your local currency. 20+ currencies supported worldwide.</span></div>
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>Industry scan profiles</strong> -- 6 scan configurations: SaaS, Fintech, Healthcare, E-commerce, Government, General. Each adapts tests to your platform risk model.</span></div>
+          <div class="change-item"><span class="change-tag tag-improved">IMPROVED</span><span class="change-text">Notification panel now reads from database -- real notifications per scan event, finding severity, billing, and monitoring alerts. Mark read writes back to DB.</span></div>
+          <div class="change-item"><span class="change-tag tag-improved">IMPROVED</span><span class="change-text">Dashboard rebuilt -- animated score ring SVG, time-based greeting, severity breakdown, findings table scoped per authenticated user session.</span></div>
+          <div class="change-item"><span class="change-tag tag-fixed">FIXED</span><span class="change-text">Scan INSERT failing silently -- <span class="mono">target_domain</span> (NOT NULL field) now correctly included in every scan payload alongside consent log record.</span></div>
+          <div class="change-item"><span class="change-tag tag-fixed">FIXED</span><span class="change-text">Score field mismatch -- <span class="mono">score</span> renamed to <span class="mono">security_score</span> across all scan PATCH operations to match the database schema.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="release security reveal" data-type="security">
+      <div class="release-card">
+        <div class="release-header">
+          <span class="release-version">v1.0.4</span>
+          <span class="release-badge badge-security">SECURITY</span>
+          <span class="release-date">April 2025</span>
+        </div>
+        <div class="release-title">Two-Factor Authentication and Session Hardening</div>
+        <div class="release-summary">Critical security upgrade for all accounts. TOTP two-factor authentication now available on all plans. Session tokens are validated and expire reliably on every dashboard page load.</div>
+        <div class="change-list">
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>TOTP two-factor authentication</strong> -- Works with Google Authenticator, Authy, 1Password, and Bitwarden. 4-step setup wizard with QR code and download recovery codes.</span></div>
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>Recovery codes</strong> -- 8 single-use backup codes generated at 2FA setup. Downloadable as a plain text file.</span></div>
+          <div class="change-item"><span class="change-tag tag-security">SECURITY</span><span class="change-text">Password reset tokens now expire after 1 hour (previously 24 hours).</span></div>
+          <div class="change-item"><span class="change-tag tag-security">SECURITY</span><span class="change-text">Session expires_at checked on every dashboard page load -- expired sessions redirect immediately to login.</span></div>
+          <div class="change-item"><span class="change-tag tag-security">SECURITY</span><span class="change-text">Rate limiting on all auth endpoints -- maximum 5 failed attempts per 15 minutes per IP address.</span></div>
+          <div class="change-item"><span class="change-tag tag-improved">IMPROVED</span><span class="change-text">Sign out all devices option added to Settings Security tab.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="release minor reveal" data-type="minor">
+      <div class="release-card">
+        <div class="release-header">
+          <span class="release-version">v1.0.3</span>
+          <span class="release-badge badge-minor">MINOR</span>
+          <span class="release-date">March 2025</span>
+        </div>
+        <div class="release-title">Domain Verification, Monitoring Toggles and Scan History</div>
+        <div class="release-summary">Full domain management with three verification methods, per-domain monitoring toggles, paginated scan history with search and filter, and the report viewer with severity tabs.</div>
+        <div class="change-list">
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>3 domain verification methods</strong> -- DNS TXT record, file upload at /.well-known/penchecker-verify.txt, or HTML meta tag.</span></div>
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>Per-domain monitoring toggles</strong> -- Enable or disable continuous monitoring directly from domain cards. PATCHes domains.is_monitoring in real time.</span></div>
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>Scan history page</strong> -- Paginated list (15 per page) with live search, 4 status filters, sort by score or date, and delete with confirmation dialog.</span></div>
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>Report viewer</strong> -- Load any past scan by ?id= URL param. Filter findings by severity. Expandable cards with server evidence and step-by-step fix instructions.</span></div>
+          <div class="change-item"><span class="change-tag tag-improved">IMPROVED</span><span class="change-text">Scan page now pre-fills domain from ?domain= URL param, localStorage, or first verified domain automatically.</span></div>
+          <div class="change-item"><span class="change-tag tag-fixed">FIXED</span><span class="change-text">OAuth callback not restoring dark/light theme after redirect from Google or GitHub.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="release patch reveal" data-type="patch">
+      <div class="release-card">
+        <div class="release-header">
+          <span class="release-version">v1.0.2</span>
+          <span class="release-badge badge-patch">PATCH</span>
+          <span class="release-date">February 2025</span>
+        </div>
+        <div class="release-title">Performance Fixes and Mobile Polish</div>
+        <div class="release-summary">Speed improvements and mobile experience fixes based on early user feedback across auth flow, dashboard, and scan terminal.</div>
+        <div class="change-list">
+          <div class="change-item"><span class="change-tag tag-improved">IMPROVED</span><span class="change-text">Dashboard load time reduced by 40% -- scan data and domain data now fetched in parallel instead of sequentially.</span></div>
+          <div class="change-item"><span class="change-tag tag-fixed">FIXED</span><span class="change-text">Score ring SVG arc not animating on first dashboard visit -- now plays reliably across all browsers including Safari.</span></div>
+          <div class="change-item"><span class="change-tag tag-fixed">FIXED</span><span class="change-text">Mobile sidebar not closing after navigation tap on iOS Safari.</span></div>
+          <div class="change-item"><span class="change-tag tag-fixed">FIXED</span><span class="change-text">Light mode text contrast on scan terminal -- terminal output was unreadable in light theme.</span></div>
+          <div class="change-item"><span class="change-tag tag-fixed">FIXED</span><span class="change-text">Supabase anon key truncated (205 chars instead of 208) in scan history -- all API calls on that page now succeed.</span></div>
+          <div class="change-item"><span class="change-tag tag-fixed">FIXED</span><span class="change-text">Email verification page not redirecting to onboarding after successful token confirmation.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="release major reveal" data-type="major">
+      <div class="release-card">
+        <div class="release-header">
+          <span class="release-version">v1.0.0</span>
+          <span class="release-badge badge-major">MAJOR</span>
+          <span class="release-date">January 2025</span>
+        </div>
+        <div class="release-title">PenChecker Launch -- The World Most Accurate Web Scanner</div>
+        <div class="release-summary">First public release. Built to solve one problem -- scanners that report SQL Injection on Node.js and Prisma sites. Every finding is verified before it reaches your report. Zero template results, ever.</div>
+        <div class="change-list">
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>Core scanner</strong> -- Technology fingerprinting first, then OWASP Top 10 testing. Only tests that apply to your detected stack are run. Zero false positives by design.</span></div>
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>5-phase scan pipeline</strong> -- Discovery, Headers, Injection, Auth and Session, Score. Each phase verified independently before scoring.</span></div>
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>Evidence cards</strong> -- Every finding ships with the actual server response that proves the vulnerability. Not a guess. Real proof.</span></div>
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>4 plans launched</strong> -- Free, Individual at .99 per month, Team at 9.99 per month, Enterprise at 9.99 per month. All plans start with a free scan with no credit card required.</span></div>
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>Google and GitHub OAuth</strong> -- One-click sign-up. No password required for OAuth users.</span></div>
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>5-step onboarding</strong> -- Guided first run: account, domain, industry, notifications, dashboard.</span></div>
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>32-page platform</strong> -- Full marketing site, legal framework, security blog with 10 articles, and complete dashboard suite. Dark and light mode on every page.</span></div>
+          <div class="change-item"><span class="change-tag tag-new">NEW</span><span class="change-text"><strong>Legal compliance</strong> -- Terms, Privacy Policy, Acceptable Use, DMCA. Consent logged immutably on every scan for legal audit trail.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="upcoming reveal">
+    <div class="upcoming-header">
+      <div class="upcoming-title">Coming up next</div>
+      <span class="upcoming-badge">ROADMAP</span>
+    </div>
+    <div class="upcoming-grid">
+      <div class="upcoming-item">
+        <div class="upcoming-icon">&#128279;</div>
+        <div class="upcoming-item-title">GitHub Integration</div>
+        <div class="upcoming-item-desc">Scan on every pull request. Failing scans block merges until the vulnerability is fixed.</div>
+        <span class="upcoming-eta">Phase 3</span>
+      </div>
+      <div class="upcoming-item">
+        <div class="upcoming-icon">&#9881;</div>
+        <div class="upcoming-item-title">CI/CD Pipeline Support</div>
+        <div class="upcoming-item-desc">GitHub Actions, GitLab CI, and CircleCI native integrations out of the box.</div>
+        <span class="upcoming-eta">Phase 3</span>
+      </div>
+      <div class="upcoming-item">
+        <div class="upcoming-icon">&#128172;</div>
+        <div class="upcoming-item-title">Slack and Discord Alerts</div>
+        <div class="upcoming-item-desc">Critical and high findings pushed directly to your team channels in real time.</div>
+        <span class="upcoming-eta">Phase 3</span>
+      </div>
+      <div class="upcoming-item">
+        <div class="upcoming-icon">&#127758;</div>
+        <div class="upcoming-item-title">Public API and Webhooks</div>
+        <div class="upcoming-item-desc">Full REST API with webhook events for scan completion, new findings, and score changes.</div>
+        <span class="upcoming-eta">Phase 3</span>
+      </div>
+    </div>
+  </div>
+  <div class="cta-card reveal">
+    <div class="cta-title">Always shipping. Always improving.</div>
+    <p class="cta-sub">PenChecker gets better every week. Start free and grow with every release.</p>
+    <a href="signup.html" class="cta-btn">Start scanning for free</a>
+  </div>
+</div>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" style="display:inline-flex;">
+          <div class="nav-logo-icon">PC</div>
+          <div class="nav-logo-text" style="margin-left:10px;">Pen<span>Checker</span></div>
+        </a>
+        <p>The world most accurate web security scanner. Zero false positives. AI-powered fix recommendations.</p>
+      </div>
+      <div class="footer-col"><h4>Product</h4><ul><li><a href="features.html">Features</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="how.html">How it works</a></li><li><a href="changelog.html">Changelog</a></li><li><a href="affiliates.html">Affiliates</a></li></ul></div>
+      <div class="footer-col"><h4>Account</h4><ul><li><a href="signup.html">Sign up free</a></li><li><a href="login.html">Sign in</a></li><li><a href="dashboard.html">Dashboard</a></li><li><a href="contact.html">Support</a></li><li><a href="blog.html">Blog</a></li></ul></div>
+      <div class="footer-col"><h4>Legal</h4><ul><li><a href="legal/terms.html">Terms of Service</a></li><li><a href="legal/privacy.html">Privacy Policy</a></li><li><a href="legal/acceptable-use.html">Acceptable Use</a></li><li><a href="legal/dmca.html">DMCA</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">2025 PenChecker, Inc. All rights reserved. United States. Serving 190 plus countries.</div>
+      <div class="footer-legal"><a href="legal/terms.html">Terms</a><a href="legal/privacy.html">Privacy</a><a href="legal/dmca.html">DMCA</a></div>
+    </div>
+  </div>
+</footer>
+<div id="toast"></div>
+<script>
+var tBtn=document.getElementById("themeToggle");
+var sunSVG='<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+var moonSVG='<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+function setTheme(l){document.body.classList.toggle("light-theme",l);localStorage.setItem("pencheckerTheme",l?"light":"dark");if(tBtn)tBtn.innerHTML=(l?sunSVG:moonSVG)+"&nbsp;"+(l?"Light":"Dark");}
+tBtn.addEventListener("click",function(){setTheme(!document.body.classList.contains("light-theme"));});
+(function(){var s=localStorage.getItem("pencheckerTheme");var p=window.matchMedia("(prefers-color-scheme: light)").matches;setTheme(s==="light"||(!s&&p));})();
+function filterChanges(btn,type){
+  document.querySelectorAll(".filter-chip").forEach(function(c){c.classList.remove("active");});
+  btn.classList.add("active");
+  document.querySelectorAll(".release").forEach(function(r){
+    r.classList.toggle("hidden",type!=="all"&&r.dataset.type!==type);
+  });
+}
+function subscribe(){
+  var email=document.getElementById("subEmail").value.trim();
+  if(!email||email.indexOf("@")<0){showToast("Please enter a valid email address.");return;}
+  var subs=JSON.parse(localStorage.getItem("newsletterSubs")||"[]");
+  if(subs.indexOf(email)<0){subs.push(email);localStorage.setItem("newsletterSubs",JSON.stringify(subs));}
+  showToast("Subscribed! Release notes will arrive at "+email);
+  document.getElementById("subEmail").value="";
+}
+function showToast(msg){var t=document.getElementById("toast");t.textContent=msg;t.style.display="block";t.style.opacity="1";clearTimeout(window._tt);window._tt=setTimeout(function(){t.style.opacity="0";setTimeout(function(){t.style.display="none";},300);},3500);}
+(function(){var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add("visible");obs.unobserve(e.target);}});},{threshold:0.08});document.querySelectorAll(".reveal").forEach(function(el){obs.observe(el);});})();
+</script>
+</body>
+</html>

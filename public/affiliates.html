@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Affiliate Program — PenChecker</title>
+<meta name="description" content="Earn 30% recurring commission by referring customers to PenChecker. Join our affiliate program."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--black:#060608;--black2:#0d0d12;--black3:#13131a;--surface:#1a1a24;--surface2:#22222f;--border:rgba(255,255,255,0.07);--border2:rgba(0,229,255,0.2);--cyan:#00e5ff;--green:#00ff87;--red:#ff3b5c;--orange:#ff8c42;--yellow:#ffd60a;--purple:#a855f7;--white:#f0f0f8;--muted:#6b6b85;--muted2:#9090a8;--font-display:'Plus Jakarta Sans',sans-serif;--font-body:'Plus Jakarta Sans',sans-serif;--font-mono:'JetBrains Mono',monospace;--radius:12px;--radius2:20px;--glow-cyan:0 0 40px rgba(0,229,255,0.25);}
+body{transition:background 0.25s,color 0.25s;}
+.light-theme{--black:#f8f9fc;--black2:#e8eaf2;--black3:#ffffff;--surface:#ffffff;--surface2:#f2f4f9;--border:rgba(13,23,44,0.12);--border2:rgba(0,149,212,0.25);--cyan:#007fbc;--green:#0f9d58;--red:#d93025;--orange:#e37400;--yellow:#f1c232;--purple:#6a1b9a;--white:#0b0d13;--muted:#4b5d79;--muted2:#6b7790;}
+.light-theme #navbar{background:rgba(248,249,252,0.96);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:16px;line-height:1.7;overflow-x:hidden;}
+a{color:var(--cyan);text-decoration:none;}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.02) 1px,transparent 1px);background-size:50px 50px;mask-image:radial-gradient(ellipse 80% 80% at 50% 20%,black,transparent);pointer-events:none;z-index:0;}
+#navbar{position:sticky;top:0;z-index:100;padding:0 24px;background:rgba(6,6,8,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1100px;margin:0 auto;height:64px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-icon{width:34px;height:34px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;font-size:0.82rem;color:var(--black);}
+.nav-logo-text{font-size:1.1rem;font-weight:700;letter-spacing:-0.02em;color:var(--white);}
+.nav-logo-text span{color:var(--cyan);}
+.nav-right{display:flex;align-items:center;gap:14px;font-size:0.88rem;}
+.nav-right a{color:var(--muted2);transition:color 0.2s;text-decoration:none;}
+.nav-right a:hover{color:var(--white);}
+.accent{color:var(--cyan)!important;font-weight:600;}
+.theme-btn{background:none;border:1px solid var(--border);color:var(--muted2);padding:7px 14px;border-radius:8px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;}
+.theme-btn:hover{border-color:var(--border2);color:var(--white);}
+/* Hero */
+.hero{text-align:center;padding:80px 24px 60px;position:relative;z-index:1;max-width:800px;margin:0 auto;}
+.hero-eyebrow{font-family:var(--font-mono);font-size:0.72rem;color:var(--green);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:16px;display:inline-flex;align-items:center;gap:7px;background:rgba(0,255,135,0.08);border:1px solid rgba(0,255,135,0.2);padding:5px 14px;border-radius:100px;}
+.hero-title{font-size:clamp(2.4rem,6vw,4rem);font-weight:800;letter-spacing:-0.03em;line-height:1.1;margin-bottom:18px;}
+.hero-title .accent{background:linear-gradient(135deg,var(--cyan),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.hero-sub{font-size:1.05rem;color:var(--muted2);max-width:520px;margin:0 auto 32px;line-height:1.75;}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-primary{display:inline-flex;align-items:center;gap:7px;padding:14px 28px;background:var(--cyan);color:var(--black);border-radius:var(--radius);font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 0.25s;border:none;text-decoration:none;}
+.btn-primary:hover{box-shadow:var(--glow-cyan);transform:translateY(-1px);}
+.btn-ghost{display:inline-flex;align-items:center;gap:7px;padding:14px 28px;background:transparent;color:var(--muted2);border:1px solid var(--border);border-radius:var(--radius);font-weight:600;font-size:0.95rem;cursor:pointer;transition:all 0.2s;text-decoration:none;}
+.btn-ghost:hover{border-color:var(--border2);color:var(--white);}
+/* Stats */
+.stats-bar{background:var(--black3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:28px 24px;margin-bottom:80px;}
+.stats-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center;}
+.stat-num{font-size:2rem;font-weight:800;letter-spacing:-0.03em;color:var(--cyan);margin-bottom:4px;}
+.stat-lbl{font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);}
+/* Content sections */
+.section{max-width:1100px;margin:0 auto;padding:0 24px 80px;position:relative;z-index:1;}
+.section-title{font-size:1.8rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;}
+.section-sub{font-size:0.9rem;color:var(--muted2);margin-bottom:36px;}
+/* How it works */
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:60px;}
+.step-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);padding:28px;position:relative;overflow:hidden;}
+.step-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--green));}
+.step-num{font-family:var(--font-mono);font-size:2.5rem;font-weight:800;color:var(--surface2);position:absolute;top:16px;right:20px;line-height:1;}
+.step-icon{font-size:1.8rem;margin-bottom:14px;}
+.step-title{font-weight:700;font-size:1rem;margin-bottom:8px;}
+.step-text{font-size:0.84rem;color:var(--muted2);line-height:1.65;}
+/* Commission tiers */
+.tiers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:60px;}
+.tier-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);padding:24px;text-align:center;transition:all 0.3s;}
+.tier-card.featured{border-color:rgba(0,229,255,0.3);background:rgba(0,229,255,0.04);}
+.tier-name{font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;}
+.tier-pct{font-size:2.5rem;font-weight:800;letter-spacing:-0.04em;color:var(--cyan);margin-bottom:4px;}
+.tier-desc{font-size:0.82rem;color:var(--muted2);margin-bottom:14px;}
+.tier-req{font-family:var(--font-mono);font-size:0.68rem;color:var(--muted);background:var(--surface);padding:5px 10px;border-radius:6px;}
+/* Benefits */
+.benefits-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:60px;}
+.benefit-item{display:flex;gap:12px;padding:18px;background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);}
+.bi-icon{font-size:1.4rem;flex-shrink:0;}
+.bi-title{font-weight:700;font-size:0.9rem;margin-bottom:4px;}
+.bi-text{font-size:0.82rem;color:var(--muted2);line-height:1.6;}
+/* FAQ */
+.faq-list{display:flex;flex-direction:column;gap:10px;margin-bottom:60px;}
+.faq-item{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;font-weight:600;font-size:0.9rem;transition:background 0.2s;}
+.faq-q:hover{background:var(--surface);}
+.faq-arrow{transition:transform 0.2s;color:var(--muted);}
+.faq-item.open .faq-arrow{transform:rotate(90deg);}
+.faq-a{display:none;padding:0 20px 16px;font-size:0.84rem;color:var(--muted2);line-height:1.7;}
+.faq-item.open .faq-a{display:block;}
+/* Apply form */
+.apply-card{background:linear-gradient(135deg,rgba(0,229,255,0.08),rgba(0,255,135,0.04));border:1px solid rgba(0,229,255,0.2);border-radius:var(--radius2);padding:48px;text-align:center;}
+.apply-title{font-size:1.6rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:12px;}
+.apply-sub{font-size:0.92rem;color:var(--muted2);margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto;}
+.apply-form{max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-input{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:11px 14px;font-family:var(--font-body);font-size:0.87rem;color:var(--white);outline:none;transition:border-color 0.2s;width:100%;}
+.form-input:focus{border-color:var(--cyan);}
+.form-input::placeholder{color:var(--muted);}
+.form-select{appearance:none;cursor:pointer;}
+/* Footer */
+footer{background:var(--black2);border-top:1px solid var(--border);padding:40px 24px;}
+.footer-inner{max-width:1100px;margin:0 auto;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:32px;}
+.footer-brand p{font-size:0.82rem;color:var(--muted2);line-height:1.7;margin-top:10px;max-width:260px;}
+.footer-col h4{font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:14px;font-family:var(--font-mono);}
+.footer-col ul{list-style:none;}
+.footer-col li{margin-bottom:8px;}
+.footer-col a{font-size:0.84rem;color:var(--muted2);transition:color 0.2s;text-decoration:none;}
+.footer-col a:hover{color:var(--white);}
+.footer-bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.footer-copy{font-size:0.8rem;color:var(--muted);}
+@media(max-width:900px){.steps-grid{grid-template-columns:1fr;}.tiers-grid{grid-template-columns:1fr;}.benefits-grid{grid-template-columns:1fr;}.stats-inner{grid-template-columns:repeat(2,1fr);}.footer-grid{grid-template-columns:1fr 1fr;}.footer-brand{grid-column:1/-1;}}
+@media(max-width:480px){.hero{padding:60px 16px 40px;}.form-row-2{grid-template-columns:1fr;}.stats-inner{grid-template-columns:1fr 1fr;}}
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity 0.55s ease,transform 0.55s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:0.1s;}
+.reveal-delay-2{transition-delay:0.2s;}
+.reveal-delay-3{transition-delay:0.3s;}
+/* Success state */
+.apply-success{display:none;text-align:center;padding:40px 20px;}
+.apply-success.show{display:block;}
+.success-icon{font-size:3rem;margin-bottom:16px;}
+.success-title{font-size:1.4rem;font-weight:800;margin-bottom:8px;color:var(--green);}
+.success-text{font-size:0.9rem;color:var(--muted2);line-height:1.7;max-width:360px;margin:0 auto 24px;}
+/* Full nav links */
+.nav-links{display:flex;align-items:center;gap:22px;font-size:0.88rem;}
+.nav-links a{color:var(--muted2);transition:color 0.2s;text-decoration:none;}
+.nav-links a:hover{color:var(--white);}
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);color:var(--white);padding:12px 24px;border-radius:10px;font-size:0.84rem;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.5);transition:opacity 0.3s;min-width:240px;text-align:center;display:none;}
+</style>
+</head>
+<body>
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon" style="background:none;width:36px;height:36px;display:flex;align-items:center;justify-content:center;padding:0;">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="36" height="36">
+    <defs>
+      <linearGradient id="penchecker-grad-nav" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#00e5ff" />
+        <stop offset="50%" stop-color="#7c3aed" />
+        <stop offset="100%" stop-color="#00ff87" />
+      </linearGradient>
+      <filter id="penchecker-glow-nav" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+    </defs>
+    <path d="M50 12 L82 22 V52 C82 70 68 83 50 88 C32 83 18 70 18 52 V22 Z" fill="none" stroke="url(#penchecker-grad-nav)" stroke-width="3" stroke-linejoin="round" filter="url(#penchecker-glow-nav)" />
+    <path d="M30 40 A 24 24 0 0 1 70 40" fill="none" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.8" />
+    <path d="M36 48 A 16 16 0 0 1 64 48" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6" />
+    <path d="M50 28 L62 54 L50 72 L38 54 Z" fill="url(#penchecker-grad-nav)" />
+    <line x1="50" y1="38" x2="50" y2="60" stroke="#060608" stroke-width="2" stroke-linecap="round" />
+    <circle cx="50" cy="34" r="2.5" fill="#00ff87" filter="url(#penchecker-glow-nav)" />
+  </svg>
+</div>
+      <div class="nav-logo-text">Pen<span>Checker</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="features.html">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="how.html">How it works</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About</a>
+    </div>
+    <div class="nav-right">
+      <button class="theme-btn" id="themeToggle" style="display:inline-flex;align-items:center;gap:6px;"></button>
+      <a href="login.html" style="color:var(--muted2);font-size:0.88rem;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted2)'">Sign in</a>
+      <a href="signup.html" class="btn-primary" style="padding:8px 18px;font-size:0.85rem;">Get started →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero reveal">
+  <div class="hero-eyebrow"> Affiliate Program</div>
+  <h1 class="hero-title">Earn <span class="accent">30% recurring</span> commission</h1>
+  <p class="hero-sub">Refer developers and security teams to PenChecker and earn a commission every month they stay subscribed — for as long as they're a customer.</p>
+  <div class="hero-cta">
+    <a href="#apply" class="btn-primary">Apply to join →</a>
+    <a href="#how-it-works" class="btn-ghost">How it works</a>
+  </div>
+</div>
+
+<!-- Stats bar -->
+<div class="stats-bar reveal reveal-delay-1">
+  <div class="stats-inner">
+    <div><div class="stat-num">30%</div><div class="stat-lbl">Recurring commission</div></div>
+    <div><div class="stat-num">90 days</div><div class="stat-lbl">Cookie window</div></div>
+    <div><div class="stat-num">$0</div><div class="stat-lbl">Cost to join</div></div>
+    <div><div class="stat-num">Monthly</div><div class="stat-lbl">Payout schedule</div></div>
+  </div>
+</div>
+
+<!-- How it works -->
+<div class="section" id="how-it-works">
+  <div class="section-title">How it works</div>
+  <div class="section-sub">Three simple steps to start earning.</div>
+  <div class="steps-grid">
+    <div class="step-card reveal">
+      <div class="step-num">01</div>
+      <div class="step-icon"></div>
+      <div class="step-title">Apply and get approved</div>
+      <div class="step-text">Fill out the form below. We approve affiliates within 24 hours. You'll receive a unique referral link and access to our affiliate dashboard.</div>
+    </div>
+    <div class="step-card reveal reveal-delay-1">
+      <div class="step-num">02</div>
+      <div class="step-icon"></div>
+      <div class="step-title">Share your link</div>
+      <div class="step-text">Promote PenChecker on your blog, YouTube, newsletter, Twitter, or anywhere your audience is. We provide banners, copy, and assets.</div>
+    </div>
+    <div class="step-card reveal reveal-delay-2">
+      <div class="step-num">03</div>
+      <div class="step-icon"></div>
+      <div class="step-title">Earn every month</div>
+      <div class="step-text">Earn 30% of every payment your referrals make — monthly or annually — for as long as they remain a paying customer.</div>
+    </div>
+  </div>
+
+  <!-- Tiers -->
+  <div class="section-title">Commission tiers</div>
+  <div class="section-sub">Earn more as you refer more customers.</div>
+  <div class="tiers-grid">
+    <div class="tier-card reveal">
+      <div class="tier-name">Starter</div>
+      <div class="tier-pct">20%</div>
+      <div class="tier-desc">On all paid plan referrals</div>
+      <div class="tier-req">0–5 active referrals</div>
+    </div>
+    <div class="tier-card featured reveal reveal-delay-1">
+      <div class="tier-name">Partner ⭐ Most common</div>
+      <div class="tier-pct">30%</div>
+      <div class="tier-desc">Recurring commission every month</div>
+      <div class="tier-req">6–25 active referrals</div>
+    </div>
+    <div class="tier-card reveal reveal-delay-2">
+      <div class="tier-name">Pro</div>
+      <div class="tier-pct">40%</div>
+      <div class="tier-desc">Our highest commission tier</div>
+      <div class="tier-req">25+ active referrals</div>
+    </div>
+  </div>
+
+  <!-- Benefits -->
+  <div class="section-title">Why affiliate partners love us</div>
+  <div class="section-sub">Everything you need to earn consistently.</div>
+  <div class="benefits-grid">
+    <div class="benefit-item reveal"><div class="bi-icon"></div><div><div class="bi-title">Recurring revenue</div><div class="bi-text">Unlike one-time commissions, you earn every month for every active subscriber you've referred. Your income grows and compounds over time.</div></div></div>
+    <div class="benefit-item reveal reveal-delay-1"><div class="bi-icon"></div><div><div class="bi-title">Real-time dashboard</div><div class="bi-text">See clicks, signups, conversions, and earnings in real time. Track exactly which content converts best.</div></div></div>
+    <div class="benefit-item reveal reveal-delay-2"><div class="bi-icon"></div><div><div class="bi-title">90-day cookie window</div><div class="bi-text">If someone clicks your link today and subscribes 3 months later, you still get credited. One of the longest windows in SaaS.</div></div></div>
+    <div class="benefit-item reveal"><div class="bi-icon"></div><div><div class="bi-title">Dedicated affiliate support</div><div class="bi-text">Dedicated Slack channel, monthly performance review calls, and a partner manager to help you maximise earnings.</div></div></div>
+    <div class="benefit-item reveal reveal-delay-1"><div class="bi-icon"></div><div><div class="bi-title">Full creative toolkit</div><div class="bi-text">Banners, email templates, social media copy, product screenshots, and demo video clips — all ready to use.</div></div></div>
+    <div class="benefit-item reveal reveal-delay-2"><div class="bi-icon"></div><div><div class="bi-title">Monthly payouts via PayPal / bank</div><div class="bi-text">Get paid on the 1st of every month via PayPal, bank transfer, or Wise. Minimum payout is $50.</div></div></div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section-title">Frequently asked questions</div>
+  <div class="faq-list">
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Who can join the affiliate program? <span class="faq-arrow">›</span></div><div class="faq-a">Anyone with an audience of developers, security professionals, or business owners. Bloggers, YouTubers, newsletter writers, Twitter/X creators, podcasters — if you can reach our target audience, we want you.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">When and how do I get paid? <span class="faq-arrow">›</span></div><div class="faq-a">Payouts happen on the 1st of every month for the previous month's earnings. We pay via PayPal, bank transfer, or Wise. Minimum payout threshold is $50. Earnings below $50 roll over to the next month.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What happens if a customer upgrades their plan? <span class="faq-arrow">›</span></div><div class="faq-a">You earn commission on the upgraded amount too. If someone signs up for Individual and then upgrades to Team, your commission increases proportionally from the month they upgrade.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I refer my own account? <span class="faq-arrow">›</span></div><div class="faq-a">No — self-referrals are not permitted and will result in commission reversal and potential account suspension. Our system automatically detects self-referrals.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is there a minimum traffic requirement to join? <span class="faq-arrow">›</span></div><div class="faq-a">No. We evaluate applications holistically — a small niche newsletter with 500 targeted subscribers can be more valuable than a general blog with 50,000. Quality of audience matters more than size.</div></div>
+  </div>
+
+  <!-- Apply form -->
+  <div class="apply-card reveal" id="apply">
+    <div class="apply-title">Apply to become an affiliate</div>
+    <p class="apply-sub">Fill in your details and we'll get back to you within 24 hours with your affiliate link and dashboard access.</p>
+    <div class="apply-success" id="applySuccess">
+      <div class="success-icon">&#127881;</div>
+      <div class="success-title">Application received!</div>
+      <p class="success-text">We'll review your application and email you at the address provided within 24 hours. Check your inbox for next steps and your unique affiliate link.</p>
+      <a href="index.html" class="btn-primary" style="display:inline-flex;justify-content:center;">Back to PenChecker &rarr;</a>
+    </div>
+    <div class="apply-form">
+      <div class="form-row-2">
+        <input type="text" class="form-input" placeholder="First name" id="afFirstName"/>
+        <input type="text" class="form-input" placeholder="Last name" id="afLastName"/>
+      </div>
+      <input type="email" class="form-input" placeholder="Email address" id="afEmail"/>
+      <input type="url" class="form-input" placeholder="Your website or social profile URL" id="afUrl"/>
+      <select class="form-input form-select" id="afType">
+        <option value="">How do you plan to promote PenChecker?</option>
+        <option>Blog / written content</option>
+        <option>YouTube channel</option>
+        <option>Newsletter / email list</option>
+        <option>Twitter / X / Social media</option>
+        <option>Podcast</option>
+        <option>Other</option>
+      </select>
+      <input type="text" class="form-input" placeholder="Approximate monthly audience size" id="afAudience"/>
+      <button class="btn-primary" style="justify-content:center;width:100%;font-size:1rem;" onclick="applyAffiliate()">Submit Application →</button>
+      <p style="font-size:0.75rem;color:var(--muted);text-align:center;">We review all applications within 24 hours. By applying you agree to our <a href="legal/terms.html" style="color:var(--cyan);">Affiliate Terms</a>.</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" style="display:inline-flex;">
+          <div class="nav-logo-icon" style="background:none;width:36px;height:36px;display:flex;align-items:center;justify-content:center;padding:0;">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="36" height="36">
+    <defs>
+      <linearGradient id="penchecker-grad-nav" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#00e5ff" />
+        <stop offset="50%" stop-color="#7c3aed" />
+        <stop offset="100%" stop-color="#00ff87" />
+      </linearGradient>
+      <filter id="penchecker-glow-nav" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+    </defs>
+    <path d="M50 12 L82 22 V52 C82 70 68 83 50 88 C32 83 18 70 18 52 V22 Z" fill="none" stroke="url(#penchecker-grad-nav)" stroke-width="3" stroke-linejoin="round" filter="url(#penchecker-glow-nav)" />
+    <path d="M30 40 A 24 24 0 0 1 70 40" fill="none" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.8" />
+    <path d="M36 48 A 16 16 0 0 1 64 48" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6" />
+    <path d="M50 28 L62 54 L50 72 L38 54 Z" fill="url(#penchecker-grad-nav)" />
+    <line x1="50" y1="38" x2="50" y2="60" stroke="#060608" stroke-width="2" stroke-linecap="round" />
+    <circle cx="50" cy="34" r="2.5" fill="#00ff87" filter="url(#penchecker-glow-nav)" />
+  </svg>
+</div>
+          <div class="nav-logo-text" style="margin-left:10px;">Pen<span>Checker</span></div>
+        </a>
+        <p>The world's most accurate web security scanner.</p>
+      </div>
+      <div class="footer-col"><h4>Product</h4><ul><li><a href="features.html">Features</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="changelog.html">Changelog</a></li><li><a href="about.html">About</a></li></ul></div>
+      <div class="footer-col"><h4>Account</h4><ul><li><a href="signup.html">Sign up free</a></li><li><a href="login.html">Sign in</a></li><li><a href="dashboard.html">Dashboard</a></li><li><a href="contact.html">Support</a></li></ul></div>
+      <div class="footer-col"><h4>Legal</h4><ul><li><a href="legal/terms.html">Terms</a></li><li><a href="legal/privacy.html">Privacy</a></li><li><a href="legal/acceptable-use.html">Acceptable Use</a></li><li><a href="legal/dmca.html">DMCA</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 PenChecker, Inc. All rights reserved.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+'use strict';
+const tBtn=document.getElementById('themeToggle');
+const sunIconSVG=`<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+const moonIconSVG=`<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+function setTheme(l){document.body.classList.toggle('light-theme',l);localStorage.setItem('pencheckerTheme',l?'light':'dark');if(tBtn)tBtn.innerHTML=(l?sunIconSVG:moonIconSVG)+'&nbsp;'+(l?'Light':'Dark');}
+tBtn.addEventListener('click',()=>setTheme(!document.body.classList.contains('light-theme')));
+(function(){const s=localStorage.getItem('pencheckerTheme');const p=window.matchMedia('(prefers-color-scheme: light)').matches;setTheme(s==='light'||(!s&&p));})();
+
+function toggleFaq(el){el.closest('.faq-item').classList.toggle('open');}
+
+function applyAffiliate(){
+  const email=document.getElementById('afEmail').value.trim();
+  const name=document.getElementById('afFirstName').value.trim();
+  const url=document.getElementById('afUrl').value.trim();
+  const type=document.getElementById('afType').value;
+  const audience=document.getElementById('afAudience').value.trim();
+  if(!name){showToast('Please enter your first name.');return;}
+  if(!email||!email.includes('@')||!email.includes('.')){showToast('Please enter a valid email address.');return;}
+  if(!url){showToast('Please enter your website or social profile URL.');return;}
+  if(!type){showToast('Please select how you plan to promote PenChecker.');return;}
+  // Save to localStorage
+  const app={name,email,url,type,audience,submittedAt:new Date().toISOString()};
+  localStorage.setItem('pc_affiliate_app',JSON.stringify(app));
+  // Show success state
+  document.querySelector('.apply-form').style.display='none';
+  document.getElementById('applySuccess').classList.add('show');
+}
+
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';document.body.appendChild(t);}
+  t.textContent=msg;t.style.display='block';t.style.opacity='1';
+  clearTimeout(window._tt);
+  window._tt=setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.style.display='none',300);},3500);
+}
+
+// Scroll reveal
+(function(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+  },{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+})();
+</script>
+<div id="toast"></div>
+</body>
+</html>

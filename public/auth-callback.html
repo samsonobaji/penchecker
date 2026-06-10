@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Signing you in — PenChecker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --black:#060608; --black2:#0d0d12; --black3:#13131a;
+  --surface:#1a1a24; --border:rgba(255,255,255,0.07); --border2:rgba(0,229,255,0.2);
+  --cyan:#00e5ff; --green:#00ff87; --white:#f0f0f8; --muted2:#9090a8;
+  --font-display:'Plus Jakarta Sans',sans-serif;
+}
+body { background: var(--black); color: var(--white); font-family: var(--font-display); display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+.callback-card { background: var(--black3); border: 1px solid var(--border); border-radius: 24px; padding: 52px 48px; text-align: center; max-width: 460px; width: 100%; margin: 24px; box-shadow: 0 40px 100px rgba(0,0,0,0.5); }
+.cb-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 32px; }
+.cb-logo-icon { width: 36px; height: 36px; background: var(--cyan); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.85rem; color: var(--black); }
+.cb-logo-text { font-size: 1.15rem; font-weight: 700; }
+.cb-logo-text span { color: var(--cyan); }
+.cb-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; }
+.cb-msg { font-size: 0.9rem; color: var(--muted2); line-height: 1.65; }
+</style>
+</head>
+<body>
+<div class="callback-card">
+  <div class="cb-logo">
+    <div class="cb-logo-icon">PC</div>
+    <div class="cb-logo-text">Pen<span>Checker</span></div>
+  </div>
+  <div class="cb-title">Redirecting...</div>
+  <div class="cb-msg">Verifying session details and loading your dashboard...</div>
+</div>
+
+<script src="/js/api.js"></script>
+<script>
+'use strict';
+(function() {
+  // Apply saved theme
+  const s = localStorage.getItem('pencheckerTheme');
+  const p = window.matchMedia('(prefers-color-scheme: light)').matches;
+  document.body.classList.toggle('light-theme', s === 'light' || (!s && p));
+
+  setTimeout(() => {
+    if (PC.isLoggedIn()) {
+      window.location.href = '/dashboard.html';
+    } else {
+      window.location.href = '/login.html';
+    }
+  }, 1000);
+})();
+</script>
+</body>
+</html>

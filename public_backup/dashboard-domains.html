@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Domains — PenChecker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--black:#060608;--black2:#0d0d12;--black3:#13131a;--surface:#1a1a24;--surface2:#22222f;--border:rgba(255,255,255,0.07);--border2:rgba(0,229,255,0.2);--cyan:#00e5ff;--cyan2:#00b4cc;--green:#00ff87;--red:#ff3b5c;--orange:#ff8c42;--yellow:#ffd60a;--purple:#a855f7;--white:#f0f0f8;--muted:#6b6b85;--muted2:#9090a8;--font-display:'Plus Jakarta Sans',sans-serif;--font-body:'Plus Jakarta Sans',sans-serif;--font-mono:'JetBrains Mono',monospace;--glow-cyan:0 0 40px rgba(0,229,255,0.25);--radius:12px;--radius2:20px;--sidebar-w:240px;--topbar-h:60px;}
+body{transition:background 0.25s,color 0.25s;}
+.light-theme{--black:#f8f9fc;--black2:#e8eaf2;--black3:#ffffff;--surface:#ffffff;--surface2:#f2f4f9;--border:rgba(13,23,44,0.12);--border2:rgba(0,149,212,0.25);--cyan:#007fbc;--cyan2:#005f91;--green:#0f9d58;--red:#d93025;--orange:#e37400;--yellow:#f1c232;--purple:#6a1b9a;--white:#0b0d13;--muted:#4b5d79;--muted2:#6b7790;}
+.light-theme .topbar{background:rgba(248,249,252,0.96);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:15px;line-height:1.6;overflow-x:hidden;min-height:100vh;}
+a{color:inherit;text-decoration:none;}button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--black2);}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px;}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--black2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:200;transition:transform 0.3s ease;}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:18px 20px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sb-logo-icon{width:32px;height:32px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;font-size:0.8rem;color:var(--black);}
+.sb-logo-text{font-size:1.05rem;font-weight:700;letter-spacing:-0.02em;}
+.sb-logo-text span{color:var(--cyan);}
+.sb-nav{flex:1;padding:12px 10px;overflow-y:auto;}
+.sb-section{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;padding:8px 10px 4px;margin-top:8px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius);font-size:0.85rem;font-weight:500;color:var(--muted2);transition:all 0.18s;position:relative;margin-bottom:1px;cursor:pointer;}
+.sb-link:hover{background:var(--surface);color:var(--white);}
+.sb-link.active{background:rgba(0,229,255,0.08);color:var(--cyan);font-weight:600;}
+.sb-link.active::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--cyan);border-radius:0 2px 2px 0;}
+.sb-icon{font-size:1rem;flex-shrink:0;width:20px;text-align:center;}
+.sb-badge{margin-left:auto;background:rgba(0,229,255,0.15);color:var(--cyan);font-family:var(--font-mono);font-size:0.6rem;font-weight:700;border-radius:10px;padding:1px 6px;}
+.sb-bottom{padding:12px 10px;border-top:1px solid var(--border);flex-shrink:0;}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:all 0.2s;}
+.sb-user:hover{border-color:var(--border2);}
+.sb-avatar{width:30px;height:30px;border-radius:50%;background:rgba(0,229,255,0.15);border:1px solid rgba(0,229,255,0.3);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:var(--cyan);flex-shrink:0;}
+.sb-uname{font-size:0.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-uplan{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);}
+.topbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--topbar-h);background:rgba(6,6,8,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;z-index:100;transition:left 0.3s;}
+.tb-breadcrumb{flex:1;font-size:0.82rem;color:var(--muted2);display:flex;align-items:center;gap:6px;}
+.tb-cur{color:var(--white);font-weight:600;}
+.tb-sep{opacity:0.4;}
+.tb-actions{display:flex;align-items:center;gap:8px;}
+.tb-btn{width:36px;height:36px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.9rem;cursor:pointer;transition:all 0.2s;color:var(--muted2);}
+.tb-btn:hover{border-color:var(--border2);color:var(--white);}
+.add-btn{display:flex;align-items:center;gap:7px;padding:8px 16px;background:var(--cyan);color:var(--black);border-radius:var(--radius);font-weight:700;font-size:0.82rem;cursor:pointer;transition:all 0.2s;border:none;}
+.add-btn:hover{box-shadow:var(--glow-cyan);}
+.mob-toggle{display:none;width:36px;height:36px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);align-items:center;justify-content:center;font-size:1rem;cursor:pointer;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;}
+.overlay.open{display:block;}
+.main{margin-left:var(--sidebar-w);padding-top:var(--topbar-h);}
+.content{padding:28px 28px 60px;max-width:960px;}
+.page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;}
+.ph-title{font-size:1.4rem;font-weight:800;letter-spacing:-0.02em;}
+.ph-sub{font-size:0.84rem;color:var(--muted2);margin-top:3px;}
+/* Add domain form */
+.add-domain-card{background:linear-gradient(135deg,rgba(0,229,255,0.07),rgba(0,255,135,0.04));border:1px solid rgba(0,229,255,0.2);border-radius:var(--radius2);padding:24px;margin-bottom:28px;}
+.adc-title{font-weight:700;font-size:0.95rem;margin-bottom:4px;}
+.adc-sub{font-size:0.8rem;color:var(--muted2);margin-bottom:16px;}
+.adc-row{display:flex;gap:10px;}
+.adc-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:11px 14px;font-family:var(--font-body);font-size:0.88rem;color:var(--white);outline:none;transition:border-color 0.2s;}
+.adc-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,229,255,0.08);}
+.adc-input::placeholder{color:var(--muted);}
+.adc-input.error{border-color:var(--red);}
+.adc-submit{padding:11px 20px;background:var(--cyan);color:var(--black);border:none;border-radius:var(--radius);font-family:var(--font-display);font-weight:700;font-size:0.88rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.adc-submit:hover{box-shadow:var(--glow-cyan);}
+.adc-submit:disabled{opacity:0.5;cursor:not-allowed;}
+.field-err{font-family:var(--font-mono);font-size:0.7rem;color:var(--red);margin-top:5px;display:none;}
+.field-err.show{display:block;}
+/* Domain cards */
+.domains-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.domain-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);padding:0;overflow:hidden;transition:all 0.25s;}
+.domain-card:hover{border-color:rgba(0,229,255,0.15);transform:translateY(-2px);}
+.dc-header{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.dc-domain{font-family:var(--font-mono);font-size:0.88rem;font-weight:700;color:var(--cyan);}
+.dc-status{display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:0.62rem;font-weight:700;}
+.dc-dot{width:6px;height:6px;border-radius:50%;}
+.dc-dot.verified{background:var(--green);box-shadow:0 0 6px rgba(0,255,135,0.5);}
+.dc-dot.unverified{background:var(--yellow);}
+.dc-verified{color:var(--green);}
+.dc-unverified{color:var(--yellow);}
+.dc-body{padding:16px 18px;}
+.dc-row{display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;margin-bottom:8px;}
+.dc-row:last-child{margin-bottom:0;}
+.dc-label{color:var(--muted2);}
+.dc-val{font-family:var(--font-mono);font-size:0.72rem;font-weight:600;}
+.dc-score{font-size:0.9rem;font-weight:700;}
+.dc-score.green{color:var(--green);}
+.dc-score.yellow{color:var(--yellow);}
+.dc-score.none{color:var(--muted);}
+.dc-footer{padding:12px 18px;border-top:1px solid var(--border);display:flex;gap:8px;}
+.dc-btn{flex:1;padding:8px 10px;border-radius:var(--radius);font-size:0.76rem;font-weight:600;cursor:pointer;transition:all 0.2s;text-align:center;}
+.dc-scan{background:var(--cyan);color:var(--black);border:none;}
+.dc-scan:hover{box-shadow:var(--glow-cyan);}
+.dc-verify{background:transparent;color:var(--yellow);border:1px solid rgba(255,214,10,0.3);}
+.dc-verify:hover{background:rgba(255,214,10,0.08);}
+.dc-delete{background:transparent;color:var(--muted2);border:1px solid var(--border);}
+.dc-delete:hover{border-color:rgba(255,59,92,0.4);color:var(--red);}
+.tog{width:36px;height:20px;background:var(--surface2);border-radius:10px;cursor:pointer;position:relative;border:1px solid var(--border);transition:background 0.3s;}
+.tog.on{background:var(--cyan2);}
+.tog-k{position:absolute;top:1px;left:1px;width:16px;height:16px;background:var(--white);border-radius:50%;transition:transform 0.3s;}
+.tog.on .tog-k{transform:translateX(16px);}
+/* Empty state */
+.empty-state{text-align:center;padding:60px 24px;color:var(--muted2);}
+.es-icon{font-size:3rem;margin-bottom:14px;}
+.es-title{font-size:1.05rem;font-weight:700;margin-bottom:8px;}
+.es-sub{font-size:0.84rem;line-height:1.7;}
+/* Verify modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:center;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);padding:28px;max-width:520px;width:90%;}
+.modal-title{font-size:1.05rem;font-weight:700;margin-bottom:6px;}
+.modal-sub{font-size:0.82rem;color:var(--muted2);margin-bottom:20px;}
+.verify-methods{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.vm-tab{display:flex;gap:8px;margin-bottom:14px;}
+.vm-t{padding:6px 14px;border-radius:8px;font-size:0.78rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted2);transition:all 0.2s;}
+.vm-t:hover{border-color:var(--border2);}
+.vm-t.active{background:var(--surface);color:var(--white);border-color:var(--border2);}
+.vm-code{background:var(--black);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-family:var(--font-mono);font-size:0.75rem;color:var(--cyan);margin-bottom:14px;line-height:1.7;word-break:break-all;}
+.modal-btns{display:flex;gap:10px;}
+.modal-btn{flex:1;padding:10px;border-radius:var(--radius);font-family:var(--font-display);font-weight:600;font-size:0.88rem;cursor:pointer;}
+.modal-ok{background:var(--cyan);color:var(--black);border:none;}
+.modal-ok:hover{box-shadow:var(--glow-cyan);}
+.modal-cancel{background:transparent;color:var(--muted2);border:1px solid var(--border);}
+.modal-cancel:hover{border-color:var(--border2);color:var(--white);}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.overlay.open{display:block;}.main{margin-left:0;}.topbar{left:0;}.mob-toggle{display:flex;}}
+@media(max-width:480px){.content{padding:16px;}.adc-row{flex-direction:column;}.domains-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- Verify modal -->
+<div class="modal-bg" id="verifyModal">
+  <div class="modal">
+    <div class="modal-title">Verify Domain Ownership</div>
+    <div class="modal-sub">Choose a verification method for <strong id="modalDomain" style="color:var(--cyan)">—</strong></div>
+    <div class="vm-tab">
+      <button class="vm-t active" onclick="setMethod('dns',this)">DNS TXT</button>
+      <button class="vm-t" onclick="setMethod('file',this)">File upload</button>
+      <button class="vm-t" onclick="setMethod('meta',this)">Meta tag</button>
+    </div>
+    <div class="vm-code" id="verifyCode">Loading...</div>
+    <div style="font-size:0.78rem;color:var(--muted2);margin-bottom:16px;" id="verifyInstr">Add this TXT record to your DNS settings, then click Check.</div>
+    <div class="modal-btns">
+      <button class="modal-btn modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn modal-ok" onclick="checkVerification()">Check Verification</button>
+    </div>
+  </div>
+</div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo" onclick="window.location.href='dashboard.html'" style="cursor:pointer">
+    <div class="sb-logo-icon">PC</div>
+    <div class="sb-logo-text">Pen<span>Checker</span></div>
+  </div>
+  <nav class="sb-nav" id="sbNav"></nav>
+  <div class="sb-bottom">
+    <div class="sb-user" onclick="window.location.href='dashboard-settings.html'">
+      <div class="sb-avatar" id="sbAvatar">?</div>
+      <div style="overflow:hidden;">
+        <div class="sb-uname" id="sbName">Loading...</div>
+        <div class="sb-uplan" id="sbPlan">Free Plan</div>
+      </div>
+      <div style="margin-left:auto;color:var(--muted);font-size:0.7rem;">&rsaquo;</div>
+    </div>
+  </div>
+</aside>
+
+<header class="topbar">
+  <button class="mob-toggle" onclick="openSidebar()"></button>
+  <div class="tb-breadcrumb"><span style="cursor:pointer;" onclick="nav('dashboard.html')">Dashboard</span><span class="tb-sep">/</span><span class="tb-cur">Domains</span></div>
+  <div class="tb-actions">
+    <button class="tb-btn" id="themeToggle"></button>
+    <button class="add-btn" onclick="focusAdd()">+ Add Domain</button>
+  </div>
+</header>
+
+<main class="main">
+  <div class="content">
+    <div class="page-hdr">
+      <div><div class="ph-title">Domains</div><div class="ph-sub">Manage domains you want to scan and monitor</div></div>
+    </div>
+
+    <!-- Add domain -->
+    <div class="add-domain-card">
+      <div class="adc-title">Add a new domain</div>
+      <div class="adc-sub">Enter any domain you own. You'll verify ownership before scanning begins.</div>
+      <div class="adc-row">
+        <input type="text" class="adc-input" id="newDomain" placeholder="e.g. yoursite.com or https://app.yoursite.com" autocomplete="off" onkeydown="if(event.key==='Enter')addDomain()"/>
+        <button class="adc-submit" id="addBtn" onclick="addDomain()">Add Domain</button>
+      </div>
+      <span class="field-err" id="domainErr">Please enter a valid domain (e.g. yoursite.com)</span>
+    </div>
+
+    <!-- Domains grid -->
+    <div id="domainsWrap">
+      <div class="empty-state"><div class="es-icon">⏳</div><div class="es-title">Loading domains...</div></div>
+    </div>
+  </div>
+</main>
+
+<script src="/js/api.js"></script>
+<script src="/js/sidebar.js"></script>
+<script>
+'use strict';
+function nav(url){window.location.href=url;}
+PC.requireAuth();
+
+// Theme
+const tBtn=document.getElementById('themeToggle');
+function setTheme(l){document.body.classList.toggle('light-theme',l);localStorage.setItem('pencheckerTheme',l?'light':'dark');tBtn.innerHTML=l?"<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"5\"></circle><line x1=\"12\" y1=\"1\" x2=\"12\" y2=\"3\"></line><line x1=\"12\" y1=\"21\" x2=\"12\" y2=\"23\"></line><line x1=\"4.22\" y1=\"4.22\" x2=\"5.64\" y2=\"5.64\"></line><line x1=\"18.36\" y1=\"18.36\" x2=\"19.78\" y2=\"19.78\"></line><line x1=\"1\" y1=\"12\" x2=\"3\" y2=\"12\"></line><line x1=\"21\" y1=\"12\" x2=\"23\" y2=\"12\"></line><line x1=\"4.22\" y1=\"19.78\" x2=\"5.64\" y2=\"18.36\"></line><line x1=\"18.36\" y1=\"5.64\" x2=\"19.78\" y2=\"4.22\"></svg>":"<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"></path></svg>";}
+tBtn.addEventListener('click',()=>setTheme(!document.body.classList.contains('light-theme')));
+(function(){const s=localStorage.getItem('pencheckerTheme');const p=window.matchMedia('(prefers-color-scheme: light)').matches;setTheme(s==='light'||(!s&&p));})();
+
+// Dynamic sidebar handled by sidebar.js
+
+// Parse domain helper
+function parseDomain(raw){
+  raw=(raw||'').trim();
+  if(!raw)return'';
+  if(!/^https?:\/\//i.test(raw))raw='https://'+raw;
+  try{return new URL(raw).hostname.replace(/^www\./,'');}catch{return'';}
+}
+
+let domains=[];
+let verifyDomainId=null;
+let verifyMethod='dns';
+
+async function loadDomains(){
+  try{
+    const res = await PC.listDomains();
+    domains = res.domains || [];
+    render();
+  }catch(err){
+    console.error(err);
+    domains = [];
+    render();
+  }
+}
+
+function render(){
+  const wrap=document.getElementById('domainsWrap');
+  if(!domains.length){
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon"></div><div class="es-title">No domains yet</div><div class="es-sub">Add your first domain above to start scanning and monitoring it.</div></div>`;
+    return;
+  }
+  wrap.innerHTML=`<div class="domains-grid">${domains.map(d=>domainCard(d)).join('')}</div>`;
+}
+
+function domainCard(d){
+  const score=d.latest_score;
+  const sCls=score>=8?'green':score>=6?'yellow':'none';
+  const isVerified=d.is_verified;
+  return`<div class="domain-card">
+    <div class="dc-header">
+      <div class="dc-domain">${d.domain}</div>
+      <div class="dc-status"><div class="dc-dot ${isVerified?'verified':'unverified'}"></div><span class="${isVerified?'dc-verified':'dc-unverified'}">${isVerified?'Verified':'Unverified'}</span></div>
+    </div>
+    <div class="dc-body">
+      <div class="dc-row"><span class="dc-label">Security score</span><span class="dc-score ${sCls}">${score?score.toFixed(1)+'/10':'Not scanned'}</span></div>
+      <div class="dc-row"><span class="dc-label">Last scan</span><span class="dc-val">${d.last_scan_at?new Date(d.last_scan_at).toLocaleDateString():'Never'}</span></div>
+      <div class="dc-row"><span class="dc-label">Monitoring</span><div class="tog ${d.is_monitoring?'on':''}" onclick="toggleMon('${d.id}',this)"><div class="tog-k"></div></div></div>
+    </div>
+    <div class="dc-footer">
+      <button class="dc-btn dc-scan" onclick="scanDomain('${d.domain}')">Scan Now</button>
+      ${!isVerified?`<button class="dc-btn dc-verify" onclick="openVerify('${d.id}','${d.domain}')">Verify</button>`:''}
+      <button class="dc-btn dc-delete" onclick="deleteDomain('${d.id}')">Delete</button>
+    </div>
+  </div>`;
+}
+
+function focusAdd(){document.getElementById('newDomain').focus();}
+
+async function addDomain(){
+  const raw=document.getElementById('newDomain').value;
+  const domain=parseDomain(raw);
+  if(!domain||!domain.includes('.')){document.getElementById('domainErr').classList.add('show');return;}
+  document.getElementById('domainErr').classList.remove('show');
+  const btn=document.getElementById('addBtn');
+  btn.disabled=true;btn.textContent='Adding...';
+  try{
+    await PC.addDomain(domain);
+    document.getElementById('newDomain').value='';
+    await loadDomains();
+    showToast('Domain added! Verify ownership to start scanning.');
+  }catch(err){
+    showToast(err.message || 'Could not add domain.');
+  }
+  btn.disabled=false;btn.textContent='Add Domain';
+}
+
+function scanDomain(domain){
+  localStorage.setItem('pc_prescan_domain',domain);
+  nav('dashboard-scan.html?domain='+encodeURIComponent(domain));
+}
+
+async function toggleMon(id,el){
+  const on=el.classList.contains('on');el.classList.toggle('on');
+  try{
+    await PC.updateDomain(id, { monitoring_enabled: !on });
+  }catch{el.classList.toggle('on');}
+}
+
+async function deleteDomain(id){
+  if(!confirm('Delete this domain? All scan history for it will be removed.'))return;
+  try{
+    await PC.deleteDomain(id);
+    domains=domains.filter(d=>d.id!==id);render();
+    showToast('Domain deleted.');
+  }catch{showToast('Could not delete. Try again.');}
+}
+
+function openVerify(id,domain){
+  verifyDomainId=id;
+  document.getElementById('modalDomain').textContent=domain;
+  setMethod('dns',document.querySelector('.vm-t'));
+  document.getElementById('verifyModal').classList.add('open');
+}
+function closeModal(){document.getElementById('verifyModal').classList.remove('open');}
+function setMethod(m,btn){
+  verifyMethod=m;
+  document.querySelectorAll('.vm-t').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  const domain=document.getElementById('modalDomain').textContent;
+  const code=document.getElementById('verifyCode');
+  const instr=document.getElementById('verifyInstr');
+  const domObj = domains.find(d => d.id === verifyDomainId);
+  const token = domObj ? domObj.verification_token : 'Loading...';
+
+  if(m==='dns'){code.textContent=`TXT  _penchecker.${domain}  ${token}`;instr.textContent='Add this TXT record in your DNS provider (Cloudflare, GoDaddy, Namecheap, etc), then click Check.';}
+  else if(m==='file'){code.textContent=`https://${domain}/.well-known/penchecker-verify.txt\nContent: ${token}`;instr.textContent='Create this file on your server with the token as its content, then click Check.';}
+  else{code.textContent=`<meta name="penchecker-verify" content="${token}">`;instr.textContent='Add this tag inside the <head> of your homepage, then click Check.';}
+}
+
+async function checkVerification(){
+  try{
+    const methodMap = { dns: 'dns_txt', file: 'file_upload', meta: 'meta_tag' };
+    const mapped = methodMap[verifyMethod] || 'dns_txt';
+    const res = await PC.verifyDomain(verifyDomainId, mapped);
+    if(res.verified){
+      closeModal();await loadDomains();
+      showToast('Domain verified successfully!');
+    } else {
+      showToast('Verification failed: ' + (res.error || 'Token not found'));
+    }
+  }catch(err){
+    showToast('Verification check failed: ' + (err.message || 'Try again'));
+  }
+}
+
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);color:var(--white);padding:12px 22px;border-radius:10px;font-size:0.84rem;z-index:10000;box-shadow:0 8px 32px rgba(0,0,0,0.4);transition:opacity 0.3s;min-width:240px;text-align:center;font-family:var(--font-body);';document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity='1';
+  clearTimeout(window._tt);window._tt=setTimeout(()=>{t.style.opacity='0';},3200);
+}
+
+// Pre-fill domain from scan page
+(function(){
+  const p=new URLSearchParams(window.location.search);
+  const d=p.get('domain');
+  if(d)document.getElementById('newDomain').value=d;
+})();
+
+loadDomains();
+</script>
+</body>
+</html>

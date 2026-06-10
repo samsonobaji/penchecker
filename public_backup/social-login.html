@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Authorize PenChecker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      /* Shared values */
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-google: 'Roboto', 'Google Sans', 'Inter', sans-serif;
+      --font-github: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      
+      /* Google Theme Colors (Light default) */
+      --g-bg: #ffffff;
+      --g-card-bg: #ffffff;
+      --g-border: #dadce0;
+      --g-text: #202124;
+      --g-text-muted: #5f6368;
+      --g-blue: #1a73e8;
+      --g-blue-hover: #1557b0;
+      --g-surface: #f8f9fa;
+      --g-surface-hover: #f1f3f4;
+      
+      /* GitHub Theme Colors (Dark) */
+      --gh-bg: #0d1117;
+      --gh-card-bg: #161b22;
+      --gh-border: #30363d;
+      --gh-text: #c9d1d9;
+      --gh-text-white: #f0f6fc;
+      --gh-text-muted: #8b949e;
+      --gh-green: #238636;
+      --gh-green-hover: #2ea043;
+      --gh-btn-secondary: #21262d;
+      --gh-btn-secondary-hover: #30363d;
+    }
+
+    body {
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* Error alert banner */
+    .alert-err {
+      background: rgba(255,59,92,0.1);
+      border: 1px solid rgba(255,59,92,0.3);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.85rem;
+      color: #ff6b8a;
+      margin-bottom: 16px;
+      display: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    /* Google Selector Container */
+    .google-container {
+      display: none;
+      width: 100%;
+      max-width: 450px;
+      background: var(--g-card-bg);
+      border: 1px solid var(--g-border);
+      border-radius: 8px;
+      padding: 36px 40px;
+      text-align: center;
+      font-family: var(--font-google);
+      color: var(--g-text);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    
+    .g-logo {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 16px auto;
+    }
+    
+    .g-title {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--g-text);
+      margin-bottom: 8px;
+      letter-spacing: -0.2px;
+    }
+    
+    .g-subtitle {
+      font-size: 0.95rem;
+      color: var(--g-text-muted);
+      margin-bottom: 24px;
+    }
+    .g-subtitle span {
+      color: var(--g-text);
+      font-weight: 500;
+    }
+
+    /* Google Accounts List */
+    .g-accounts-list {
+      border: 1px solid var(--g-border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+    
+    .g-account-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--g-border);
+      cursor: pointer;
+      background: var(--g-bg);
+      transition: background 0.2s;
+    }
+    .g-account-item:last-child {
+      border-bottom: none;
+    }
+    .g-account-item:hover {
+      background: var(--g-surface-hover);
+    }
+    
+    .g-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #e8f0fe;
+      color: #1a73e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+    
+    .g-acc-info {
+      flex: 1;
+    }
+    
+    .g-acc-name {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--g-text);
+    }
+    
+    .g-acc-email {
+      font-size: 0.78rem;
+      color: var(--g-text-muted);
+    }
+    
+    .g-use-other {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      cursor: pointer;
+      color: var(--g-blue);
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: background 0.2s;
+      background: var(--g-bg);
+      border-top: 1px solid var(--g-border);
+    }
+    .g-use-other:hover {
+      background: var(--g-surface-hover);
+    }
+    
+    /* Google Form Input Mode */
+    .g-form {
+      display: none;
+      text-align: left;
+    }
+    
+    .g-form-group {
+      margin-bottom: 16px;
+    }
+    
+    .g-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--g-text-muted);
+      margin-bottom: 6px;
+    }
+    
+    .g-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--g-border);
+      border-radius: 4px;
+      font-family: var(--font-google);
+      font-size: 0.9rem;
+      color: var(--g-text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .g-input:focus {
+      border-color: var(--g-blue);
+      box-shadow: inset 0 0 0 1px var(--g-blue);
+    }
+    
+    .g-actions-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 24px;
+    }
+    
+    .g-btn-text {
+      color: var(--g-blue);
+      font-weight: 500;
+      font-size: 0.88rem;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+    .g-btn-text:hover {
+      color: var(--g-blue-hover);
+    }
+    
+    .g-btn-primary {
+      background: var(--g-blue);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 24px;
+      font-family: var(--font-google);
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .g-btn-primary:hover {
+      background: var(--g-blue-hover);
+    }
+    
+    .g-footer {
+      font-size: 0.75rem;
+      color: var(--g-text-muted);
+      line-height: 1.5;
+      margin-top: 28px;
+      text-align: left;
+    }
+    .g-footer a {
+      color: var(--g-blue);
+      text-decoration: none;
+    }
+    .g-footer a:hover {
+      text-decoration: underline;
+    }
+
+
+    /* GitHub Container */
+    .github-container {
+      display: none;
+      width: 100%;
+      max-width: 500px;
+      background: var(--gh-card-bg);
+      border: 1px solid var(--gh-border);
+      border-radius: 6px;
+      padding: 32px;
+      font-family: var(--font-github);
+      color: var(--gh-text);
+    }
+    
+    .gh-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    
+    .gh-logo-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .gh-logo-github {
+      color: var(--gh-text-white);
+    }
+    
+    .gh-connect-arrow {
+      color: var(--gh-text-muted);
+      font-size: 1.2rem;
+    }
+    
+    .gh-logo-pc {
+      width: 44px;
+      height: 44px;
+      background: #00e5ff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #000;
+      font-family: var(--font-body);
+    }
+    
+    .gh-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--gh-text-white);
+      margin-bottom: 6px;
+    }
+    
+    .gh-subtitle {
+      font-size: 0.85rem;
+      color: var(--gh-text-muted);
+    }
+    .gh-subtitle span {
+      color: var(--gh-text-white);
+      font-weight: 500;
+    }
+    
+    .gh-scope-box {
+      border: 1px solid var(--gh-border);
+      border-radius: 6px;
+      background: rgba(255,255,255,0.01);
+      margin-bottom: 24px;
+    }
+    
+    .gh-scope-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--gh-border);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--gh-text-muted);
+    }
+    
+    .gh-scope-item {
+      display: flex;
+      align-items: flex-start;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--gh-border);
+    }
+    .gh-scope-item:last-child {
+      border-bottom: none;
+    }
+    
+    .gh-scope-icon {
+      margin-right: 12px;
+      margin-top: 2px;
+      color: var(--gh-text-muted);
+      flex-shrink: 0;
+    }
+    
+    .gh-scope-detail {
+      flex: 1;
+    }
+    
+    .gh-scope-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--gh-text-white);
+      margin-bottom: 2px;
+    }
+    
+    .gh-scope-desc {
+      font-size: 0.8rem;
+      color: var(--gh-text-muted);
+      line-height: 1.4;
+    }
+
+    /* GitHub authorization selection/form */
+    .gh-auth-form {
+      margin-bottom: 24px;
+    }
+
+    .gh-select-acc {
+      width: 100%;
+      background: var(--gh-bg);
+      border: 1px solid var(--gh-border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      color: var(--gh-text-white);
+      font-family: var(--font-github);
+      font-size: 0.85rem;
+      outline: none;
+      margin-bottom: 14px;
+      cursor: pointer;
+    }
+
+    .gh-custom-inputs {
+      display: none;
+      border: 1px dashed var(--gh-border);
+      border-radius: 6px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    
+    .gh-form-group {
+      margin-bottom: 12px;
+    }
+    .gh-form-group:last-child {
+      margin-bottom: 0;
+    }
+    
+    .gh-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gh-text-muted);
+      margin-bottom: 6px;
+    }
+    
+    .gh-input {
+      width: 100%;
+      background: var(--gh-bg);
+      border: 1px solid var(--gh-border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: var(--gh-text-white);
+      font-family: var(--font-github);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .gh-input:focus {
+      border-color: #58a6ff;
+    }
+    
+    .gh-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    
+    .gh-btn {
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-family: var(--font-github);
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .gh-btn-secondary {
+      background: var(--gh-btn-secondary);
+      border: 1px solid var(--gh-border);
+      color: var(--gh-text-white);
+    }
+    .gh-btn-secondary:hover {
+      background: var(--gh-btn-secondary-hover);
+      border-color: #8b949e;
+    }
+    
+    .gh-btn-primary {
+      background: var(--gh-green);
+      border: 1px solid rgba(240,246,252,0.1);
+      color: #fff;
+    }
+    .gh-btn-primary:hover {
+      background: var(--gh-green-hover);
+    }
+
+    .gh-footer {
+      font-size: 0.72rem;
+      color: var(--gh-text-muted);
+      line-height: 1.5;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .gh-footer a {
+      color: #58a6ff;
+      text-decoration: none;
+    }
+    .gh-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Common Spinner */
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    
+    .spinner-dark {
+      border-color: rgba(0,0,0,0.15);
+      border-top-color: #1a73e8;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Google Auth View -->
+  <div class="google-container" id="googleView">
+    <div class="g-logo">
+      <svg viewBox="0 0 24 24" width="48" height="48" style="display:block;width:100%;height:100%;">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+      </svg>
+    </div>
+    <h1 class="g-title">Sign in with Google</h1>
+    <p class="g-subtitle">to continue to <span>PenChecker</span></p>
+
+    <div class="alert-err" id="gError"></div>
+
+    <!-- Accounts Selector -->
+    <div id="gSelector">
+      <div class="g-accounts-list">
+        <div class="g-account-item" onclick="selectGoogleAccount('admin@penchecker.local', 'Admin User')">
+          <div class="g-avatar">A</div>
+          <div class="g-acc-info">
+            <div class="g-acc-name">Admin User (Demo)</div>
+            <div class="g-acc-email">admin@penchecker.local</div>
+          </div>
+        </div>
+        <div class="g-account-item" onclick="selectGoogleAccount('developer@yourcompany.com', 'Dev User')">
+          <div class="g-avatar">D</div>
+          <div class="g-acc-info">
+            <div class="g-acc-name">Dev User (Demo)</div>
+            <div class="g-acc-email">developer@yourcompany.com</div>
+          </div>
+        </div>
+        <div class="g-account-item" onclick="selectGoogleAccount('guest@example.com', 'Guest User')">
+          <div class="g-avatar">G</div>
+          <div class="g-acc-info">
+            <div class="g-acc-name">Guest User (Demo)</div>
+            <div class="g-acc-email">guest@example.com</div>
+          </div>
+        </div>
+        <div class="g-use-other" onclick="showGoogleForm()">
+          <div class="g-avatar" style="background:#f1f3f4;color:#5f6368;">+</div>
+          Use another account
+        </div>
+      </div>
+    </div>
+
+    <!-- Manual Email/Name Form -->
+    <form class="g-form" id="gForm" onsubmit="handleGoogleSubmit(event)">
+      <div class="g-form-group">
+        <label class="g-label" for="gEmail">Email address</label>
+        <input class="g-input" type="email" id="gEmail" required placeholder="name@domain.com"/>
+      </div>
+      <div class="g-form-group">
+        <label class="g-label" for="gName">Full name</label>
+        <input class="g-input" type="text" id="gName" required placeholder="John Doe"/>
+      </div>
+      <div class="g-actions-row">
+        <button class="g-btn-text" type="button" onclick="showGoogleSelector()">Back</button>
+        <button class="g-btn-primary" type="submit" id="gSubmitBtn">Next</button>
+      </div>
+    </form>
+
+    <div class="g-footer">
+      To continue, Google will share your name, email address, language preference, and profile picture with PenChecker. See PenChecker's <a href="/legal/privacy.html" target="_blank">Privacy Policy</a> and <a href="/legal/terms.html" target="_blank">Terms of Service</a>.
+    </div>
+  </div>
+
+
+  <!-- GitHub Auth View -->
+  <div class="github-container" id="githubView">
+    <div class="gh-header">
+      <div class="gh-logo-row">
+        <svg class="gh-logo-github" height="48" viewBox="0 0 16 16" width="48" fill="currentColor">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+        <div class="gh-connect-arrow">⇄</div>
+        <div class="gh-logo-pc">PC</div>
+      </div>
+      <h1 class="gh-title">Authorize PenChecker</h1>
+      <p class="gh-subtitle"><span>penchecker-org</span> wants to access your GitHub account</p>
+    </div>
+
+    <div class="alert-err" id="ghError"></div>
+
+    <div class="gh-scope-box">
+      <div class="gh-scope-header">Requested Permissions</div>
+      <div class="gh-scope-item">
+        <div class="gh-scope-icon">👤</div>
+        <div class="gh-scope-detail">
+          <div class="gh-scope-title">Public user data</div>
+          <div class="gh-scope-desc">Read your public profile information (name, avatar, profile link).</div>
+        </div>
+      </div>
+      <div class="gh-scope-item">
+        <div class="gh-scope-icon">✉️</div>
+        <div class="gh-scope-detail">
+          <div class="gh-scope-title">User emails (read-only)</div>
+          <div class="gh-scope-desc">Read your primary email address to associate with your account.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GitHub Account form -->
+    <div class="gh-auth-form">
+      <select class="gh-select-acc" id="ghAccountSelect" onchange="toggleGhCustomInputs()">
+        <option value="developer@yourcompany.com|GitHub Dev">Authorize as Dev User (developer@yourcompany.com)</option>
+        <option value="admin@penchecker.local|GitHub Admin">Authorize as Admin User (admin@penchecker.local)</option>
+        <option value="guest@example.com|GitHub Guest">Authorize as Guest User (guest@example.com)</option>
+        <option value="custom">Use a custom GitHub identity...</option>
+      </select>
+      
+      <div class="gh-custom-inputs" id="ghCustomInputs">
+        <div class="gh-form-group">
+          <label class="gh-label" for="ghEmail">GitHub Email Address</label>
+          <input class="gh-input" type="email" id="ghEmail" placeholder="your-github-email@example.com"/>
+        </div>
+        <div class="gh-form-group">
+          <label class="gh-label" for="ghName">GitHub Profile Name</label>
+          <input class="gh-input" type="text" id="ghName" placeholder="GitHub Handle or Name"/>
+        </div>
+      </div>
+      
+      <div class="gh-actions">
+        <button class="gh-btn gh-btn-secondary" onclick="window.close()">Cancel</button>
+        <button class="gh-btn gh-btn-primary" id="ghSubmitBtn" onclick="handleGhSubmit()">Authorize penchecker-org</button>
+      </div>
+    </div>
+
+    <div class="gh-footer">
+      Authorizing will redirect back to <a href="#" onclick="return false;">localhost:3000</a>.<br/>
+      PenChecker's use of information is governed by their privacy guidelines.
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script>
+    'use strict';
+    
+    // Parse provider
+    const params = new URLSearchParams(window.location.search);
+    const provider = (params.get('provider') || 'google').toLowerCase();
+
+    // Setup Theme (GitHub is dark, Google is light/dark based on system/settings)
+    if (provider === 'github') {
+      document.body.style.background = 'var(--gh-bg)';
+      document.getElementById('githubView').style.display = 'block';
+    } else {
+      // Restore PenChecker theme for Google login page to feel coherent
+      const savedTheme = localStorage.getItem('pencheckerTheme') || 'dark';
+      if (savedTheme === 'dark') {
+        document.body.style.background = '#060608';
+        // Adjust Google variables for dark mode
+        document.documentElement.style.setProperty('--g-bg', '#202124');
+        document.documentElement.style.setProperty('--g-card-bg', '#202124');
+        document.documentElement.style.setProperty('--g-border', '#3c4043');
+        document.documentElement.style.setProperty('--g-text', '#e8eaed');
+        document.documentElement.style.setProperty('--g-text-muted', '#9aa0a6');
+        document.documentElement.style.setProperty('--g-surface', '#303134');
+        document.documentElement.style.setProperty('--g-surface-hover', '#35363a');
+        document.documentElement.style.setProperty('--g-blue', '#8ab4f8');
+        document.documentElement.style.setProperty('--g-blue-hover', '#aecbfa');
+      } else {
+        document.body.style.background = '#f1f3f4';
+      }
+      document.getElementById('googleView').style.display = 'block';
+    }
+
+    // Google View Controls
+    function showGoogleForm() {
+      document.getElementById('gSelector').style.display = 'none';
+      document.getElementById('gForm').style.display = 'block';
+      document.getElementById('gEmail').focus();
+    }
+
+    function showGoogleSelector() {
+      document.getElementById('gForm').style.display = 'none';
+      document.getElementById('gSelector').style.display = 'block';
+    }
+
+    // GitHub Form Controls
+    function toggleGhCustomInputs() {
+      const select = document.getElementById('ghAccountSelect');
+      const customDiv = document.getElementById('ghCustomInputs');
+      if (select.value === 'custom') {
+        customDiv.style.display = 'block';
+        document.getElementById('ghEmail').focus();
+      } else {
+        customDiv.style.display = 'none';
+      }
+    }
+
+    // Submission logic
+    async function selectGoogleAccount(email, name) {
+      await submitSocialAuth('google', email, name, 'gSubmitBtn', 'gError');
+    }
+
+    async function handleGoogleSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('gEmail').value.trim();
+      const name = document.getElementById('gName').value.trim();
+      await submitSocialAuth('google', email, name, 'gSubmitBtn', 'gError');
+    }
+
+    async function handleGhSubmit() {
+      const select = document.getElementById('ghAccountSelect').value;
+      let email, name;
+      if (select === 'custom') {
+        email = document.getElementById('ghEmail').value.trim();
+        name = document.getElementById('ghName').value.trim();
+        if (!email || !name) {
+          showError('ghError', 'Please fill in both email and profile name.');
+          return;
+        }
+      } else {
+        const parts = select.split('|');
+        email = parts[0];
+        name = parts[1];
+      }
+      await submitSocialAuth('github', email, name, 'ghSubmitBtn', 'ghError');
+    }
+
+    function showError(errId, msg) {
+      const el = document.getElementById(errId);
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    async function submitSocialAuth(prov, email, fullName, btnId, errId) {
+      const btn = document.getElementById(btnId);
+      const errEl = document.getElementById(errId);
+      errEl.style.display = 'none';
+      
+      const originalHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<span class="spinner ${prov === 'google' ? 'spinner-dark' : ''}"></span>Authorizing...`;
+
+      try {
+        const response = await fetch(`${window.location.origin}/api/auth/social`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, full_name: fullName, provider: prov })
+        });
+        
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || 'Authentication failed');
+        }
+
+        // Save token and user details in client session
+        PC.setSession(data.token, data.user);
+        
+        // Notify parent window
+        if (window.opener && !window.opener.closed) {
+          window.opener.postMessage({
+            type: 'social-login-success',
+            token: data.token,
+            user: data.user
+          }, window.location.origin);
+        }
+
+        // Close self
+        window.close();
+        
+        // Fallback redirect if not in a popup
+        setTimeout(() => {
+          window.location.href = data.user?.onboarding_completed ? '/dashboard.html' : '/onboarding.html';
+        }, 500);
+
+      } catch (err) {
+        console.error(err);
+        showError(errId, err.message || 'Authentication failed. Please try again.');
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,407 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privacy Policy — PenChecker</title>
+<meta name="description" content="PenChecker Privacy Policy. Learn how we collect, use, and protect your personal data." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+:root{--black:#060608;--black2:#0d0d12;--black3:#13131a;--surface:#1a1a24;--surface2:#22222f;--border:rgba(255,255,255,0.07);--border2:rgba(0,229,255,0.2);--cyan:#00e5ff;--cyan2:#00b4cc;--green:#00ff87;--red:#ff3b5c;--orange:#ff8c42;--yellow:#ffd60a;--white:#f0f0f8;--muted:#6b6b85;--muted2:#9090a8;--font-display:'Plus Jakarta Sans',sans-serif;--font-body:'Plus Jakarta Sans',sans-serif;--font-mono:'JetBrains Mono',monospace;--radius:12px;--radius2:20px;}
+body{transition:background 0.25s,color 0.25s;}
+.light-theme{--black:#f8f9fc;--black2:#e8eaf2;--black3:#ffffff;--surface:#ffffff;--surface2:#f2f4f9;--border:rgba(13,23,44,0.12);--border2:rgba(0,149,212,0.25);--cyan:#007fbc;--cyan2:#005f91;--green:#0f9d58;--red:#d93025;--orange:#e37400;--yellow:#f1c232;--white:#0b0d13;--muted:#4b5d79;--muted2:#6b7790;}
+.light-theme #navbar.scrolled{background:rgba(248,249,252,0.96);}
+.light-theme body::before{opacity:0.12;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:16px;line-height:1.6;overflow-x:hidden;}
+a{color:inherit;text-decoration:none;}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--black2);}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px;}::-webkit-scrollbar-thumb:hover{background:var(--cyan2);}
+.container{max-width:1200px;margin:0 auto;padding:0 24px;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:var(--radius);font-family:var(--font-display);font-weight:600;font-size:0.95rem;transition:all 0.25s ease;position:relative;overflow:hidden;border:none;}
+.btn::after{content:'';position:absolute;inset:0;background:white;opacity:0;transition:opacity 0.2s;}
+.btn:hover::after{opacity:0.06;}
+.btn-primary{background:var(--cyan);color:var(--black);}
+.btn-ghost{background:transparent;color:var(--white);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);}
+.btn-sm{padding:10px 20px;font-size:0.85rem;}
+#navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 24px;transition:all 0.3s ease;}
+#navbar.scrolled{background:rgba(6,6,8,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1200px;margin:0 auto;height:70px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-logo-icon{width:36px;height:36px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:500;font-size:0.85rem;color:var(--black);}
+.nav-logo-text{font-size:1.2rem;font-weight:700;letter-spacing:-0.02em;}
+.nav-logo-text span{color:var(--cyan);}
+.nav-actions{display:flex;align-items:center;gap:10px;}
+.nav-menu-btn{display:none;background:none;border:none;color:var(--white);cursor:pointer;padding:8px;}
+.mobile-menu{display:none;position:fixed;inset:0;background:var(--black2);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:32px;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{font-size:2rem;font-weight:700;color:var(--white);transition:color 0.2s;}
+.mobile-menu a:hover{color:var(--cyan);}
+.mobile-menu-close{position:absolute;top:20px;right:24px;background:none;border:none;color:var(--white);font-size:2rem;cursor:pointer;}
+.legal-page{padding:130px 0 100px;}
+.legal-layout{display:grid;grid-template-columns:260px 1fr;gap:56px;align-items:start;}
+.legal-toc{position:sticky;top:90px;}
+.toc-header{font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:14px;}
+.toc-list{display:flex;flex-direction:column;gap:2px;}
+.toc-item{display:block;padding:8px 12px;border-radius:var(--radius);font-size:0.82rem;color:var(--muted2);transition:all 0.2s;border-left:2px solid transparent;}
+.toc-item:hover{color:var(--white);background:var(--surface);}
+.toc-item.active{color:var(--cyan);border-left-color:var(--cyan);background:rgba(0,229,255,0.05);}
+.toc-divider{height:1px;background:var(--border);margin:10px 0;}
+.toc-meta{font-family:var(--font-mono);font-size:0.68rem;color:var(--muted);padding:0 12px;}
+.legal-other-docs{margin-top:20px;}
+.legal-other-title{font-family:var(--font-mono);font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;}
+.legal-other-link{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:var(--radius);font-size:0.8rem;color:var(--muted2);transition:all 0.2s;border:1px solid var(--border);margin-bottom:7px;}
+.legal-other-link:hover{border-color:var(--border2);color:var(--cyan);}
+.legal-hero{margin-bottom:48px;}
+.legal-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:var(--surface);border:1px solid var(--border);border-radius:100px;font-family:var(--font-mono);font-size:0.72rem;color:var(--muted2);margin-bottom:18px;}
+.legal-badge-dot{width:6px;height:6px;background:var(--green);border-radius:50%;}
+.legal-title{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;letter-spacing:-0.03em;margin-bottom:14px;}
+.legal-title span{background:linear-gradient(135deg,var(--green),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.legal-meta{display:flex;gap:20px;flex-wrap:wrap;}
+.legal-meta-item{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);}
+.legal-meta-dot{width:4px;height:4px;background:var(--muted);border-radius:50%;}
+.legal-section{margin-bottom:52px;scroll-margin-top:100px;}
+.legal-section-num{font-family:var(--font-mono);font-size:0.7rem;color:var(--green);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;}
+.legal-section h2{font-size:1.35rem;font-weight:700;letter-spacing:-0.01em;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.legal-section h3{font-size:1rem;font-weight:700;margin:20px 0 10px;}
+.legal-section p{font-size:0.9rem;color:var(--muted2);line-height:1.8;margin-bottom:14px;}
+.legal-section p:last-child{margin-bottom:0;}
+.legal-section ul,.legal-section ol{padding-left:22px;margin-bottom:14px;}
+.legal-section li{font-size:0.9rem;color:var(--muted2);line-height:1.8;margin-bottom:6px;}
+.legal-section a{color:var(--cyan);}
+.legal-section a:hover{text-decoration:underline;}
+.legal-section strong{color:var(--white);}
+.legal-highlight{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin:18px 0;border-left:3px solid var(--green);}
+.legal-highlight.warning{border-left-color:var(--red);background:rgba(255,59,92,0.04);}
+.legal-highlight.info{border-left-color:var(--cyan);}
+.legal-highlight p{margin-bottom:0;font-size:0.88rem;}
+.legal-highlight strong{color:var(--white);}
+.lh-label{font-family:var(--font-mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;font-weight:600;color:var(--green);}
+.legal-highlight.warning .lh-label{color:var(--red);}
+.legal-highlight.info .lh-label{color:var(--cyan);}
+.legal-table-wrap{overflow-x:auto;margin:18px 0;}
+.legal-table{width:100%;border-collapse:collapse;font-size:0.85rem;}
+.legal-table th{background:var(--surface);padding:11px 14px;text-align:left;font-weight:600;border-bottom:2px solid var(--border);font-size:0.8rem;}
+.legal-table td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--muted2);vertical-align:top;}
+.legal-table tr:hover td{background:rgba(255,255,255,0.02);}
+footer{background:var(--black);border-top:1px solid var(--border);padding:48px 0 28px;}
+.footer-mini{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.footer-mini-logo{display:flex;align-items:center;gap:8px;}
+.fml-icon{width:28px;height:28px;background:var(--cyan);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:0.72rem;color:var(--black);font-weight:500;}
+.fml-text{font-size:1rem;font-weight:700;}
+.fml-text span{color:var(--cyan);}
+.footer-mini-copy{font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);}
+.footer-mini-copy span{color:var(--cyan);}
+.footer-mini-links{display:flex;gap:18px;}
+.footer-mini-links a{font-size:0.8rem;color:var(--muted);transition:color 0.2s;}
+.footer-mini-links a:hover{color:var(--muted2);}
+@media(max-width:900px){.legal-layout{grid-template-columns:1fr;}.legal-toc{display:none;}}
+@media(max-width:768px){.nav-menu-btn{display:block;}.nav-actions .btn-ghost:not(#themeToggle){display:none;}.footer-mini{flex-direction:column;align-items:flex-start;}}
+</style>
+</head>
+<body>
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <div class="nav-logo-icon" style="background:none;width:36px;height:36px;display:flex;align-items:center;justify-content:center;padding:0;">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="36" height="36">
+    <defs>
+      <linearGradient id="penchecker-grad-nav" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#00e5ff" />
+        <stop offset="50%" stop-color="#7c3aed" />
+        <stop offset="100%" stop-color="#00ff87" />
+      </linearGradient>
+      <filter id="penchecker-glow-nav" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+    </defs>
+    <path d="M50 12 L82 22 V52 C82 70 68 83 50 88 C32 83 18 70 18 52 V22 Z" fill="none" stroke="url(#penchecker-grad-nav)" stroke-width="3" stroke-linejoin="round" filter="url(#penchecker-glow-nav)" />
+    <path d="M30 40 A 24 24 0 0 1 70 40" fill="none" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.8" />
+    <path d="M36 48 A 16 16 0 0 1 64 48" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6" />
+    <path d="M50 28 L62 54 L50 72 L38 54 Z" fill="url(#penchecker-grad-nav)" />
+    <line x1="50" y1="38" x2="50" y2="60" stroke="#060608" stroke-width="2" stroke-linecap="round" />
+    <circle cx="50" cy="34" r="2.5" fill="#00ff87" filter="url(#penchecker-glow-nav)" />
+  </svg>
+</div>
+      <div class="nav-logo-text">Pen<span>Checker</span></div>
+    </a>
+    <div class="nav-actions">
+      <button id="themeToggle" class="btn btn-ghost btn-sm" style="padding:8px 14px;font-size:0.82rem;;display:inline-flex;align-items:center;gap:6px;"></button>
+      <a href="../login.html" class="btn btn-ghost btn-sm">Sign in</a>
+      <a href="../signup.html" class="btn btn-primary btn-sm">Start Free</a>
+    </div>
+    <button class="nav-menu-btn" id="menuBtn"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" id="menuClose"></button>
+  <a href="../index.html">Home</a>
+  <a href="../pricing.html">Pricing</a>
+  <a href="../signup.html" class="btn btn-primary">Start Free</a>
+</div>
+
+<div class="legal-page">
+  <div class="container">
+    <div class="legal-layout">
+      <aside class="legal-toc">
+        <div class="toc-header">On this page</div>
+        <nav class="toc-list">
+          <a class="toc-item active" href="#overview">1. Overview</a>
+          <a class="toc-item" href="#data-collected">2. Data We Collect</a>
+          <a class="toc-item" href="#how-used">3. How We Use Data</a>
+          <a class="toc-item" href="#sharing">4. Data Sharing</a>
+          <a class="toc-item" href="#retention">5. Data Retention</a>
+          <a class="toc-item" href="#security">6. Data Security</a>
+          <a class="toc-item" href="#rights">7. Your Rights</a>
+          <a class="toc-item" href="#cookies">8. Cookies</a>
+          <a class="toc-item" href="#children">9. Children's Privacy</a>
+          <a class="toc-item" href="#international">10. International Transfers</a>
+          <a class="toc-item" href="#changes-privacy">11. Changes</a>
+          <a class="toc-item" href="#contact-privacy">12. Contact</a>
+        </nav>
+        <div class="toc-divider"></div>
+        <div class="toc-meta">Last updated: April 1, 2025</div>
+        <div class="legal-other-docs">
+          <div class="legal-other-title">Other legal docs</div>
+          <a href="terms.html" class="legal-other-link"> Terms of Service</a>
+          <a href="acceptable-use.html" class="legal-other-link"> Acceptable Use Policy</a>
+          <a href="dmca.html" class="legal-other-link"> DMCA Policy</a>
+        </div>
+      </aside>
+
+      <main class="legal-content">
+        <div class="legal-hero">
+          <div class="legal-badge"><div class="legal-badge-dot"></div>Legal Document</div>
+          <h1 class="legal-title">Privacy <span>Policy</span></h1>
+          <div class="legal-meta">
+            <div class="legal-meta-item"> Effective April 1, 2025</div>
+            <div class="legal-meta-item"><div class="legal-meta-dot"></div>Version 1.0</div>
+            <div class="legal-meta-item"><div class="legal-meta-dot"></div>PenChecker Inc.</div>
+          </div>
+        </div>
+
+        <div class="legal-highlight info">
+          <div class="lh-label"> Plain English Summary</div>
+          <p>We collect data necessary to run the platform: your account info, scan results, payment data, and usage analytics. We do not sell your personal data to anyone. Scan results are yours. We keep security consent logs for legal compliance. You can request deletion of your personal data at any time.</p>
+        </div>
+
+        <div class="legal-section" id="overview">
+          <div class="legal-section-num">Section 01</div>
+          <h2>Overview</h2>
+          <p>PenChecker Inc. ("we," "us," "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard information when you use our platform at penchecker.io and related services.</p>
+          <p>We are headquartered in San Francisco, California, United States, and operate in compliance with applicable US privacy laws including the California Consumer Privacy Act (CCPA) and, where applicable, the EU General Data Protection Regulation (GDPR).</p>
+        </div>
+
+        <div class="legal-section" id="data-collected">
+          <div class="legal-section-num">Section 02</div>
+          <h2>Data We Collect</h2>
+          <h3>2.1 Account Information</h3>
+          <p>When you create an account: name, email address, password (hashed), company name, phone/WhatsApp number (optional), profile avatar (optional).</p>
+          <h3>2.2 Scan & Technical Data</h3>
+          <p>When you run scans: target URLs and domain names, scan results, vulnerability findings, HTTP request/response evidence, technology fingerprint data, security scores, and report exports.</p>
+          <h3>2.3 Payment Data</h3>
+          <p>Billing information is processed by Paystack. We store: subscription plan, billing cycle, payment status, and transaction references. We do not store full credit card numbers — these are handled exclusively by Paystack's PCI-compliant infrastructure.</p>
+          <h3>2.4 Consent Logs (Special Category)</h3>
+          <p>Every scan requires domain ownership confirmation. We permanently log: user ID, target URL, IP address at time of consent, user agent, and timestamp. These records are retained indefinitely for legal compliance and cannot be deleted by users.</p>
+          <h3>2.5 Usage & Analytics Data</h3>
+          <p>Pages visited, features used, scan frequency, session duration, browser type, operating system, IP address, and referring URLs — collected to improve the Service.</p>
+          <h3>2.6 Communications</h3>
+          <p>If you contact our support team, we retain those communications to provide support and improve our service.</p>
+          <div class="legal-table-wrap">
+            <table class="legal-table">
+              <thead><tr><th>Data Type</th><th>Purpose</th><th>Retention</th><th>Deletable?</th></tr></thead>
+              <tbody>
+                <tr><td>Account info</td><td>Account management</td><td>Until account deletion</td><td>Yes</td></tr>
+                <tr><td>Scan results</td><td>Service delivery</td><td>Until account deletion + 30 days</td><td>Yes</td></tr>
+                <tr><td>Payment data</td><td>Billing</td><td>7 years (legal requirement)</td><td>No (legal hold)</td></tr>
+                <tr><td>Consent logs</td><td>Legal compliance</td><td>Indefinite</td><td>No (legal requirement)</td></tr>
+                <tr><td>Analytics</td><td>Service improvement</td><td>24 months</td><td>Yes (anonymized)</td></tr>
+                <tr><td>Audit logs</td><td>Security & compliance</td><td>Subscription + 12 months</td><td>No</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="legal-section" id="how-used">
+          <div class="legal-section-num">Section 03</div>
+          <h2>How We Use Your Data</h2>
+          <p>We use collected data to:</p>
+          <ul>
+            <li>Provide, operate, and improve the PenChecker platform</li>
+            <li>Process payments and manage subscriptions</li>
+            <li>Send transactional emails (scan completion, billing, security alerts)</li>
+            <li>Send product updates and security tips (you can unsubscribe anytime)</li>
+            <li>Detect and prevent fraud, abuse, and unauthorized scanning</li>
+            <li>Comply with legal obligations and respond to lawful requests</li>
+            <li>Analyze usage patterns to improve features and performance</li>
+            <li>Provide customer support</li>
+          </ul>
+          <div class="legal-highlight warning">
+            <div class="lh-label"> What we never do</div>
+            <p>We <strong>never sell your personal data</strong> to third parties, data brokers, or advertisers. We do not use your scan results or vulnerability data to train AI models or share with competitors. Your security data is yours.</p>
+          </div>
+        </div>
+
+        <div class="legal-section" id="sharing">
+          <div class="legal-section-num">Section 04</div>
+          <h2>Data Sharing & Disclosure</h2>
+          <p>We share data only in these limited circumstances:</p>
+          <h3>4.1 Service Providers</h3>
+          <p>We use trusted third-party providers who process data on our behalf under strict data processing agreements:</p>
+          <ul>
+            <li><strong>Local Secure Hosting</strong> — Database and authentication hosting</li>
+            <li>Paystack — Payment processing</li>
+            <li><strong>Anthropic</strong> — AI assistant capabilities (message content only, no personal data)</li>
+            <li>Analytics provider — Aggregated, anonymized usage analytics</li>
+          </ul>
+          <h3>4.2 Legal Requirements</h3>
+          <p>We may disclose your information if required by law, court order, or government request. We will notify you of such requests unless legally prohibited from doing so.</p>
+          <h3>4.3 Consent Logs for Legal Proceedings</h3>
+          <p>Scan consent logs may be shared with law enforcement if we receive a lawful request related to alleged unauthorized scanning from your account.</p>
+          <h3>4.4 Business Transfers</h3>
+          <p>In the event of a merger, acquisition, or sale, user data may be transferred to the acquiring entity, subject to the same privacy protections described in this policy.</p>
+        </div>
+
+        <div class="legal-section" id="retention">
+          <div class="legal-section-num">Section 05</div>
+          <h2>Data Retention</h2>
+          <p>We retain your data for as long as necessary to provide the Service and comply with our legal obligations. See the data table in Section 2 for specific retention periods.</p>
+          <p>When you delete your account, we begin the deletion process within 30 days. You may request an export of your data before deletion at <a href="mailto:privacy@penchecker.io">privacy@penchecker.io</a>.</p>
+        </div>
+
+        <div class="legal-section" id="security">
+          <div class="legal-section-num">Section 06</div>
+          <h2>Data Security</h2>
+          <p>We implement industry-standard security measures to protect your data:</p>
+          <ul>
+            <li>Encryption in transit (TLS 1.2/1.3) and at rest (AES-256)</li>
+            <li>Strict access policies in our database infrastructure</li>
+            <li>Multi-factor authentication available for all accounts</li>
+            <li>Regular security audits and penetration testing of our own platform</li>
+            <li>Access controls ensuring only authorized personnel can access production data</li>
+            <li>Service role keys and API credentials stored as environment variables, never in code</li>
+          </ul>
+          <p>In the event of a data breach affecting your personal data, we will notify you within <strong>72 hours</strong> of becoming aware of the breach, as required by applicable law.</p>
+        </div>
+
+        <div class="legal-section" id="rights">
+          <div class="legal-section-num">Section 07</div>
+          <h2>Your Privacy Rights</h2>
+          <p>Depending on your location, you may have the following rights:</p>
+          <ul>
+            <li><strong>Access (GDPR Art. 15)</strong> — Request a copy of all personal data we hold about you, delivered within 30 days</li>
+            <li><strong>Correction (GDPR Art. 16)</strong> — Request correction of inaccurate or incomplete personal data</li>
+            <li><strong>Erasure (GDPR Art. 17)</strong> — The "right to be forgotten." Request deletion of your personal data. We will erase your data within 30 days unless we are legally required to retain it</li>
+            <li><strong>Portability (GDPR Art. 20)</strong> — Request your data in a structured, machine-readable JSON format for transfer to another service</li>
+            <li><strong>Objection (GDPR Art. 21)</strong> — Object to processing of your personal data for direct marketing or legitimate interest purposes</li>
+            <li><strong>Withdraw Consent</strong> — Where processing is based on your consent, you may withdraw it at any time. Withdrawal does not affect prior lawful processing</li>
+            <li><strong>Opt-out</strong> — Opt out of marketing emails at any time via the unsubscribe link in any email</li>
+            <li><strong>Restriction (GDPR Art. 18)</strong> — Request that we limit how we process your data in certain circumstances, such as while disputing accuracy. To exercise any right, contact privacy@penchecker.io</li>
+             that we limit the processing of your data in certain circumstances</li>
+          </ul>
+          <p>California residents have additional rights under CCPA including the right to know, delete, and opt out of data sales (we do not sell data). EU/UK residents have rights under GDPR.</p>
+          <p>To exercise any of these rights, email <a href="mailto:privacy@penchecker.io">privacy@penchecker.io</a>. We will respond within <strong>30 days</strong>.</p>
+        </div>
+
+        <div class="legal-section" id="cookies">
+          <div class="legal-section-num">Section 08</div>
+          <h2>Cookies & Tracking</h2>
+          <p>We use the following types of cookies and similar technologies:</p>
+          <div class="legal-table-wrap">
+            <table class="legal-table">
+              <thead><tr><th>Cookie Type</th><th>Purpose</th><th>Duration</th><th>Required?</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Essential</strong></td><td>Authentication, session management, security</td><td>Session / 30 days</td><td>Yes</td></tr>
+                <tr><td><strong>Preference</strong></td><td>Theme (dark/light), language, UI settings</td><td>1 year</td><td>No</td></tr>
+                <tr><td><strong>Analytics</strong></td><td>Anonymized usage analytics</td><td>24 months</td><td>No</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>You can control non-essential cookies through your browser settings. Blocking essential cookies may prevent the Service from functioning correctly.</p>
+        </div>
+
+        <div class="legal-section" id="children">
+          <div class="legal-section-num">Section 09</div>
+          <h2>Children's Privacy</h2>
+          <p>The Service is not directed to individuals under the age of 18. We do not knowingly collect personal data from children under 18. If we become aware that a child has provided us with personal data, we will delete it immediately. If you believe we have collected data from a minor, contact <a href="mailto:privacy@penchecker.io">privacy@penchecker.io</a>.</p>
+        </div>
+
+        <div class="legal-section" id="international">
+          <div class="legal-section-num">Section 10</div>
+          <h2>International Data Transfers</h2>
+          <p>PenChecker is based in the United States. If you access the Service from outside the US, your data will be transferred to and processed in the US. By using the Service, you consent to this transfer.</p>
+          <p>For users in the European Economic Area (EEA) or United Kingdom, we rely on Standard Contractual Clauses (SCCs) as the legal mechanism for cross-border data transfers where required.</p>
+        </div>
+
+        <div class="legal-section" id="changes-privacy">
+          <div class="legal-section-num">Section 11</div>
+          <h2>Changes to This Policy</h2>
+          <p>We may update this Privacy Policy periodically. Material changes will be communicated via email at least <strong>30 days</strong> before taking effect. The "Last Updated" date at the top reflects the most recent revision. Continued use of the Service after changes constitutes acceptance.</p>
+        </div>
+
+        <div class="legal-section" id="contact-privacy">
+          <div class="legal-section-num">Section 12</div>
+          <h2>Contact & Data Protection</h2>
+          <p>For privacy-related requests or questions:</p>
+          <ul>
+            <li><strong>Email:</strong> <a href="mailto:privacy@penchecker.io">privacy@penchecker.io</a></li>
+            <li><strong>Data Protection Officer:</strong> dpo@penchecker.io</li>
+            <li><strong>Mailing address:</strong> PenChecker Inc., 548 Market St Suite 95110, San Francisco, CA 94104, USA</li>
+          </ul>
+          <p>EU/EEA users may also lodge a complaint with their local supervisory authority if they believe their rights under GDPR have been violated.</p>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-mini">
+      <div class="footer-mini-logo"><div class="fml-icon">PC</div><div class="fml-text">Pen<span>Checker</span></div></div>
+      <div class="footer-mini-copy">© 2025 <span>PenChecker</span> Inc. All rights reserved.</div>
+      <div class="footer-mini-links">
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="acceptable-use.html">Acceptable Use</a>
+        <a href="dmca.html">DMCA</a>
+        <a href="../contact.html">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+'use strict';
+const navbar=document.getElementById('navbar');
+window.addEventListener('scroll',()=>navbar.classList.toggle('scrolled',window.scrollY>20));
+document.getElementById('menuBtn').addEventListener('click',()=>document.getElementById('mobileMenu').classList.add('open'));
+document.getElementById('menuClose').addEventListener('click',()=>document.getElementById('mobileMenu').classList.remove('open'));
+const themeToggle=document.getElementById('themeToggle');
+function updateThemeBtn(){if(!themeToggle)return;const isLight=document.body.classList.contains('light-theme');themeToggle.innerHTML=(isLight?'<svg viewBox='0 0 24 24' width='14' height='14' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round' style='display:inline-block;vertical-align:middle;'><circle cx='12' cy='12' r='5'/><line x1='12' y1='1' x2='12' y2='3'/><line x1='12' y1='21' x2='12' y2='23'/><line x1='4.22' y1='4.22' x2='5.64' y2='5.64'/><line x1='18.36' y1='18.36' x2='19.78' y2='19.78'/><line x1='1' y1='12' x2='3' y2='12'/><line x1='21' y1='12' x2='23' y2='12'/><line x1='4.22' y1='19.78' x2='5.64' y2='18.36'/><line x1='18.36' y1='5.64' x2='19.78' y2='4.22'/></svg>':'<svg viewBox='0 0 24 24' width='14' height='14' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round' style='display:inline-block;vertical-align:middle;'><path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/></svg>')+'&nbsp;'+(isLight?'Light':'Dark');}
+function setTheme(light){document.body.classList.toggle('light-theme',light);localStorage.setItem('pencheckerTheme',light?'light':'dark');updateThemeBtn();}
+if(themeToggle)themeToggle.addEventListener('click',()=>setTheme(!document.body.classList.contains('light-theme')));
+(function(){const s=localStorage.getItem('pencheckerTheme');const p=window.matchMedia('(prefers-color-scheme: light)').matches;setTheme(s==='light'||(!s&&p));})();
+const sections=document.querySelectorAll('.legal-section');
+const tocItems=document.querySelectorAll('.toc-item');
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){tocItems.forEach(t=>t.classList.remove('active'));const active=document.querySelector('.toc-item[href="#'+e.target.id+'"]');if(active)active.classList.add('active');}});},{rootMargin:'-20% 0px -70% 0px'});
+sections.forEach(s=>obs.observe(s));
+// Smooth scroll for TOC
+document.querySelectorAll('a[href^="#"]').forEach(function(link){
+  link.addEventListener('click', function(e){
+    var target = document.querySelector(this.getAttribute('href'));
+    if(target){ e.preventDefault(); target.scrollIntoView({behavior:'smooth', block:'start'}); }
+  });
+});
+</script>
+</body>
+</html>
+
+

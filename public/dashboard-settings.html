@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Settings — PenChecker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--black:#060608;--black2:#0d0d12;--black3:#13131a;--surface:#1a1a24;--surface2:#22222f;--border:rgba(255,255,255,0.07);--border2:rgba(0,229,255,0.2);--cyan:#00e5ff;--cyan2:#00b4cc;--green:#00ff87;--red:#ff3b5c;--orange:#ff8c42;--yellow:#ffd60a;--purple:#a855f7;--white:#f0f0f8;--muted:#6b6b85;--muted2:#9090a8;--font-display:'Plus Jakarta Sans',sans-serif;--font-body:'Plus Jakarta Sans',sans-serif;--font-mono:'JetBrains Mono',monospace;--glow-cyan:0 0 40px rgba(0,229,255,0.25);--radius:12px;--radius2:20px;--sidebar-w:240px;--topbar-h:60px;}
+body{transition:background 0.25s,color 0.25s;}
+.light-theme{--black:#f8f9fc;--black2:#e8eaf2;--black3:#ffffff;--surface:#ffffff;--surface2:#f2f4f9;--border:rgba(13,23,44,0.12);--border2:rgba(0,149,212,0.25);--cyan:#007fbc;--cyan2:#005f91;--green:#0f9d58;--red:#d93025;--orange:#e37400;--yellow:#f1c232;--purple:#6a1b9a;--white:#0b0d13;--muted:#4b5d79;--muted2:#6b7790;}
+.light-theme .topbar{background:rgba(248,249,252,0.96);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:15px;line-height:1.6;overflow-x:hidden;min-height:100vh;}
+a{color:inherit;text-decoration:none;}button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--black2);}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px;}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--black2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:200;transition:transform 0.3s;}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:18px 20px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sb-logo-icon{width:32px;height:32px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;font-size:0.8rem;color:var(--black);}
+.sb-logo-text{font-size:1.05rem;font-weight:700;}
+.sb-logo-text span{color:var(--cyan);}
+.sb-nav{flex:1;padding:12px 10px;overflow-y:auto;}
+.sb-section{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;padding:8px 10px 4px;margin-top:8px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius);font-size:0.85rem;font-weight:500;color:var(--muted2);transition:all 0.18s;position:relative;margin-bottom:1px;cursor:pointer;}
+.sb-link:hover{background:var(--surface);color:var(--white);}
+.sb-link.active{background:rgba(0,229,255,0.08);color:var(--cyan);font-weight:600;}
+.sb-link.active::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--cyan);border-radius:0 2px 2px 0;}
+.sb-icon{font-size:1rem;flex-shrink:0;width:20px;text-align:center;}
+.sb-badge{margin-left:auto;background:rgba(0,229,255,0.15);color:var(--cyan);font-family:var(--font-mono);font-size:0.6rem;font-weight:700;border-radius:10px;padding:1px 6px;}
+.sb-bottom{padding:12px 10px;border-top:1px solid var(--border);flex-shrink:0;}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);cursor:pointer;}
+.sb-avatar{width:30px;height:30px;border-radius:50%;background:rgba(0,229,255,0.15);border:1px solid rgba(0,229,255,0.3);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:var(--cyan);flex-shrink:0;}
+.sb-uname{font-size:0.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-uplan{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);}
+.topbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--topbar-h);background:rgba(6,6,8,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;z-index:100;}
+.tb-bc{flex:1;font-size:0.82rem;color:var(--muted2);display:flex;align-items:center;gap:6px;}
+.tb-cur{color:var(--white);font-weight:600;}
+.tb-sep{opacity:0.4;}
+.tb-btn{width:36px;height:36px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.9rem;cursor:pointer;transition:all 0.2s;color:var(--muted2);}
+.tb-btn:hover{border-color:var(--border2);color:var(--white);}
+.mob-toggle{display:none;width:36px;height:36px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);align-items:center;justify-content:center;font-size:1rem;cursor:pointer;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;}
+.overlay.open{display:block;}
+.main{margin-left:var(--sidebar-w);padding-top:var(--topbar-h);}
+.content{padding:28px 28px 60px;max-width:780px;}
+.page-title{font-size:1.4rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:4px;}
+.page-sub{font-size:0.84rem;color:var(--muted2);margin-bottom:28px;}
+/* Settings tabs */
+.tabs{display:flex;gap:4px;background:var(--surface);border-radius:var(--radius);padding:4px;margin-bottom:24px;border:1px solid var(--border);}
+.tab{flex:1;padding:8px;border-radius:8px;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.2s;text-align:center;color:var(--muted2);background:transparent;border:none;}
+.tab:hover{color:var(--white);}
+.tab.active{background:var(--black3);color:var(--white);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+/* Setting cards */
+.setting-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;margin-bottom:16px;}
+.sc-hdr{padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:0.9rem;display:flex;align-items:center;gap:8px;}
+.sc-body{padding:20px;}
+.form-row{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.form-row:last-child{margin-bottom:0;}
+.form-label{font-size:0.82rem;font-weight:600;}
+.form-hint{font-family:var(--font-mono);font-size:0.68rem;color:var(--muted);}
+.form-input{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 13px;font-family:var(--font-body);font-size:0.87rem;color:var(--white);outline:none;transition:border-color 0.2s;width:100%;}
+.form-input:focus{border-color:var(--cyan);}
+.form-input::placeholder{color:var(--muted);}
+.save-btn{padding:10px 22px;background:var(--cyan);color:var(--black);border:none;border-radius:var(--radius);font-family:var(--font-display);font-weight:700;font-size:0.88rem;cursor:pointer;transition:all 0.2s;margin-top:16px;}
+.save-btn:hover{box-shadow:var(--glow-cyan);}
+/* Notification toggles */
+.notif-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);}
+.notif-row:last-child{border-bottom:none;padding-bottom:0;}
+.nr-left strong{display:block;font-size:0.85rem;font-weight:600;}
+.nr-left span{font-size:0.75rem;color:var(--muted2);}
+.tog{width:38px;height:22px;background:var(--surface2);border-radius:11px;cursor:pointer;position:relative;border:1px solid var(--border);transition:background 0.3s;}
+.tog.on{background:var(--cyan2);}
+.tog-k{position:absolute;top:2px;left:2px;width:16px;height:16px;background:var(--white);border-radius:50%;transition:transform 0.3s;}
+.tog.on .tog-k{transform:translateX(16px);}
+/* Danger zone */
+.danger-card{background:rgba(255,59,92,0.04);border:1px solid rgba(255,59,92,0.2);border-radius:var(--radius2);padding:20px;}
+.danger-title{font-weight:700;font-size:0.9rem;color:var(--red);margin-bottom:8px;}
+.danger-desc{font-size:0.82rem;color:var(--muted2);margin-bottom:14px;}
+.danger-btn{padding:9px 18px;background:transparent;color:var(--red);border:1px solid rgba(255,59,92,0.4);border-radius:var(--radius);font-size:0.84rem;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.danger-btn:hover{background:rgba(255,59,92,0.1);}
+/* Plan card */
+.plan-card{background:linear-gradient(135deg,rgba(0,229,255,0.08),rgba(168,85,247,0.05));border:1px solid rgba(0,229,255,0.2);border-radius:var(--radius2);padding:20px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px;}
+.pc-left strong{display:block;font-size:1rem;font-weight:700;margin-bottom:3px;}
+.pc-left span{font-size:0.82rem;color:var(--muted2);}
+.upgrade-btn{padding:9px 18px;background:var(--cyan);color:var(--black);border:none;border-radius:var(--radius);font-weight:700;font-size:0.84rem;cursor:pointer;transition:all 0.2s;}
+.upgrade-btn:hover{box-shadow:var(--glow-cyan);}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.overlay.open{display:block;}.main{margin-left:0;}.topbar{left:0;}.mob-toggle{display:flex;}.tabs{flex-wrap:wrap;}}
+@media(max-width:480px){.content{padding:16px;}}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo" onclick="window.location.href='dashboard.html'" style="cursor:pointer">
+    <div class="sb-logo-icon">PC</div>
+    <div class="sb-logo-text">Pen<span>Checker</span></div>
+  </div>
+  <nav class="sb-nav" id="sbNav"></nav>
+  <div class="sb-bottom">
+    <div class="sb-user" onclick="window.location.href='dashboard-settings.html'">
+      <div class="sb-avatar" id="sbAvatar">?</div>
+      <div style="overflow:hidden;">
+        <div class="sb-uname" id="sbName">Loading...</div>
+        <div class="sb-uplan" id="sbPlan">Free Plan</div>
+      </div>
+      <div style="margin-left:auto;color:var(--muted);font-size:0.7rem;">&rsaquo;</div>
+    </div>
+  </div>
+</aside>
+<header class="topbar">
+  <button class="mob-toggle" onclick="openSidebar()"></button>
+  <div class="tb-bc"><span onclick="nav('dashboard.html')" style="cursor:pointer">Dashboard</span><span class="tb-sep">/</span><span class="tb-cur">Settings</span></div>
+  <button class="tb-btn" id="themeToggle"></button>
+</header>
+<main class="main"><div class="content">
+  <div class="page-title"> Settings</div>
+  <div class="page-sub">Manage your account, notifications, and preferences</div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('profile',this)">Profile</button>
+    <button class="tab" onclick="showTab('notifications',this)">Notifications</button>
+    <button class="tab" onclick="showTab('security',this)">Security</button>
+    <button class="tab" onclick="showTab('billing',this)">Billing</button>
+  </div>
+
+  <!-- Profile tab -->
+  <div class="tab-panel active" id="tab-profile">
+    <div class="setting-card">
+      <div class="sc-hdr"> Account Information</div>
+      <div class="sc-body">
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+          <div style="width:60px;height:60px;border-radius:50%;background:rgba(0,229,255,0.15);border:2px solid rgba(0,229,255,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:var(--cyan);" id="bigAvatar">?</div>
+          <div><div style="font-weight:700;font-size:1rem;" id="profileName">Loading...</div><div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--muted2);" id="profileEmail">—</div></div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Display name</label>
+          <input type="text" class="form-input" id="displayName" placeholder="Your name"/>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Email address</label>
+          <input type="email" class="form-input" id="emailField" placeholder="Your email" readonly style="opacity:0.6;cursor:not-allowed;"/>
+          <span class="form-hint">Email cannot be changed here. Contact support to update it.</span>
+        </div>
+        <button class="save-btn" onclick="saveProfile()">Save Changes</button>
+      </div>
+    </div>
+    <div class="danger-card">
+      <div class="danger-title"> Danger Zone</div>
+      <div class="danger-desc">Permanently delete your account and all associated data. This cannot be undone.</div>
+      <button class="danger-btn" onclick="deleteAccount()">Delete my account</button>
+    </div>
+  </div>
+
+  <!-- Notifications tab -->
+  <div class="tab-panel" id="tab-notifications">
+    <div class="setting-card">
+      <div class="sc-hdr"> Email Alerts</div>
+      <div class="sc-body">
+        <div class="notif-row"><div class="nr-left"><strong>Critical finding detected</strong><span>Immediate alert when a critical vulnerability is found</span></div><div class="tog on" data-key="n_critical" onclick="this.classList.toggle('on')"><div class="tog-k"></div></div></div>
+        <div class="notif-row"><div class="nr-left"><strong>High severity finding</strong><span>Alert for high severity vulnerabilities</span></div><div class="tog on" data-key="n_high" onclick="this.classList.toggle('on')"><div class="tog-k"></div></div></div>
+        <div class="notif-row"><div class="nr-left"><strong>Scan completed</strong><span>Email when any scan finishes</span></div><div class="tog on" data-key="n_scan_done" onclick="this.classList.toggle('on')"><div class="tog-k"></div></div></div>
+        <div class="notif-row"><div class="nr-left"><strong>Weekly security digest</strong><span>Summary of your security posture every Monday</span></div><div class="tog on" data-key="n_weekly" onclick="this.classList.toggle('on')"><div class="tog-k"></div></div></div>
+        <div class="notif-row"><div class="nr-left"><strong>Security score drop</strong><span>Alert when your score drops by 0.5 or more</span></div><div class="tog on" data-key="n_score_drop" onclick="this.classList.toggle('on')"><div class="tog-k"></div></div></div>
+        <div class="notif-row"><div class="nr-left"><strong>Product updates</strong><span>New features and announcements</span></div><div class="tog" data-key="n_product" onclick="this.classList.toggle('on')"><div class="tog-k"></div></div></div>
+        <button class="save-btn" onclick="saveNotifications()">Save Preferences</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Security tab -->
+  <div class="tab-panel" id="tab-security">
+    <div class="setting-card">
+      <div class="sc-hdr"> Password</div>
+      <div class="sc-body">
+        <div class="form-row">
+          <label class="form-label">Current password</label>
+          <input type="password" class="form-input" id="currentPw" placeholder="Enter current password"/>
+        </div>
+        <div class="form-row">
+          <label class="form-label">New password</label>
+          <input type="password" class="form-input" id="newPw" placeholder="Min. 8 characters"/>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Confirm new password</label>
+          <input type="password" class="form-input" id="confirmPw" placeholder="Repeat new password"/>
+        </div>
+        <button class="save-btn" onclick="changePassword()">Update Password</button>
+      </div>
+    </div>
+    <div class="setting-card">
+      <div class="sc-hdr"> Two-Factor Authentication</div>
+      <div class="sc-body" id="tfaSection">
+        <div style="font-size:0.84rem;color:var(--muted2);margin-bottom:14px;">Protect your account with an authenticator app. You'll need to enter a 6-digit code every time you sign in.</div>
+        <button class="save-btn" onclick="nav('setup-2fa.html')">Enable 2FA →</button>
+      </div>
+    </div>
+    <div class="setting-card">
+      <div class="sc-hdr"> Active Sessions</div>
+      <div class="sc-body">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--surface);border-radius:var(--radius);">
+          <div><div style="font-size:0.84rem;font-weight:600;">Current session</div><div style="font-family:var(--font-mono);font-size:0.68rem;color:var(--muted2)" id="sessionInfo">—</div></div>
+          <span style="font-family:var(--font-mono);font-size:0.68rem;color:var(--green)">● Active</span>
+        </div>
+        <button class="save-btn" style="background:transparent;color:var(--red);border:1px solid rgba(255,59,92,0.4);box-shadow:none;" onclick="signOut()">Sign out of all devices</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Billing tab -->
+  <div class="tab-panel" id="tab-billing">
+    <div class="plan-card">
+      <div class="pc-left">
+        <strong id="planName">Free Plan</strong>
+        <span>Upgrade for more scans, domains, and features</span>
+      </div>
+      <button class="upgrade-btn" onclick="nav('pricing.html')">Upgrade Plan →</button>
+    </div>
+    <div class="setting-card">
+      <div class="sc-hdr"> Usage This Month</div>
+      <div class="sc-body" id="usageBody">
+        <div style="font-size:0.84rem;color:var(--muted2)">Loading usage data...</div>
+      </div>
+    </div>
+  </div>
+
+</div></main>
+
+<script src="/js/api.js"></script>
+<script src="/js/sidebar.js"></script>
+<script>
+'use strict';
+function nav(u){window.location.href=u;}
+PC.requireAuth();
+
+const tBtn=document.getElementById('themeToggle');
+function setTheme(l){document.body.classList.toggle('light-theme',l);localStorage.setItem('pencheckerTheme',l?'light':'dark');tBtn.innerHTML=l?"<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"5\"></circle><line x1=\"12\" y1=\"1\" x2=\"12\" y2=\"3\"></line><line x1=\"12\" y1=\"21\" x2=\"12\" y2=\"23\"></line><line x1=\"4.22\" y1=\"4.22\" x2=\"5.64\" y2=\"5.64\"></line><line x1=\"18.36\" y1=\"18.36\" x2=\"19.78\" y2=\"19.78\"></line><line x1=\"1\" y1=\"12\" x2=\"3\" y2=\"12\"></line><line x1=\"21\" y1=\"12\" x2=\"23\" y2=\"12\"></line><line x1=\"4.22\" y1=\"19.78\" x2=\"5.64\" y2=\"18.36\"></line><line x1=\"18.36\" y1=\"5.64\" x2=\"19.78\" y2=\"4.22\"></svg>":"<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"></path></svg>";}
+tBtn.addEventListener('click',()=>setTheme(!document.body.classList.contains('light-theme')));
+(function(){const s=localStorage.getItem('pencheckerTheme');const p=window.matchMedia('(prefers-color-scheme: light)').matches;setTheme(s==='light'||(!s&&p));})();
+
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('open');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open');}
+
+async function loadUserSettings() {
+  try {
+    const res = await PC.getMe();
+    const user = res.user;
+    if (!user) return;
+    
+    localStorage.setItem('pc_user', JSON.stringify(user));
+    
+    const email = user.email || '';
+    const fullName = user.full_name || email.split('@')[0] || 'User';
+    document.getElementById('sbName').textContent = fullName;
+    document.getElementById('profileName').textContent = fullName;
+    document.getElementById('profileEmail').textContent = email;
+    document.getElementById('displayName').value = fullName;
+    
+    // Update TFA Section
+    const tfaSection = document.getElementById('tfaSection');
+    if (user.two_factor_enabled) {
+      tfaSection.innerHTML = `
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <div>
+            <div style="font-size:0.88rem;font-weight:600;color:var(--white);">Two-factor authentication is active</div>
+            <div style="font-size:0.8rem;color:var(--muted2);">Your account is protected by an authenticator app.</div>
+          </div>
+        </div>
+        <button class="save-btn" style="background:transparent;color:var(--red);border:1px solid rgba(255,59,92,0.4);box-shadow:none;" onclick="disable2FA()">Disable 2FA</button>
+      `;
+    } else {
+      tfaSection.innerHTML = `
+        <div style="font-size:0.84rem;color:var(--muted2);margin-bottom:14px;">Protect your account with an authenticator app. You'll need to enter a 6-digit code every time you sign in.</div>
+        <button class="save-btn" onclick="nav('setup-2fa.html')">Enable 2FA →</button>
+      `;
+    }
+  } catch (err) {
+    console.error('Failed to load user settings:', err);
+  }
+}
+loadUserSettings();
+
+async function disable2FA() {
+  if (!confirm('Are you sure you want to disable two-factor authentication? This will make your account less secure.')) return;
+  try {
+    const res = await PC.updateMe({ two_factor_enabled: 0, two_factor_secret: null });
+    localStorage.setItem('pc_user', JSON.stringify(res.user));
+    showToast('2FA disabled successfully');
+    setTimeout(() => window.location.reload(), 1000);
+  } catch(err) {
+    showToast(err.message || 'Failed to disable 2FA.');
+  }
+}
+
+function showTab(id,btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Profile save
+async function saveProfile(){
+  const name=document.getElementById('displayName').value.trim();
+  try{
+    const res = await PC.updateMe({ full_name: name });
+    localStorage.setItem('pc_user', JSON.stringify(res.user));
+    showToast(' Profile updated!');
+    setTimeout(()=>window.location.reload(), 1000);
+  }catch(err){
+    showToast(err.message || ' Could not save. Try again.');
+  }
+}
+
+// Notifications save
+async function saveNotifications(){
+  const prefs={};
+  document.querySelectorAll('.tog[data-key]').forEach(t=>{prefs[t.dataset.key]=t.classList.contains('on');});
+  localStorage.setItem('pc_notif_prefs',JSON.stringify(prefs));
+  
+  try{
+    const email_notifications = prefs['n_critical'] || prefs['n_high'] || prefs['n_scan_done'] ? 1 : 0;
+    await PC.updateMe({ email_notifications });
+    showToast(' Notification preferences saved!');
+  }catch(err){
+    showToast(' Could not save preferences on server.');
+  }
+}
+
+// Password change
+async function changePassword(){
+  const current = document.getElementById('currentPw').value;
+  const np=document.getElementById('newPw').value;
+  const cp=document.getElementById('confirmPw').value;
+  if(!current){showToast(' Current password is required');return;}
+  if(!np||np.length<6){showToast(' Password must be at least 6 characters');return;}
+  if(np!==cp){showToast(' Passwords do not match');return;}
+  try{
+    await PC.post('/users/change-password', { current_password: current, new_password: np });
+    showToast(' Password updated! Signing out.');
+    setTimeout(()=>signOut(),1500);
+  }catch(err){
+    showToast(err.message || ' Could not update password.');
+  }
+}
+
+// Sign out
+function signOut(){
+  PC.logout();
+}
+
+// Delete account
+async function deleteAccount(){
+  if(!confirm('Are you absolutely sure? This will permanently delete your account, all scans, and all data.'))return;
+  if(!confirm('This cannot be undone. Type OK to confirm.'))return;
+  signOut();
+}
+
+// Load usage
+async function loadUsage(){
+  try{
+    const res = await PC.getStats();
+    const thisMonth = res.totalScans || 0;
+    const user = PC.getUser();
+    const plan = user?.plan || 'free';
+    const limit = plan==='free'?5:plan==='individual'?50:999;
+    document.getElementById('usageBody').innerHTML=`
+      <div style="display:flex;justify-content:space-between;font-size:0.84rem;margin-bottom:8px;"><span>Scans this month</span><strong>${thisMonth} / ${limit}</strong></div>
+      <div style="height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:14px;"><div style="height:100%;width:${Math.min(thisMonth/limit*100,100)}%;background:${thisMonth>=limit?'var(--red)':'var(--cyan)'};border-radius:3px;transition:width 0.5s;"></div></div>
+      <div style="font-size:0.8rem;color:var(--muted2);">Total scans all time: <strong>${thisMonth}</strong></div>`;
+  }catch{}
+}
+loadUsage();
+
+function showToast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);color:var(--white);padding:11px 20px;border-radius:10px;font-size:0.84rem;z-index:10000;box-shadow:0 8px 24px rgba(0,0,0,0.4);transition:opacity 0.3s;text-align:center;min-width:220px;';document.body.appendChild(t);}t.textContent=msg;t.style.opacity='1';clearTimeout(window._tt);window._tt=setTimeout(()=>t.style.opacity='0',3000);}
+</script>
+</body>
+</html>

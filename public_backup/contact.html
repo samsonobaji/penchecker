@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact Us — PenChecker</title>
+<meta name="description" content="Get in touch with the PenChecker team. Support, sales, partnerships, careers, and security questions answered." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --black:   #060608;
+  --black2:  #0d0d12;
+  --black3:  #13131a;
+  --surface: #1a1a24;
+  --surface2:#22222f;
+  --border:  rgba(255,255,255,0.07);
+  --border2: rgba(0,229,255,0.2);
+  --cyan:    #00e5ff;
+  --cyan2:   #00b4cc;
+  --green:   #00ff87;
+  --red:     #ff3b5c;
+  --orange:  #ff8c42;
+  --yellow:  #ffd60a;
+  --purple:  #a855f7;
+  --white:   #f0f0f8;
+  --muted:   #6b6b85;
+  --muted2:  #9090a8;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body:    'Plus Jakarta Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --glow-cyan:  0 0 40px rgba(0,229,255,0.25);
+  --glow-green: 0 0 40px rgba(0,255,135,0.25);
+  --radius:  12px;
+  --radius2: 20px;
+}
+body { transition: background 0.25s, color 0.25s; }
+.light-theme {
+  --black:   #f8f9fc;
+  --black2:  #e8eaf2;
+  --black3:  #ffffff;
+  --surface: #ffffff;
+  --surface2:#f2f4f9;
+  --border:  rgba(13,23,44,0.12);
+  --border2: rgba(0,149,212,0.25);
+  --cyan:    #007fbc;
+  --cyan2:   #005f91;
+  --green:   #0f9d58;
+  --red:     #d93025;
+  --orange:  #e37400;
+  --yellow:  #f1c232;
+  --purple:  #6a1b9a;
+  --white:   #0b0d13;
+  --muted:   #4b5d79;
+  --muted2:  #6b7790;
+}
+.light-theme #navbar.scrolled { background: rgba(248,249,252,0.96); }
+.light-theme body::before { opacity: 0.12; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--black); color: var(--white);
+  font-family: var(--font-body); font-size: 16px;
+  line-height: 1.6; overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; border: none; outline: none; }
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999; opacity: 0.4;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--black2); }
+::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--cyan2); }
+
+/* Layout */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* Typography */
+.display-xl { font-size: clamp(2.6rem,6vw,5rem); font-weight:800; line-height:1.0; letter-spacing:-0.03em; }
+.display-lg { font-size: clamp(1.8rem,4vw,3rem); font-weight:700; line-height:1.1; letter-spacing:-0.02em; }
+.display-md { font-size: clamp(1.2rem,2.5vw,1.8rem); font-weight:700; letter-spacing:-0.02em; }
+
+/* Reveal */
+.reveal { opacity:0; transform:translateY(22px); transition:opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal-delay-1 { transition-delay:0.1s; }
+.reveal-delay-2 { transition-delay:0.2s; }
+.reveal-delay-3 { transition-delay:0.3s; }
+
+/* Section label */
+.section-label { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.section-label-line { width:36px; height:2px; background:var(--cyan); }
+.section-label-text { font-family:var(--font-mono); font-size:0.72rem; color:var(--cyan); letter-spacing:0.15em; text-transform:uppercase; }
+
+/* Buttons */
+.btn {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:14px 28px; border-radius:var(--radius);
+  font-family:var(--font-display); font-weight:600; font-size:0.95rem;
+  transition:all 0.25s ease; position:relative; overflow:hidden; border:none;
+}
+.btn::after { content:''; position:absolute; inset:0; background:white; opacity:0; transition:opacity 0.2s; }
+.btn:hover::after { opacity:0.06; }
+.btn-primary { background:var(--cyan); color:var(--black); box-shadow:0 0 40px rgba(0,229,255,0.2); }
+.btn-primary:hover { box-shadow:var(--glow-cyan); transform:translateY(-1px); }
+.btn-ghost { background:transparent; color:var(--white); border:1px solid var(--border); }
+.btn-ghost:hover { border-color:var(--cyan); color:var(--cyan); }
+.btn-sm { padding:10px 20px; font-size:0.85rem; }
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+#navbar {
+  position:fixed; top:0; left:0; right:0; z-index:1000;
+  padding:0 24px; transition:all 0.3s ease;
+}
+#navbar.scrolled {
+  background:rgba(6,6,8,0.92); backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner {
+  max-width:1200px; margin:0 auto; height:70px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.nav-logo { display:flex; align-items:center; gap:10px; }
+.nav-logo-icon {
+  width:36px; height:36px; background:var(--cyan); border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-weight:500; font-size:0.85rem; color:var(--black);
+}
+.nav-logo-text { font-size:1.2rem; font-weight:700; letter-spacing:-0.02em; }
+.nav-logo-text span { color:var(--cyan); }
+.nav-links { display:flex; align-items:center; gap:36px; list-style:none; }
+.nav-links a { font-size:0.9rem; color:var(--muted2); transition:color 0.2s; font-weight:500; }
+.nav-links a:hover { color:var(--white); }
+.nav-links a.active { color:var(--cyan); }
+.nav-actions { display:flex; align-items:center; gap:10px; }
+.nav-menu-btn { display:none; background:none; border:none; color:var(--white); cursor:pointer; padding:8px; }
+.mobile-menu {
+  display:none; position:fixed; inset:0; background:var(--black2);
+  z-index:999; flex-direction:column; align-items:center; justify-content:center; gap:32px;
+}
+.mobile-menu.open { display:flex; }
+.mobile-menu a { font-size:2rem; font-weight:700; color:var(--white); transition:color 0.2s; }
+.mobile-menu a:hover { color:var(--cyan); }
+.mobile-menu-close { position:absolute; top:20px; right:24px; background:none; border:none; color:var(--white); font-size:2rem; cursor:pointer; }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+#contact-hero {
+  padding:150px 0 80px; position:relative; overflow:hidden; text-align:center;
+}
+#contact-hero::before {
+  content:''; position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,255,0.025) 1px,transparent 1px);
+  background-size:50px 50px;
+  mask-image:radial-gradient(ellipse 80% 100% at 50% 0%,black 40%,transparent 100%);
+}
+#contact-hero::after {
+  content:''; position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:700px; height:500px;
+  background:radial-gradient(ellipse,rgba(0,229,255,0.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.contact-hero-inner { position:relative; z-index:2; max-width:680px; margin:0 auto; }
+.hero-eyebrow { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:24px; }
+.hero-eyebrow-dot { width:7px; height:7px; background:var(--green); border-radius:50%; animation:heroPulse 2s infinite; }
+@keyframes heroPulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,255,135,0.6);}50%{box-shadow:0 0 0 8px rgba(0,255,135,0);} }
+.hero-eyebrow-text { font-family:var(--font-mono); font-size:0.78rem; color:var(--green); letter-spacing:0.12em; text-transform:uppercase; }
+.contact-hero-title { margin-bottom:16px; }
+.contact-hero-title .accent { background:linear-gradient(135deg,var(--cyan),var(--green)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.contact-hero-desc { font-size:1.05rem; color:var(--muted2); line-height:1.75; }
+
+/* Response time badges */
+.response-badges { display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:24px; }
+.response-badge {
+  display:inline-flex; align-items:center; gap:7px;
+  padding:8px 16px; background:var(--surface); border:1px solid var(--border);
+  border-radius:100px; font-family:var(--font-mono); font-size:0.72rem; color:var(--muted2);
+}
+.rb-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+
+/* ============================================================
+   CONTACT CARDS (choose your topic)
+   ============================================================ */
+#contact-topics { padding:72px 0 0; }
+.topics-header { text-align:center; margin-bottom:40px; }
+.topics-header h2 { font-size:1.2rem; font-weight:700; margin-bottom:6px; }
+.topics-header p { font-size:0.9rem; color:var(--muted2); }
+.topics-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+.topic-card {
+  background:var(--black3); border:2px solid var(--border);
+  border-radius:var(--radius2); padding:22px 18px; text-align:center;
+  cursor:pointer; transition:all 0.3s; position:relative;
+}
+.topic-card:hover, .topic-card.selected {
+  border-color:var(--cyan); background:rgba(0,229,255,0.04);
+  transform:translateY(-3px);
+}
+.topic-card.selected::after {
+  content:''; position:absolute; top:10px; right:12px;
+  font-size:0.75rem; color:var(--cyan); font-weight:700;
+  font-family:var(--font-mono);
+}
+.topic-icon { font-size:1.8rem; margin-bottom:10px; }
+.topic-title { font-weight:700; font-size:0.88rem; margin-bottom:4px; }
+.topic-desc { font-size:0.74rem; color:var(--muted2); line-height:1.5; }
+.topic-sla { margin-top:8px; font-family:var(--font-mono); font-size:0.65rem; }
+
+/* ============================================================
+   MAIN CONTACT LAYOUT
+   ============================================================ */
+#contact-main { padding:48px 0 100px; }
+.contact-layout { display:grid; grid-template-columns:1fr 420px; gap:56px; align-items:start; }
+
+/* ============================================================
+   CONTACT FORM
+   ============================================================ */
+.contact-form-card {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius2); overflow:hidden;
+}
+.cfc-header {
+  padding:20px 28px; background:var(--surface); border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.cfc-title { font-weight:700; font-size:0.95rem; }
+.cfc-topic-badge {
+  font-family:var(--font-mono); font-size:0.7rem; color:var(--cyan);
+  background:rgba(0,229,255,0.1); border:1px solid rgba(0,229,255,0.2);
+  padding:4px 12px; border-radius:6px;
+}
+.cfc-body { padding:28px; }
+
+/* Form fields */
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.form-group { display:flex; flex-direction:column; gap:7px; margin-bottom:18px; }
+.form-group:last-child { margin-bottom:0; }
+.form-label {
+  font-size:0.82rem; font-weight:600; color:var(--white);
+  display:flex; align-items:center; gap:5px;
+}
+.form-label .req { color:var(--red); font-size:0.9rem; }
+.form-input, .form-select, .form-textarea {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:12px 14px;
+  font-family:var(--font-body); font-size:0.88rem; color:var(--white);
+  outline:none; transition:border-color 0.2s, box-shadow 0.2s; width:100%;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color:var(--cyan); box-shadow:0 0 0 3px rgba(0,229,255,0.08);
+}
+.form-input::placeholder, .form-textarea::placeholder { color:var(--muted); }
+.form-input.error, .form-textarea.error { border-color:var(--red); }
+.form-select { appearance:none; cursor:pointer; }
+.form-select option { background:var(--black3); color:var(--white); }
+.form-textarea { resize:vertical; min-height:130px; line-height:1.6; }
+.form-error { font-size:0.75rem; color:var(--red); font-family:var(--font-mono); display:none; }
+.form-error.visible { display:block; }
+.form-char-count { font-family:var(--font-mono); font-size:0.68rem; color:var(--muted); text-align:right; margin-top:4px; }
+
+/* Priority selector */
+.priority-row { display:flex; gap:8px; }
+.priority-btn {
+  flex:1; padding:9px 8px; border-radius:var(--radius); border:1px solid var(--border);
+  background:var(--surface); font-size:0.78rem; font-weight:600;
+  color:var(--muted2); cursor:pointer; transition:all 0.2s; text-align:center;
+}
+.priority-btn:hover { border-color:var(--border2); color:var(--white); }
+.priority-btn.active.low    { background:rgba(0,255,135,0.1);  border-color:var(--green);  color:var(--green);  }
+.priority-btn.active.medium { background:rgba(255,214,10,0.1); border-color:var(--yellow); color:var(--yellow); }
+.priority-btn.active.high   { background:rgba(255,59,92,0.1);  border-color:var(--red);    color:var(--red);    }
+
+/* File attachment */
+.file-drop {
+  border:2px dashed var(--border); border-radius:var(--radius);
+  padding:20px; text-align:center; cursor:pointer; transition:all 0.2s;
+}
+.file-drop:hover, .file-drop.dragover { border-color:var(--cyan); background:rgba(0,229,255,0.03); }
+.file-drop-icon { font-size:1.6rem; margin-bottom:6px; }
+.file-drop-text { font-size:0.8rem; color:var(--muted2); }
+.file-drop-text strong { color:var(--cyan); }
+.file-drop-sub { font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); margin-top:4px; }
+.file-list { display:flex; flex-direction:column; gap:6px; margin-top:10px; }
+.file-item {
+  display:flex; align-items:center; gap:8px;
+  background:var(--surface); border-radius:7px; padding:7px 10px;
+  font-family:var(--font-mono); font-size:0.72rem; color:var(--muted2);
+}
+.file-remove { margin-left:auto; color:var(--red); cursor:pointer; font-size:0.8rem; }
+
+/* Submit button + legal */
+.form-submit-wrap { margin-top:24px; }
+.form-submit-btn {
+  width:100%; padding:15px; background:var(--cyan); color:var(--black);
+  border:none; border-radius:var(--radius); font-family:var(--font-display);
+  font-weight:700; font-size:1rem; cursor:pointer; transition:all 0.25s;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.form-submit-btn:hover { box-shadow:var(--glow-cyan); transform:translateY(-1px); }
+.form-submit-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; box-shadow:none; }
+.form-submit-btn .btn-spinner {
+  display:none; width:16px; height:16px; border:2px solid rgba(0,0,0,0.3);
+  border-top-color:var(--black); border-radius:50%; animation:spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+.form-legal { margin-top:12px; font-size:0.72rem; color:var(--muted); text-align:center; line-height:1.6; }
+.form-legal a { color:var(--cyan); }
+
+/* Success state */
+.form-success {
+  display:none; text-align:center; padding:40px 20px;
+}
+.form-success-icon { font-size:3rem; margin-bottom:16px; }
+.form-success-title { font-size:1.3rem; font-weight:700; margin-bottom:10px; }
+.form-success-msg { font-size:0.9rem; color:var(--muted2); line-height:1.7; margin-bottom:24px; }
+.form-success-ticket {
+  font-family:var(--font-mono); font-size:0.78rem; color:var(--cyan);
+  background:rgba(0,229,255,0.08); border:1px solid rgba(0,229,255,0.2);
+  border-radius:8px; padding:10px 16px; display:inline-block; margin-bottom:20px;
+}
+
+/* ============================================================
+   CONTACT SIDEBAR
+   ============================================================ */
+.contact-sidebar {}
+.sidebar-card {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius2); padding:24px; margin-bottom:16px;
+}
+.sc-title { font-weight:700; font-size:0.95rem; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+.contact-methods { display:flex; flex-direction:column; gap:12px; }
+.contact-method {
+  display:flex; align-items:flex-start; gap:12px;
+  padding:14px; background:var(--surface); border-radius:var(--radius);
+  border:1px solid var(--border); transition:all 0.2s; cursor:pointer;
+  text-decoration:none;
+}
+.contact-method:hover { border-color:var(--border2); background:var(--surface2); }
+.cm-icon { font-size:1.2rem; flex-shrink:0; margin-top:1px; }
+.cm-label { font-weight:600; font-size:0.85rem; margin-bottom:2px; }
+.cm-value { font-family:var(--font-mono); font-size:0.72rem; color:var(--cyan); }
+.cm-note { font-size:0.72rem; color:var(--muted2); margin-top:2px; }
+
+/* Office info */
+.office-info { display:flex; flex-direction:column; gap:12px; }
+.office-item { display:flex; gap:10px; }
+.oi-icon { font-size:1rem; flex-shrink:0; margin-top:2px; }
+.oi-label { font-size:0.78rem; font-weight:600; margin-bottom:2px; }
+.oi-value { font-size:0.78rem; color:var(--muted2); line-height:1.5; }
+
+/* Status widget */
+.status-widget { display:flex; flex-direction:column; gap:10px; }
+.status-row { display:flex; align-items:center; justify-content:space-between; }
+.status-service { font-size:0.82rem; color:var(--muted2); }
+.status-badge {
+  display:flex; align-items:center; gap:5px;
+  font-family:var(--font-mono); font-size:0.7rem; font-weight:600;
+}
+.status-dot { width:7px; height:7px; border-radius:50%; }
+.status-dot.operational { background:var(--green); box-shadow:0 0 6px rgba(0,255,135,0.5); }
+.status-dot.degraded    { background:var(--yellow); }
+.status-dot.outage      { background:var(--red); }
+.status-operational { color:var(--green); }
+.status-overall {
+  margin-top:8px; padding:10px 14px;
+  background:rgba(0,255,135,0.06); border:1px solid rgba(0,255,135,0.15);
+  border-radius:var(--radius); display:flex; align-items:center; gap:8px;
+  font-size:0.8rem; color:var(--green); font-weight:600;
+}
+
+/* FAQ mini */
+.mini-faq { display:flex; flex-direction:column; gap:8px; }
+.mini-faq-item {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); overflow:hidden;
+}
+.mini-faq-q {
+  width:100%; padding:12px 14px; background:none; text-align:left;
+  font-size:0.82rem; font-weight:600; color:var(--white);
+  display:flex; justify-content:space-between; align-items:center; gap:8px;
+}
+.mini-faq-icon { color:var(--cyan); font-size:0.9rem; transition:transform 0.2s; flex-shrink:0; }
+.mini-faq-item.open .mini-faq-icon { transform:rotate(45deg); }
+.mini-faq-a { max-height:0; overflow:hidden; transition:max-height 0.3s ease, padding 0.3s; padding:0 14px; }
+.mini-faq-item.open .mini-faq-a { max-height:120px; padding:0 14px 12px; }
+.mini-faq-a p { font-size:0.78rem; color:var(--muted2); line-height:1.6; }
+
+/* ============================================================
+   MAP / LOCATION SECTION
+   ============================================================ */
+#contact-location { padding:80px 0; background:var(--black2); }
+.location-inner { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; }
+.location-left .display-md { margin-bottom:16px; }
+.location-left p { color:var(--muted2); font-size:0.95rem; line-height:1.8; margin-bottom:20px; }
+.location-details { display:flex; flex-direction:column; gap:12px; }
+.ld-item { display:flex; gap:12px; align-items:flex-start; }
+.ld-icon { font-size:1rem; flex-shrink:0; margin-top:2px; }
+.ld-text strong { display:block; font-size:0.88rem; font-weight:600; margin-bottom:2px; }
+.ld-text span { font-size:0.82rem; color:var(--muted2); }
+.map-visual {
+  background:var(--black3); border:1px solid var(--border);
+  border-radius:var(--radius2); overflow:hidden; aspect-ratio:4/3;
+  display:flex; align-items:center; justify-content:center; position:relative;
+}
+.map-grid {
+  position:absolute; inset:0;
+  background-image: linear-gradient(rgba(0,229,255,0.04) 1px,transparent 1px), linear-gradient(90deg,rgba(0,229,255,0.04) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+.map-pin {
+  position:relative; z-index:2; text-align:center;
+  animation:mapFloat 3s ease-in-out infinite;
+}
+@keyframes mapFloat { 0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);} }
+.map-pin-icon { font-size:2.5rem; filter:drop-shadow(0 0 20px rgba(0,229,255,0.6)); }
+.map-pin-label {
+  font-family:var(--font-mono); font-size:0.72rem; color:var(--cyan);
+  background:rgba(0,229,255,0.1); border:1px solid rgba(0,229,255,0.2);
+  padding:4px 12px; border-radius:100px; margin-top:8px; display:inline-block;
+}
+.map-pulse {
+  position:absolute; width:80px; height:80px; border-radius:50%;
+  border:2px solid rgba(0,229,255,0.2); animation:mapPulse 2s ease-out infinite;
+}
+.map-pulse:nth-child(2) { animation-delay:0.7s; }
+.map-pulse:nth-child(3) { animation-delay:1.4s; }
+@keyframes mapPulse { 0%{transform:scale(1);opacity:1;} 100%{transform:scale(3);opacity:0;} }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer { background:var(--black); border-top:1px solid var(--border); padding:72px 0 32px; }
+.footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; margin-bottom:56px; }
+.footer-logo { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.footer-logo-icon { width:32px; height:32px; background:var(--cyan); border-radius:7px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-weight:500; font-size:0.75rem; color:var(--black); }
+.footer-logo-text { font-size:1.1rem; font-weight:700; }
+.footer-logo-text span { color:var(--cyan); }
+.footer-brand-desc { font-size:0.88rem; color:var(--muted2); line-height:1.7; margin-bottom:20px; max-width:300px; }
+.footer-socials { display:flex; gap:10px; }
+.footer-social { width:36px; height:36px; background:var(--surface); border:1px solid var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:0.85rem; color:var(--muted2); transition:all 0.2s; }
+.footer-social:hover { border-color:var(--cyan); color:var(--cyan); background:rgba(0,229,255,0.08); }
+.footer-col h4 { font-size:0.85rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted2); margin-bottom:16px; }
+.footer-col ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.footer-col ul li a { font-size:0.88rem; color:var(--muted2); transition:color 0.2s; }
+.footer-col ul li a:hover { color:var(--white); }
+.footer-bottom { border-top:1px solid var(--border); padding-top:28px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.footer-copyright { font-family:var(--font-mono); font-size:0.78rem; color:var(--muted); }
+.footer-copyright span { color:var(--cyan); }
+.footer-legal { display:flex; gap:20px; }
+.footer-legal a { font-size:0.8rem; color:var(--muted); transition:color 0.2s; }
+.footer-legal a:hover { color:var(--muted2); }
+.footer-legal-sep { color:var(--border); }
+.footer-pay { display:flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:0.72rem; color:var(--muted); }
+.footer-pay-dot { width:6px; height:6px; background:var(--green); border-radius:50%; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1024px) {
+  .contact-layout { grid-template-columns:1fr; }
+  .contact-sidebar { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+}
+@media (max-width:768px) {
+  .nav-links { display:none; }
+  .nav-actions .btn-ghost:not(#themeToggle) { display:none; }
+  .nav-menu-btn { display:block; }
+  .topics-grid { grid-template-columns:repeat(2,1fr); }
+  .form-row { grid-template-columns:1fr; }
+  .contact-sidebar { grid-template-columns:1fr; }
+  .location-inner { grid-template-columns:1fr; gap:40px; }
+  .footer-grid { grid-template-columns:1fr 1fr; }
+}
+@media (max-width:480px) {
+  .topics-grid { grid-template-columns:1fr 1fr; }
+  .footer-grid { grid-template-columns:1fr; }
+  .footer-bottom { flex-direction:column; align-items:flex-start; }
+  .response-badges { flex-direction:column; align-items:center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">PC</div>
+      <div class="nav-logo-text">Pen<span>Checker</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="features.html">Features</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button id="themeToggle" class="btn btn-ghost btn-sm" aria-label="Toggle theme" style="padding:8px 14px;font-size:0.82rem;display:inline-flex;align-items:center;gap:6px;"></button>
+      <a href="login.html" class="btn btn-ghost btn-sm">Sign in</a>
+      <a href="signup.html" class="btn btn-primary btn-sm">Start Free</a>
+    </div>
+    <button class="nav-menu-btn" id="menuBtn" aria-label="Open menu">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" id="menuClose"></button>
+  <a href="features.html" onclick="closeMobileMenu()">Features</a>
+  <a href="pricing.html" onclick="closeMobileMenu()">Pricing</a>
+  <a href="blog.html" onclick="closeMobileMenu()">Blog</a>
+  <a href="about.html" onclick="closeMobileMenu()">About</a>
+  <a href="contact.html" onclick="closeMobileMenu()">Contact</a>
+  <a href="signup.html" class="btn btn-primary">Start Free</a>
+</div>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section id="contact-hero">
+  <div class="container">
+    <div class="contact-hero-inner reveal">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-dot"></div>
+        <span class="hero-eyebrow-text">We're here to help</span>
+      </div>
+      <h1 class="display-xl contact-hero-title">
+        Get in <span class="accent">touch.</span>
+      </h1>
+      <p class="contact-hero-desc">
+        Whether you have a question about a scan, need help with billing, want to explore enterprise options,
+        or just want to say hello — our team is real and we actually respond.
+      </p>
+      <div class="response-badges">
+        <div class="response-badge">
+          <div class="rb-dot" style="background:var(--green);box-shadow:0 0 6px rgba(0,255,135,0.5);"></div>
+          Support replies in &lt; 4 hours
+        </div>
+        <div class="response-badge">
+          <div class="rb-dot" style="background:var(--cyan);box-shadow:0 0 6px rgba(0,229,255,0.5);"></div>
+          Sales replies in &lt; 2 hours
+        </div>
+        <div class="response-badge">
+          <div class="rb-dot" style="background:var(--yellow);"></div>
+          Mon – Fri, 9AM – 6PM EST
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TOPIC SELECTOR
+     ============================================================ -->
+<section id="contact-topics">
+  <div class="container">
+    <div class="topics-header reveal">
+      <h2>What can we help you with?</h2>
+      <p>Select a topic and we'll route your message to the right person.</p>
+    </div>
+    <div class="topics-grid">
+      <div class="topic-card selected reveal" data-topic="support" onclick="selectTopic(this,'General Support','support')">
+        <div class="topic-icon"></div>
+        <div class="topic-title">General Support</div>
+        <div class="topic-desc">Scan issues, account help, technical questions</div>
+        <div class="topic-sla" style="color:var(--green);">Reply in &lt; 4h</div>
+      </div>
+      <div class="topic-card reveal reveal-delay-1" data-topic="sales" onclick="selectTopic(this,'Sales & Enterprise','sales')">
+        <div class="topic-icon"></div>
+        <div class="topic-title">Sales & Enterprise</div>
+        <div class="topic-desc">Pricing, enterprise plans, team onboarding</div>
+        <div class="topic-sla" style="color:var(--cyan);">Reply in &lt; 2h</div>
+      </div>
+      <div class="topic-card reveal reveal-delay-2" data-topic="billing" onclick="selectTopic(this,'Billing & Payments','billing')">
+        <div class="topic-icon"></div>
+        <div class="topic-title">Billing & Payments</div>
+        <div class="topic-desc">Invoices, refunds, subscription changes</div>
+        <div class="topic-sla" style="color:var(--green);">Reply in &lt; 4h</div>
+      </div>
+      <div class="topic-card reveal reveal-delay-3" data-topic="security" onclick="selectTopic(this,'Security Report','security')">
+        <div class="topic-icon"></div>
+        <div class="topic-title">Report a Security Issue</div>
+        <div class="topic-desc">Responsible disclosure for vulnerabilities found in PenChecker</div>
+        <div class="topic-sla" style="color:var(--red);">Reply in &lt; 24h</div>
+      </div>
+      <div class="topic-card reveal" data-topic="partnership" onclick="selectTopic(this,'Partnership','partnership')">
+        <div class="topic-icon"></div>
+        <div class="topic-title">Partnerships</div>
+        <div class="topic-desc">Integrations, affiliates, reseller programs</div>
+        <div class="topic-sla" style="color:var(--yellow);">Reply in &lt; 1 day</div>
+      </div>
+      <div class="topic-card reveal reveal-delay-1" data-topic="careers" onclick="selectTopic(this,'Careers','careers')">
+        <div class="topic-icon"></div>
+        <div class="topic-title">Careers</div>
+        <div class="topic-desc">Open roles, internships, working with us</div>
+        <div class="topic-sla" style="color:var(--purple);">Reply in &lt; 2 days</div>
+      </div>
+      <div class="topic-card reveal reveal-delay-2" data-topic="press" onclick="selectTopic(this,'Press & Media','press')">
+        <div class="topic-icon"></div>
+        <div class="topic-title">Press & Media</div>
+        <div class="topic-desc">Media kits, interviews, press coverage</div>
+        <div class="topic-sla" style="color:var(--yellow);">Reply in &lt; 1 day</div>
+      </div>
+      <div class="topic-card reveal reveal-delay-3" data-topic="other" onclick="selectTopic(this,'Other','other')">
+        <div class="topic-icon"></div>
+        <div class="topic-title">Other</div>
+        <div class="topic-desc">Anything else — we read every message</div>
+        <div class="topic-sla" style="color:var(--muted2);">Reply in &lt; 1 day</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     MAIN CONTACT AREA
+     ============================================================ -->
+<section id="contact-main">
+  <div class="container">
+    <div class="contact-layout">
+
+      <!-- FORM -->
+      <div class="reveal">
+        <div class="contact-form-card">
+          <div class="cfc-header">
+            <div class="cfc-title">Send us a message</div>
+            <div class="cfc-topic-badge" id="topicBadge">General Support</div>
+          </div>
+          <div class="cfc-body">
+
+            <!-- Main form -->
+            <form id="contactForm" novalidate>
+              <input type="hidden" id="topicField" value="support" />
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="firstName">First Name <span class="req">*</span></label>
+                  <input type="text" id="firstName" class="form-input" placeholder="John" autocomplete="given-name" />
+                  <span class="form-error" id="firstNameError">Please enter your first name</span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="lastName">Last Name <span class="req">*</span></label>
+                  <input type="text" id="lastName" class="form-input" placeholder="Smith" autocomplete="family-name" />
+                  <span class="form-error" id="lastNameError">Please enter your last name</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="email">Email Address <span class="req">*</span></label>
+                <input type="email" id="email" class="form-input" placeholder="john@company.com" autocomplete="email" />
+                <span class="form-error" id="emailError">Please enter a valid email address</span>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="company">Company / Website</label>
+                  <input type="text" id="company" class="form-input" placeholder="Acme Corp (optional)" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="plan">Current Plan</label>
+                  <select id="plan" class="form-select">
+                    <option value="">Select your plan</option>
+                    <option value="free">Free Plan</option>
+                    <option value="individual">Individual</option>
+                    <option value="team">Team</option>
+                    <option value="enterprise">Enterprise</option>
+                    <option value="none">Not a user yet</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="subject">Subject <span class="req">*</span></label>
+                <input type="text" id="subject" class="form-input" placeholder="Brief description of your question..." />
+                <span class="form-error" id="subjectError">Please enter a subject</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="message">Message <span class="req">*</span></label>
+                <textarea id="message" class="form-textarea" placeholder="Tell us everything. The more detail you provide, the faster we can help you..." maxlength="2000"></textarea>
+                <div class="form-char-count"><span id="charCount">0</span> / 2000</div>
+                <span class="form-error" id="messageError">Please enter a message (at least 20 characters)</span>
+              </div>
+
+              <div class="form-group" id="priorityGroup">
+                <label class="form-label">Priority</label>
+                <div class="priority-row">
+                  <button type="button" class="priority-btn low active" onclick="setPriority('low',this)">🟢 Low</button>
+                  <button type="button" class="priority-btn medium" onclick="setPriority('medium',this)">🟡 Medium</button>
+                  <button type="button" class="priority-btn high" onclick="setPriority('high',this)"> High</button>
+                </div>
+              </div>
+
+              <div class="form-group" id="attachmentGroup">
+                <label class="form-label">Attachments <span style="color:var(--muted);font-weight:400;font-size:0.75rem;">(optional — screenshots, scan reports)</span></label>
+                <div class="file-drop" id="fileDrop" onclick="document.getElementById('fileInput').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+                  <div class="file-drop-icon"></div>
+                  <div class="file-drop-text">Click to attach or <strong>drag & drop</strong></div>
+                  <div class="file-drop-sub">PNG, JPG, PDF, JSON — Max 5MB each</div>
+                </div>
+                <input type="file" id="fileInput" multiple accept=".png,.jpg,.jpeg,.pdf,.json,.txt" style="display:none" onchange="handleFiles(this.files)" />
+                <div class="file-list" id="fileList"></div>
+              </div>
+
+              <div class="form-submit-wrap">
+                <button type="submit" class="form-submit-btn" id="submitBtn">
+                  <span id="submitText">Send Message →</span>
+                  <div class="btn-spinner" id="submitSpinner"></div>
+                </button>
+                <p class="form-legal">
+                  By submitting this form, you agree to our
+                  <a href="legal/privacy.html">Privacy Policy</a>.
+                  We never share your information with third parties.
+                </p>
+              </div>
+            </form>
+
+            <!-- Success state -->
+            <div class="form-success" id="formSuccess">
+              <div class="form-success-icon"></div>
+              <div class="form-success-title">Message sent successfully!</div>
+              <div class="form-success-msg">
+                We received your message and will get back to you shortly.
+                Check your email for a confirmation with your ticket number.
+              </div>
+              <div class="form-success-ticket" id="ticketNum">Ticket #PC-000000</div>
+              <button class="btn btn-ghost" onclick="resetForm()">Send another message</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="contact-sidebar">
+
+        <!-- Direct contact methods -->
+        <div class="sidebar-card reveal">
+          <div class="sc-title"> Other ways to reach us</div>
+          <div class="contact-methods">
+            <a href="mailto:support@penchecker.io" class="contact-method">
+              <div class="cm-icon"></div>
+              <div>
+                <div class="cm-label">Email Support</div>
+                <div class="cm-value">support@penchecker.io</div>
+                <div class="cm-note">General questions & technical help</div>
+              </div>
+            </a>
+            <a href="mailto:sales@penchecker.io" class="contact-method">
+              <div class="cm-icon"></div>
+              <div>
+                <div class="cm-label">Sales Team</div>
+                <div class="cm-value">sales@penchecker.io</div>
+                <div class="cm-note">Enterprise & team plan inquiries</div>
+              </div>
+            </a>
+            <a href="mailto:security@penchecker.io" class="contact-method">
+              <div class="cm-icon"></div>
+              <div>
+                <div class="cm-label">Security Disclosure</div>
+                <div class="cm-value">security@penchecker.io</div>
+                <div class="cm-note">Responsible vulnerability disclosure</div>
+              </div>
+            </a>
+            <a href="https://wa.me/message/penchecker" class="contact-method" target="_blank" rel="noopener">
+              <div class="cm-icon"></div>
+              <div>
+                <div class="cm-label">WhatsApp Support</div>
+                <div class="cm-value">Available Mon–Fri</div>
+                <div class="cm-note">Quick questions & urgent issues</div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Office info -->
+        <div class="sidebar-card reveal reveal-delay-1">
+          <div class="sc-title"> Company Info</div>
+          <div class="office-info">
+            <div class="office-item">
+              <div class="oi-icon"></div>
+              <div>
+                <div class="oi-label">Headquarters</div>
+                <div class="oi-value">San Francisco, CA<br/>United States</div>
+              </div>
+            </div>
+            <div class="office-item">
+              <div class="oi-icon"></div>
+              <div>
+                <div class="oi-label">Business Hours</div>
+                <div class="oi-value">Monday – Friday<br/>9:00 AM – 6:00 PM EST</div>
+              </div>
+            </div>
+            <div class="office-item">
+              <div class="oi-icon"></div>
+              <div>
+                <div class="oi-label">Support Coverage</div>
+                <div class="oi-value">Worldwide — 190+ countries<br/>English language support</div>
+              </div>
+            </div>
+            <div class="office-item">
+              <div class="oi-icon"></div>
+              <div>
+                <div class="oi-label">Urgent / Critical</div>
+                <div class="oi-value">Enterprise customers have 24/7 access to priority support via their dashboard</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- System status -->
+        <div class="sidebar-card reveal reveal-delay-2">
+          <div class="sc-title">🟢 System Status</div>
+          <div class="status-widget">
+            <div class="status-row">
+              <span class="status-service">Scanner Engine</span>
+              <div class="status-badge"><div class="status-dot operational"></div><span class="status-operational">Operational</span></div>
+            </div>
+            <div class="status-row">
+              <span class="status-service">AI Assistant</span>
+              <div class="status-badge"><div class="status-dot operational"></div><span class="status-operational">Operational</span></div>
+            </div>
+            <div class="status-row">
+              <span class="status-service">Dashboard</span>
+              <div class="status-badge"><div class="status-dot operational"></div><span class="status-operational">Operational</span></div>
+            </div>
+            <div class="status-row">
+              <span class="status-service">API</span>
+              <div class="status-badge"><div class="status-dot operational"></div><span class="status-operational">Operational</span></div>
+            </div>
+            <div class="status-row">
+              <span class="status-service">Billing</span>
+              <div class="status-badge"><div class="status-dot operational"></div><span class="status-operational">Operational</span></div>
+            </div>
+            <div class="status-row">
+              <span class="status-service">Notifications</span>
+              <div class="status-badge"><div class="status-dot operational"></div><span class="status-operational">Operational</span></div>
+            </div>
+            <div class="status-overall">
+               All systems fully operational
+            </div>
+          </div>
+        </div>
+
+        <!-- Mini FAQ -->
+        <div class="sidebar-card reveal">
+          <div class="sc-title"> Quick Answers</div>
+          <div class="mini-faq" id="miniFaq">
+            <div class="mini-faq-item">
+              <button class="mini-faq-q" onclick="toggleMiniFaq(this)">
+                How do I cancel my subscription?
+                <span class="mini-faq-icon">+</span>
+              </button>
+              <div class="mini-faq-a"><p>Go to your dashboard → Settings → Billing → Cancel subscription. You keep access until the end of your current billing period.</p></div>
+            </div>
+            <div class="mini-faq-item">
+              <button class="mini-faq-q" onclick="toggleMiniFaq(this)">
+                My scan shows false results — what do I do?
+                <span class="mini-faq-icon">+</span>
+              </button>
+              <div class="mini-faq-a"><p>Mark the finding as a false positive in your report. Our team reviews flagged findings to improve accuracy. You can also open a support ticket with your scan ID.</p></div>
+            </div>
+            <div class="mini-faq-item">
+              <button class="mini-faq-q" onclick="toggleMiniFaq(this)">
+                Can I get a refund?
+                <span class="mini-faq-icon">+</span>
+              </button>
+              <div class="mini-faq-a"><p>We offer refunds within 7 days of payment for first-time subscribers. Contact billing@penchecker.io with your order reference.</p></div>
+            </div>
+            <div class="mini-faq-item">
+              <button class="mini-faq-q" onclick="toggleMiniFaq(this)">
+                How do I report a security vulnerability in PenChecker?
+                <span class="mini-faq-icon">+</span>
+              </button>
+              <div class="mini-faq-a"><p>Email security@penchecker.io with full details. Please do not disclose publicly before we've had a chance to investigate. We aim to respond within 24 hours.</p></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     LOCATION
+     ============================================================ -->
+<section id="contact-location">
+  <div class="container">
+    <div class="location-inner">
+      <div class="reveal">
+        <div class="section-label">
+          <div class="section-label-line"></div>
+          <span class="section-label-text">Where we are</span>
+        </div>
+        <h2 class="display-md" style="margin-bottom:16px;">Headquartered in<br/>San Francisco, CA.</h2>
+        <p>PenChecker is a US-based company serving customers in 190+ countries. Our team is fully remote and distributed across multiple time zones to ensure we can support users around the world.</p>
+        <div class="location-details">
+          <div class="ld-item">
+            <div class="ld-icon"></div>
+            <div class="ld-text">
+              <strong>Main Office</strong>
+              <span>San Francisco, California, USA</span>
+            </div>
+          </div>
+          <div class="ld-item">
+            <div class="ld-icon"></div>
+            <div class="ld-text">
+              <strong>Mailing Address</strong>
+              <span>PenChecker Inc. · 548 Market St Suite 95110<br/>San Francisco, CA 94104, USA</span>
+            </div>
+          </div>
+          <div class="ld-item">
+            <div class="ld-icon"></div>
+            <div class="ld-text">
+              <strong>Remote Team</strong>
+              <span>New York · London · Lagos · Singapore · Nairobi</span>
+            </div>
+          </div>
+          <div class="ld-item">
+            <div class="ld-icon"></div>
+            <div class="ld-text">
+              <strong>Incorporated</strong>
+              <span>Delaware C-Corporation · EIN on file</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="map-visual">
+          <div class="map-grid"></div>
+          <div class="map-pulse"></div>
+          <div class="map-pulse"></div>
+          <div class="map-pulse"></div>
+          <div class="map-pin">
+            <div class="map-pin-icon"></div>
+            <div class="map-pin-label">PenChecker HQ · San Francisco, CA</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="footer-logo-icon">PC</div>
+          <div class="footer-logo-text">Pen<span>Checker</span></div>
+        </div>
+        <p class="footer-brand-desc">The world's most accurate web security scanner. Based in the US. Real findings, real evidence, real solutions.</p>
+        <div class="footer-socials">
+          <a href="#" class="footer-social">𝕏</a>
+          <a href="#" class="footer-social">in</a>
+          <a href="#" class="footer-social">gh</a>
+          <a href="#" class="footer-social">wa</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="index.html#how">How it works</a></li>
+          <li><a href="changelog.html">Changelog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About us</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="affiliates.html">Affiliates</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="legal/terms.html">Terms of Service</a></li>
+          <li><a href="legal/privacy.html">Privacy Policy</a></li>
+          <li><a href="legal/acceptable-use.html">Acceptable Use</a></li>
+          <li><a href="legal/dmca.html">DMCA</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copyright">© 2025 <span>PenChecker</span>. All rights reserved.</p>
+      <div class="footer-pay"><div class="footer-pay-dot"></div>Secure payments worldwide</div>
+      <div class="footer-legal">
+        <a href="legal/privacy.html">Privacy</a>
+        <span class="footer-legal-sep">·</span>
+        <a href="legal/terms.html">Terms</a>
+        <span class="footer-legal-sep">·</span>
+        <a href="legal/acceptable-use.html">Acceptable Use</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+'use strict';
+
+// ============================================================
+// NAVBAR
+// ============================================================
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 20));
+
+// ============================================================
+// MOBILE MENU
+// ============================================================
+document.getElementById('menuBtn').addEventListener('click', () => document.getElementById('mobileMenu').classList.add('open'));
+document.getElementById('menuClose').addEventListener('click', () => document.getElementById('mobileMenu').classList.remove('open'));
+function closeMobileMenu() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+// ============================================================
+// THEME SWITCHER
+// ============================================================
+const themeToggle = document.getElementById('themeToggle');
+const sunIconSVG = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+const moonIconSVG = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+function updateThemeBtn() {
+  if (!themeToggle) return;
+  const isLight = document.body.classList.contains('light-theme');
+  themeToggle.innerHTML = (isLight ? sunIconSVG : moonIconSVG) + '&nbsp;' + (isLight ? 'Light' : 'Dark');
+}
+function setTheme(light) {
+  document.body.classList.toggle('light-theme', light);
+  localStorage.setItem('pencheckerTheme', light ? 'light' : 'dark');
+  updateThemeBtn();
+}
+if (themeToggle) themeToggle.addEventListener('click', () => setTheme(!document.body.classList.contains('light-theme')));
+(function restoreTheme() {
+  const saved = localStorage.getItem('pencheckerTheme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  setTheme(saved === 'light' || (!saved && prefersLight));
+})();
+
+// ============================================================
+// SCROLL REVEAL
+// ============================================================
+const revObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); } });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+// ============================================================
+// TOPIC SELECTOR
+// ============================================================
+function selectTopic(card, label, value) {
+  document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  document.getElementById('topicBadge').textContent = label;
+  document.getElementById('topicField').value = value;
+  // Scroll smoothly to the form
+  document.getElementById('contact-main').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ============================================================
+// PRIORITY SELECTOR
+// ============================================================
+let currentPriority = 'low';
+function setPriority(level, btn) {
+  document.querySelectorAll('.priority-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentPriority = level;
+}
+
+// ============================================================
+// CHARACTER COUNT
+// ============================================================
+const messageField = document.getElementById('message');
+const charCount = document.getElementById('charCount');
+if (messageField) {
+  messageField.addEventListener('input', () => {
+    const len = messageField.value.length;
+    charCount.textContent = len;
+    charCount.style.color = len > 1800 ? 'var(--red)' : len > 1500 ? 'var(--orange)' : 'var(--muted)';
+  });
+}
+
+// ============================================================
+// FILE ATTACHMENT
+// ============================================================
+let attachedFiles = [];
+
+function handleFiles(files) {
+  Array.from(files).forEach(file => {
+    if (file.size > 5 * 1024 * 1024) { alert(`"${file.name}" is too large. Max 5MB.`); return; }
+    if (attachedFiles.length >= 5) { alert('Maximum 5 attachments allowed.'); return; }
+    attachedFiles.push(file);
+    renderFileList();
+  });
+}
+function handleDragOver(e) { e.preventDefault(); document.getElementById('fileDrop').classList.add('dragover'); }
+function handleDragLeave(e) { document.getElementById('fileDrop').classList.remove('dragover'); }
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('fileDrop').classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+}
+function removeFile(idx) { attachedFiles.splice(idx,1); renderFileList(); }
+function renderFileList() {
+  const list = document.getElementById('fileList');
+  list.innerHTML = attachedFiles.map((f,i) =>
+    `<div class="file-item">
+      <span></span> ${f.name}
+      <span style="color:var(--muted);margin-left:4px;">(${(f.size/1024).toFixed(0)}KB)</span>
+      <span class="file-remove" onclick="removeFile(${i})"></span>
+    </div>`
+  ).join('');
+}
+
+// ============================================================
+// FORM VALIDATION & SUBMIT
+// ============================================================
+function showError(id, errId, show) {
+  const field = document.getElementById(id);
+  const err   = document.getElementById(errId);
+  if (field) field.classList.toggle('error', show);
+  if (err)   err.classList.toggle('visible', show);
+}
+
+function validateForm() {
+  let valid = true;
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName  = document.getElementById('lastName').value.trim();
+  const email     = document.getElementById('email').value.trim();
+  const subject   = document.getElementById('subject').value.trim();
+  const message   = document.getElementById('message').value.trim();
+
+  showError('firstName','firstNameError', !firstName);
+  if (!firstName) valid = false;
+  showError('lastName','lastNameError', !lastName);
+  if (!lastName) valid = false;
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  showError('email','emailError', !emailOk);
+  if (!emailOk) valid = false;
+  showError('subject','subjectError', !subject);
+  if (!subject) valid = false;
+  showError('message','messageError', message.length < 20);
+  if (message.length < 20) valid = false;
+
+  return valid;
+}
+
+// Remove error on input
+['firstName','lastName','email','subject','message'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', () => {
+    el.classList.remove('error');
+    const errEl = document.getElementById(id + 'Error');
+    if (errEl) errEl.classList.remove('visible');
+  });
+});
+
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!validateForm()) return;
+
+  const btn = document.getElementById('submitBtn');
+  const txt = document.getElementById('submitText');
+  const spinner = document.getElementById('submitSpinner');
+
+  // Loading state
+  btn.disabled = true;
+  txt.textContent = 'Sending...';
+  spinner.style.display = 'block';
+
+  // Collect form data
+  const payload = {
+    topic:     document.getElementById('topicField').value,
+    firstName: document.getElementById('firstName').value.trim(),
+    lastName:  document.getElementById('lastName').value.trim(),
+    email:     document.getElementById('email').value.trim(),
+    company:   document.getElementById('company').value.trim(),
+    plan:      document.getElementById('plan').value,
+    subject:   document.getElementById('subject').value.trim(),
+    message:   document.getElementById('message').value.trim(),
+    priority:  currentPriority,
+    files:     attachedFiles.map(f => f.name),
+    timestamp: new Date().toISOString(),
+    ticketNum: 'PC-' + Date.now().toString().slice(-6),
+  };
+
+  // Store in localStorage (in production would POST to Supabase/backend)
+  const existing = JSON.parse(localStorage.getItem('contactSubmissions') || '[]');
+  existing.push(payload);
+  localStorage.setItem('contactSubmissions', JSON.stringify(existing));
+
+  // Simulate API delay
+  await new Promise(r => setTimeout(r, 1600));
+
+  // Show success
+  document.getElementById('contactForm').style.display = 'none';
+  const successEl = document.getElementById('formSuccess');
+  successEl.style.display = 'block';
+  document.getElementById('ticketNum').textContent = `Ticket #${payload.ticketNum}`;
+
+  // Reset button
+  btn.disabled = false;
+  txt.textContent = 'Send Message →';
+  spinner.style.display = 'none';
+});
+
+function resetForm() {
+  document.getElementById('contactForm').reset();
+  document.getElementById('contactForm').style.display = 'block';
+  document.getElementById('formSuccess').style.display = 'none';
+  attachedFiles = [];
+  renderFileList();
+  charCount.textContent = '0';
+  // Reset priority
+  document.querySelectorAll('.priority-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.priority-btn.low').classList.add('active');
+  currentPriority = 'low';
+}
+
+// ============================================================
+// MINI FAQ
+// ============================================================
+function toggleMiniFaq(btn) {
+  const item = btn.closest('.mini-faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.mini-faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ============================================================
+// URL PARAM — pre-select topic from query string
+// e.g. contact.html?subject=careers
+// ============================================================
+(function checkURLParams() {
+  const params = new URLSearchParams(window.location.search);
+  const topicParam = params.get('subject') || params.get('topic');
+  if (topicParam) {
+    const card = document.querySelector(`.topic-card[data-topic="${topicParam}"]`);
+    if (card) {
+      const label = card.querySelector('.topic-title').textContent;
+      selectTopic(card, label, topicParam);
+    }
+  }
+})();
+</script>
+</body>
+</html>

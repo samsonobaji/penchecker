@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Dashboard — PenChecker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--black:#060608;--black2:#0d0d12;--black3:#13131a;--surface:#1a1a24;--surface2:#22222f;--border:rgba(255,255,255,0.07);--border2:rgba(0,229,255,0.2);--cyan:#00e5ff;--cyan2:#00b4cc;--green:#00ff87;--red:#ff3b5c;--orange:#ff8c42;--yellow:#ffd60a;--purple:#a855f7;--white:#f0f0f8;--muted:#6b6b85;--muted2:#9090a8;--font-display:'Plus Jakarta Sans',sans-serif;--font-body:'Plus Jakarta Sans',sans-serif;--font-mono:'JetBrains Mono',monospace;--glow-cyan:0 0 40px rgba(0,229,255,0.25);--radius:12px;--radius2:20px;--sidebar-w:240px;--topbar-h:60px;}
+body{transition:background 0.25s,color 0.25s;}
+.light-theme{--black:#f8f9fc;--black2:#e8eaf2;--black3:#ffffff;--surface:#ffffff;--surface2:#f2f4f9;--border:rgba(13,23,44,0.12);--border2:rgba(0,149,212,0.25);--cyan:#007fbc;--cyan2:#005f91;--green:#0f9d58;--red:#d93025;--orange:#e37400;--yellow:#f1c232;--purple:#6a1b9a;--white:#0b0d13;--muted:#4b5d79;--muted2:#6b7790;}
+.light-theme .topbar{background:rgba(248,249,252,0.96);}
+.light-theme .sidebar{background:var(--black2);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:15px;line-height:1.6;overflow-x:hidden;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--black2);}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px;}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--black2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:200;transition:transform 0.3s ease;}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:18px 20px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sb-logo-icon{width:32px;height:32px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;font-size:0.8rem;color:var(--black);flex-shrink:0;}
+.sb-logo-text{font-size:1.05rem;font-weight:700;letter-spacing:-0.02em;}
+.sb-logo-text span{color:var(--cyan);}
+.sb-nav{flex:1;padding:12px 10px;overflow-y:auto;}
+.sb-section{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;padding:8px 10px 4px;margin-top:8px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius);font-size:0.85rem;font-weight:500;color:var(--muted2);transition:all 0.18s;position:relative;margin-bottom:1px;cursor:pointer;}
+.sb-link:hover{background:var(--surface);color:var(--white);}
+.sb-link.active{background:rgba(0,229,255,0.08);color:var(--cyan);font-weight:600;}
+.sb-link.active::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--cyan);border-radius:0 2px 2px 0;}
+.sb-icon{font-size:1rem;flex-shrink:0;width:20px;text-align:center;}
+.sb-badge{margin-left:auto;background:var(--red);color:#fff;font-family:var(--font-mono);font-size:0.6rem;font-weight:700;border-radius:10px;padding:1px 6px;min-width:18px;text-align:center;}
+.sb-badge.cyan{background:rgba(0,229,255,0.15);color:var(--cyan);}
+.sb-bottom{padding:12px 10px;border-top:1px solid var(--border);flex-shrink:0;}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:all 0.2s;}
+.sb-user:hover{border-color:var(--border2);}
+.sb-avatar{width:30px;height:30px;border-radius:50%;background:rgba(0,229,255,0.15);border:1px solid rgba(0,229,255,0.3);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:var(--cyan);flex-shrink:0;}
+.sb-uname{font-size:0.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-uplan{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);}
+
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--topbar-h);background:rgba(6,6,8,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;z-index:100;transition:left 0.3s;}
+.tb-breadcrumb{flex:1;font-size:0.82rem;color:var(--muted2);display:flex;align-items:center;gap:6px;}
+.tb-cur{color:var(--white);font-weight:600;}
+.tb-actions{display:flex;align-items:center;gap:8px;}
+.tb-btn{width:36px;height:36px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.9rem;cursor:pointer;transition:all 0.2s;color:var(--muted2);position:relative;}
+.tb-btn:hover{border-color:var(--border2);color:var(--white);}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid var(--black);}
+.scan-btn{display:flex;align-items:center;gap:7px;padding:8px 16px;background:var(--cyan);color:var(--black);border-radius:var(--radius);font-weight:700;font-size:0.82rem;cursor:pointer;transition:all 0.2s;border:none;}
+.scan-btn:hover{box-shadow:var(--glow-cyan);}
+.mob-toggle{display:none;width:36px;height:36px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);align-items:center;justify-content:center;font-size:1rem;cursor:pointer;}
+
+/* CONTENT */
+.main{margin-left:var(--sidebar-w);padding-top:var(--topbar-h);}
+.content{padding:28px 28px 60px;}
+
+/* WELCOME BANNER */
+.welcome-banner{background:linear-gradient(135deg,rgba(0,229,255,0.08),rgba(0,255,135,0.04));border:1px solid rgba(0,229,255,0.15);border-radius:var(--radius2);padding:22px 28px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.wb-title{font-size:1.25rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:4px;}
+.wb-title .hl{color:var(--cyan);}
+.wb-sub{font-size:0.84rem;color:var(--muted2);}
+.wb-live{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:0.65rem;color:var(--green);background:rgba(0,255,135,0.08);border:1px solid rgba(0,255,135,0.2);padding:4px 10px;border-radius:100px;margin-top:8px;}
+.live-dot{width:5px;height:5px;background:var(--green);border-radius:50%;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
+/* STAT CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.stat-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);padding:18px 20px;cursor:pointer;transition:all 0.25s;}
+.stat-card:hover{border-color:rgba(0,229,255,0.15);transform:translateY(-2px);}
+.sc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.sc-label{font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;}
+.sc-num{font-size:1.75rem;font-weight:800;letter-spacing:-0.03em;margin-bottom:4px;}
+.sc-sub{font-family:var(--font-mono);font-size:0.65rem;display:flex;align-items:center;gap:4px;}
+.trend-up{color:var(--green);}
+.trend-down{color:var(--red);}
+.trend-neutral{color:var(--muted);}
+
+/* MAIN GRID */
+.main-grid{display:grid;grid-template-columns:280px 1fr 300px;gap:16px;margin-bottom:24px;}
+
+/* SCORE CARD */
+.score-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);padding:22px;display:flex;flex-direction:column;}
+.card-title{font-weight:700;font-size:0.9rem;margin-bottom:4px;}
+.card-sub{font-size:0.72rem;color:var(--muted2);margin-bottom:18px;}
+.score-ring-wrap{position:relative;width:96px;height:96px;margin:0 auto 16px;}
+.score-ring{transform:rotate(-90deg);}
+.score-bg{stroke:var(--surface2);}
+.score-fill{stroke:var(--green);stroke-linecap:round;transition:stroke-dashoffset 1.4s ease 0.2s;}
+.score-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.score-n{font-size:1.5rem;font-weight:800;color:var(--green);}
+.score-d{font-family:var(--font-mono);font-size:0.6rem;color:var(--muted);}
+.breakdown{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.bd-row{display:flex;align-items:center;gap:8px;font-size:0.75rem;}
+.bd-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.bd-lbl{width:54px;color:var(--muted2);}
+.bd-track{flex:1;height:3px;background:var(--surface2);border-radius:2px;overflow:hidden;}
+.bd-fill{height:100%;border-radius:2px;}
+.bd-cnt{font-family:var(--font-mono);font-size:0.68rem;min-width:14px;text-align:right;}
+.score-hint{margin-top:auto;font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);border-top:1px solid var(--border);padding-top:12px;text-align:center;}
+.score-hint a{color:var(--cyan);}
+
+/* RECENT SCANS CARD */
+.recent-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;display:flex;flex-direction:column;}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.ch-t{font-weight:700;font-size:0.9rem;}
+.ch-a{font-family:var(--font-mono);font-size:0.7rem;color:var(--cyan);cursor:pointer;transition:opacity 0.2s;}
+.ch-a:hover{opacity:0.7;}
+.scan-list{flex:1;overflow-y:auto;}
+.scan-row{display:flex;align-items:center;gap:10px;padding:11px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.2s;}
+.scan-row:last-child{border-bottom:none;}
+.scan-row:hover{background:var(--surface);}
+.sr-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.sr-dot.done{background:var(--green);}
+.sr-dot.run{background:var(--cyan);animation:blink 1.2s infinite;}
+.sr-dot.fail{background:var(--red);}
+.sr-dom{font-size:0.83rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px;}
+.sr-meta{font-family:var(--font-mono);font-size:0.63rem;color:var(--muted);}
+.sr-score{margin-left:auto;font-size:0.82rem;font-weight:700;flex-shrink:0;}
+.score-g{color:var(--green);}
+.score-y{color:var(--yellow);}
+.score-r{color:var(--red);}
+.sr-arr{color:var(--muted);font-size:0.7rem;flex-shrink:0;}
+.empty-state{padding:36px;text-align:center;color:var(--muted2);font-size:0.83rem;}
+.empty-icon{font-size:2rem;margin-bottom:10px;}
+
+/* QUICK ACTIONS */
+.qa-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;}
+.qa-list{padding:7px;}
+.qa-row{display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:var(--radius);cursor:pointer;transition:all 0.18s;text-decoration:none;color:inherit;}
+.qa-row:hover{background:var(--surface);}
+.qa-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;}
+.qi-c{background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.2);}
+.qi-g{background:rgba(0,255,135,0.1);border:1px solid rgba(0,255,135,0.2);}
+.qi-o{background:rgba(255,140,66,0.1);border:1px solid rgba(255,140,66,0.2);}
+.qi-p{background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2);}
+.qi-y{background:rgba(255,214,10,0.1);border:1px solid rgba(255,214,10,0.2);}
+.qa-t strong{display:block;font-size:0.82rem;font-weight:700;}
+.qa-t span{font-size:0.7rem;color:var(--muted2);}
+.qa-arr{margin-left:auto;color:var(--muted);font-size:0.7rem;}
+
+/* BOTTOM GRID */
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+/* FINDINGS */
+.findings-table{width:100%;border-collapse:collapse;}
+.findings-table th{padding:9px 15px;background:var(--surface);font-family:var(--font-mono);font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:600;text-align:left;border-bottom:1px solid var(--border);}
+.findings-table td{padding:10px 15px;border-bottom:1px solid var(--border);font-size:0.8rem;vertical-align:middle;}
+.findings-table tr:last-child td{border-bottom:none;}
+.findings-table tr:hover td{background:rgba(255,255,255,0.02);}
+.sev{display:inline-flex;align-items:center;padding:2px 7px;border-radius:5px;font-family:var(--font-mono);font-size:0.6rem;font-weight:700;}
+.sev-critical{background:rgba(255,59,92,0.15);color:var(--red);}
+.sev-high{background:rgba(255,140,66,0.15);color:var(--orange);}
+.sev-medium{background:rgba(255,214,10,0.12);color:var(--yellow);}
+.sev-low{background:rgba(0,229,255,0.1);color:var(--cyan);}
+.sev-info{background:rgba(168,85,247,0.12);color:var(--purple);}
+.finding-name{font-weight:600;cursor:pointer;transition:color 0.2s;}
+.finding-name:hover{color:var(--cyan);}
+
+/* MONITORING */
+.mon-row{display:flex;align-items:center;gap:10px;padding:12px 18px;border-bottom:1px solid var(--border);}
+.mon-row:last-child{border-bottom:none;}
+.mon-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.mon-up{background:var(--green);box-shadow:0 0 6px rgba(0,255,135,0.5);}
+.mon-warn{background:var(--yellow);}
+.mon-dn{background:var(--red);}
+.mon-dom{font-size:0.83rem;font-weight:600;}
+.mon-meta{font-family:var(--font-mono);font-size:0.63rem;color:var(--muted);}
+.mon-score{margin-left:auto;font-family:var(--font-mono);font-size:0.75rem;font-weight:700;}
+.tog{width:36px;height:20px;background:var(--surface2);border-radius:10px;cursor:pointer;position:relative;border:1px solid var(--border);transition:background 0.3s;flex-shrink:0;margin-left:8px;}
+.tog.on{background:var(--cyan2);}
+.tog-k{position:absolute;top:1px;left:1px;width:16px;height:16px;background:var(--white);border-radius:50%;transition:transform 0.3s;}
+.tog.on .tog-k{transform:translateX(16px);}
+
+/* NOTIF PANEL */
+.notif-panel{position:fixed;top:var(--topbar-h);right:0;width:320px;background:var(--black2);border-left:1px solid var(--border);border-bottom:1px solid var(--border);z-index:150;display:none;max-height:500px;overflow-y:auto;border-bottom-left-radius:var(--radius2);box-shadow:-8px 8px 32px rgba(0,0,0,0.3);}
+.notif-panel.open{display:block;}
+.np-hdr{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.np-title{font-weight:700;font-size:0.88rem;}
+.np-read-all{font-family:var(--font-mono);font-size:0.68rem;color:var(--cyan);cursor:pointer;}
+.np-item{padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.2s;}
+.np-item:last-child{border-bottom:none;}
+.np-item:hover{background:var(--surface);}
+.np-item.unread{background:rgba(0,229,255,0.03);}
+.np-t{font-size:0.8rem;font-weight:600;margin-bottom:3px;}
+.np-b{font-size:0.73rem;color:var(--muted2);line-height:1.5;}
+.np-tm{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);margin-top:4px;}
+.u-dot{display:inline-block;width:6px;height:6px;background:var(--cyan);border-radius:50%;margin-right:5px;vertical-align:middle;}
+
+/* OVERLAY */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;}
+.overlay.open{display:block;}
+
+/* RESPONSIVE */
+@media(max-width:1280px){.main-grid{grid-template-columns:260px 1fr;}.main-grid .qa-card{grid-column:1 / -1;display:grid;grid-template-columns:1fr;}.main-grid .qa-card .qa-list{display:grid;grid-template-columns:repeat(3,1fr);padding:12px;gap:8px;}}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.overlay.open{display:block;}.main{margin-left:0;}.topbar{left:0;}.mob-toggle{display:flex;}.stats-grid{grid-template-columns:repeat(2,1fr);}.main-grid{grid-template-columns:1fr;}.bottom-grid{grid-template-columns:1fr;}}
+@media(max-width:540px){.stats-grid{grid-template-columns:1fr;}.content{padding:16px;}.welcome-banner{flex-direction:column;align-items:flex-start;}}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo" onclick="window.location.href='dashboard.html'" style="cursor:pointer">
+    <div class="sb-logo-icon">PC</div>
+    <div class="sb-logo-text">Pen<span>Checker</span></div>
+  </div>
+  <nav class="sb-nav" id="sbNav"></nav>
+  <div class="sb-bottom">
+    <div class="sb-user" onclick="window.location.href='dashboard-settings.html'">
+      <div class="sb-avatar" id="sbAvatar">?</div>
+      <div style="overflow:hidden;">
+        <div class="sb-uname" id="sbName">Loading...</div>
+        <div class="sb-uplan" id="sbPlan">Free Plan</div>
+      </div>
+      <div style="margin-left:auto;color:var(--muted);font-size:0.7rem;">&rsaquo;</div>
+    </div>
+  </div>
+</aside>
+
+<!-- Topbar -->
+<header class="topbar">
+  <button class="mob-toggle" onclick="openSidebar()"></button>
+  <div class="tb-breadcrumb"><span>PenChecker</span><span style="opacity:0.4;margin:0 4px;">/</span><span class="tb-cur">Dashboard</span></div>
+  <div class="tb-actions">
+    <button class="tb-btn" id="themeToggle" title="Toggle theme"></button>
+    <button class="tb-btn" id="notifBtn" onclick="toggleNotif()" title="Notifications"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg><span class="notif-dot" id="notifDot"></span></button>
+    <button class="scan-btn" onclick="nav('dashboard-scan.html')" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> New Scan</button>
+  </div>
+</header>
+
+<!-- Notifications -->
+<div class="notif-panel" id="notifPanel">
+  <div class="np-hdr"><div class="np-title">Notifications</div><div class="np-read-all" onclick="markAllRead()">Mark all read</div></div>
+  <div id="notifList">
+    <div style="padding:20px;text-align:center;color:var(--muted2);font-size:0.82rem;">Loading...</div>
+  </div>
+</div>
+
+<!-- Main -->
+<main class="main">
+  <div class="content">
+
+    <!-- Welcome -->
+    <div class="welcome-banner">
+      <div>
+        <div class="wb-title">Good morning, <span class="hl" id="wName">there</span> </div>
+        <div class="wb-sub">Here's your security posture at a glance.</div>
+        <div class="wb-live"><div class="live-dot"></div>Monitoring active</div>
+      </div>
+      <button class="scan-btn" style="padding:10px 20px;font-size:0.88rem;" onclick="nav('dashboard-scan.html')"> Run a New Scan →</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card" onclick="nav('dashboard-history.html')">
+        <div class="sc-top"><span class="sc-label">Total Scans</span><span></span></div>
+        <div class="sc-num" id="stScans">—</div>
+        <div class="sc-sub trend-neutral" id="stScansS">Loading...</div>
+      </div>
+      <div class="stat-card" onclick="nav('dashboard-domains.html')">
+        <div class="sc-top"><span class="sc-label">Domains</span><span></span></div>
+        <div class="sc-num" id="stDoms">—</div>
+        <div class="sc-sub trend-neutral" id="stDomsS">Loading...</div>
+      </div>
+      <div class="stat-card" onclick="nav('dashboard-history.html')">
+        <div class="sc-top"><span class="sc-label">Open Findings</span><span></span></div>
+        <div class="sc-num" id="stFinds">—</div>
+        <div class="sc-sub" id="stFindsS">Loading...</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-top"><span class="sc-label">Avg Score</span><span></span></div>
+        <div class="sc-num" id="stAvg">—</div>
+        <div class="sc-sub trend-up" id="stAvgS">Loading...</div>
+      </div>
+    </div>
+
+    <!-- Main grid -->
+    <div class="main-grid">
+
+      <!-- Score -->
+      <div class="score-card">
+        <div class="card-title">Security Score</div>
+        <div class="card-sub" id="scoreSub">Last scan: loading...</div>
+        <div class="score-ring-wrap">
+          <svg class="score-ring" width="96" height="96" viewBox="0 0 96 96">
+            <circle class="score-bg" cx="48" cy="48" r="40" fill="none" stroke-width="7"/>
+            <circle class="score-fill" id="scoreArc" cx="48" cy="48" r="40" fill="none" stroke-width="7"
+              stroke-dasharray="251" stroke-dashoffset="251"/>
+          </svg>
+          <div class="score-center">
+            <div class="score-n" id="scoreN">—</div>
+            <div class="score-d">/10</div>
+          </div>
+        </div>
+        <div class="breakdown">
+          <div class="bd-row"><div class="bd-dot" style="background:var(--red)"></div><span class="bd-lbl">Critical</span><div class="bd-track"><div class="bd-fill" id="bdCrit" style="width:0%;background:var(--red)"></div></div><span class="bd-cnt" id="nCrit">0</span></div>
+          <div class="bd-row"><div class="bd-dot" style="background:var(--orange)"></div><span class="bd-lbl">High</span><div class="bd-track"><div class="bd-fill" id="bdHigh" style="width:0%;background:var(--orange)"></div></div><span class="bd-cnt" id="nHigh">0</span></div>
+          <div class="bd-row"><div class="bd-dot" style="background:var(--yellow)"></div><span class="bd-lbl">Medium</span><div class="bd-track"><div class="bd-fill" id="bdMed" style="width:0%;background:var(--yellow)"></div></div><span class="bd-cnt" id="nMed">0</span></div>
+          <div class="bd-row"><div class="bd-dot" style="background:var(--cyan)"></div><span class="bd-lbl">Low</span><div class="bd-track"><div class="bd-fill" id="bdLow" style="width:0%;background:var(--cyan)"></div></div><span class="bd-cnt" id="nLow">0</span></div>
+        </div>
+        <div class="score-hint" id="scoreHint">Run a scan to see your score</div>
+      </div>
+
+      <!-- Recent scans -->
+      <div class="recent-card">
+        <div class="card-hdr">
+          <div class="ch-t">Recent Scans</div>
+          <div class="ch-a" onclick="nav('dashboard-history.html')">View all →</div>
+        </div>
+        <div class="scan-list" id="recentList">
+          <div class="empty-state"><div class="empty-icon"></div>Loading scans...</div>
+        </div>
+      </div>
+
+      <!-- Quick actions -->
+      <div class="qa-card">
+        <div class="card-hdr"><div class="ch-t">Quick Actions</div></div>
+        <div class="qa-list">
+          <div class="qa-row" onclick="nav('dashboard-scan.html')"><div class="qa-ico qi-c"></div><div class="qa-t"><strong>New scan</strong><span>Launch a scan</span></div><div class="qa-arr">›</div></div>
+          <div class="qa-row" onclick="nav('dashboard-domains.html')"><div class="qa-ico qi-g"></div><div class="qa-t"><strong>Add domain</strong><span>Verify a site</span></div><div class="qa-arr">›</div></div>
+          <div class="qa-row" onclick="nav('dashboard-ai.html')"><div class="qa-ico qi-p"></div><div class="qa-t"><strong>AI assistant</strong><span>Get fix code</span></div><div class="qa-arr">›</div></div>
+          <div class="qa-row" onclick="nav('dashboard-reports.html')"><div class="qa-ico qi-o"></div><div class="qa-t"><strong>Export report</strong><span>PDF or JSON</span></div><div class="qa-arr">›</div></div>
+          <div class="qa-row" onclick="nav('dashboard-badges.html')"><div class="qa-ico qi-y"></div><div class="qa-t"><strong>Security badge</strong><span>Show your score</span></div><div class="qa-arr">›</div></div>
+          <div class="qa-row" onclick="nav('setup-2fa.html')"><div class="qa-ico qi-c"></div><div class="qa-t"><strong>Enable 2FA</strong><span>Protect account</span></div><div class="qa-arr">›</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom grid -->
+    <div class="bottom-grid">
+
+      <!-- Open findings -->
+      <div style="background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;">
+        <div class="card-hdr">
+          <div class="ch-t">Open Findings</div>
+          <div class="ch-a" onclick="nav('dashboard-history.html')">View all →</div>
+        </div>
+        <table class="findings-table">
+          <thead><tr><th>Finding</th><th>Severity</th><th>Domain</th></tr></thead>
+          <tbody id="findingsBody"><tr><td colspan="3" style="padding:24px;text-align:center;color:var(--muted2);">Loading...</td></tr></tbody>
+        </table>
+      </div>
+
+      <!-- Monitored domains -->
+      <div style="background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;">
+        <div class="card-hdr">
+          <div class="ch-t">Monitored Domains</div>
+          <div class="ch-a" onclick="nav('dashboard-domains.html')">Manage →</div>
+        </div>
+        <div id="monList"><div style="padding:24px;text-align:center;color:var(--muted2);">Loading...</div></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script src="/js/api.js"></script>
+<script src="/js/sidebar.js"></script>
+<script>
+'use strict';
+
+function nav(url){ window.location.href=url; }
+
+// Auth guard
+PC.requireAuth();
+
+// Theme
+const tBtn=document.getElementById('themeToggle');
+function setTheme(l){ document.body.classList.toggle('light-theme',l); localStorage.setItem('pencheckerTheme',l?'light':'dark'); tBtn.innerHTML=l?"<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"5\"></circle><line x1=\"12\" y1=\"1\" x2=\"12\" y2=\"3\"></line><line x1=\"12\" y1=\"21\" x2=\"12\" y2=\"23\"></line><line x1=\"4.22\" y1=\"4.22\" x2=\"5.64\" y2=\"5.64\"></line><line x1=\"18.36\" y1=\"18.36\" x2=\"19.78\" y2=\"19.78\"></line><line x1=\"1\" y1=\"12\" x2=\"3\" y2=\"12\"></line><line x1=\"21\" y1=\"12\" x2=\"23\" y2=\"12\"></line><line x1=\"4.22\" y1=\"19.78\" x2=\"5.64\" y2=\"18.36\"></line><line x1=\"18.36\" y1=\"5.64\" x2=\"19.78\" y2=\"4.22\"></svg>":"<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"></path></svg>"; }
+tBtn.addEventListener('click',()=>setTheme(!document.body.classList.contains('light-theme')));
+(function(){ const s=localStorage.getItem('pencheckerTheme'); const p=window.matchMedia('(prefers-color-scheme: light)').matches; setTheme(s==='light'||(!s&&p)); })();
+
+// Sidebar
+function openSidebar(){ document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('open'); }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
+
+// Notifications
+function toggleNotif(){
+  const panel=document.getElementById('notifPanel');
+  panel.classList.toggle('open');
+  if(panel.classList.contains('open')) loadNotifications();
+}
+
+async function loadNotifications(){
+  try{
+    const data = await PC.getNotifications();
+    renderNotifications(data.notifications || []);
+  }catch(e){
+    document.getElementById('notifList').innerHTML=`<div style="padding:20px;text-align:center;color:var(--muted2);font-size:0.82rem;">Could not load notifications.</div>`;
+  }
+}
+
+function renderNotifications(notifs){
+  const list=document.getElementById('notifList');
+  const unreadCount=notifs.filter(n=>!n.is_read).length;
+  // Update badge
+  const dot=document.getElementById('notifDot');
+  if(dot){ dot.style.display=unreadCount>0?'block':'none'; dot.textContent=unreadCount>9?'9+':unreadCount||''; }
+
+  if(!notifs.length){
+    list.innerHTML=`<div style="padding:24px;text-align:center;color:var(--muted2);font-size:0.82rem;"> You're all caught up!</div>`;
+    return;
+  }
+
+  function timeAgo(ts){
+    const d=Math.floor((Date.now()-new Date(ts))/1000);
+    if(d<60) return 'just now';
+    if(d<3600) return Math.floor(d/60)+'m ago';
+    if(d<86400) return Math.floor(d/3600)+'h ago';
+    return Math.floor(d/86400)+'d ago';
+  }
+
+  const icons={
+    scan_complete: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--green);margin-right:6px;vertical-align:middle;"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
+    vulnerability_found: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--orange);margin-right:6px;vertical-align:middle;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`,
+    critical_vulnerability: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--red);margin-right:6px;vertical-align:middle;"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`,
+    billing_success: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--green);margin-right:6px;vertical-align:middle;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>`,
+    billing_failed: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--red);margin-right:6px;vertical-align:middle;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>`,
+    subscription_expiring: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--yellow);margin-right:6px;vertical-align:middle;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`,
+    team_invite: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--cyan);margin-right:6px;vertical-align:middle;"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>`,
+    report_ready: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--cyan);margin-right:6px;vertical-align:middle;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`,
+    monitoring_alert: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--red);margin-right:6px;vertical-align:middle;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>`
+  };
+
+  list.innerHTML=notifs.map(n=>`
+    <div class="np-item ${n.is_read?'':'unread'}" onclick="markOneRead('${n.id}',this)">
+      <div class="np-t">${n.is_read?'':'<span class="u-dot"></span>'}${icons[n.type]||''} ${n.title}</div>
+      <div class="np-b">${n.message}</div>
+      <div class="np-tm">${timeAgo(n.created_at)}</div>
+    </div>`).join('');
+}
+
+async function markOneRead(id,el){
+  el.classList.remove('unread');
+  el.querySelector('.u-dot')?.remove();
+  try{
+    await PC.markNotificationRead(id);
+  }catch(e){}
+}
+
+async function markAllRead(){
+  document.querySelectorAll('.np-item.unread').forEach(i=>i.classList.remove('unread'));
+  document.querySelectorAll('.u-dot').forEach(d=>d.remove());
+  const dot=document.getElementById('notifDot');
+  if(dot) dot.style.display='none';
+  try{
+    await PC.markAllNotificationsRead();
+  }catch(e){}
+}
+
+document.addEventListener('click',e=>{ const np=document.getElementById('notifPanel'); if(np.classList.contains('open')&&!np.contains(e.target)&&!document.getElementById('notifBtn').contains(e.target)) np.classList.remove('open'); });
+
+// User info
+(function(){
+  const user = PC.getUser();
+  const email = user?.email || localStorage.getItem('pc_user_email') || '';
+  const fullName = user?.full_name || email.split('@')[0];
+  const firstName = fullName.split(' ')[0] || 'User';
+  const disp = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+  const h = new Date().getHours();
+  const greet = h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+  document.getElementById('wName').textContent = disp;
+  document.querySelector('.wb-title').innerHTML = `${greet}, <span class="hl">${disp}</span> `;
+  document.getElementById('sbName').textContent = user?.full_name || disp;
+  document.getElementById('sbAvatar').textContent = disp.charAt(0);
+  const plan = user?.plan || 'free';
+  document.getElementById('sbPlan').textContent = plan.charAt(0).toUpperCase() + plan.slice(1) + ' Plan';
+  document.getElementById('planBadge').textContent = plan.toUpperCase();
+})();
+
+// Load data
+async function loadData(){
+  try {
+    const [scansData, domsData, findingsData, statsData] = await Promise.all([
+      PC.listScans(20),
+      PC.listDomains(),
+      PC.getFindings(),
+      PC.getStats()
+    ]);
+    render(scansData.scans || [], domsData.domains || [], findingsData.findings || [], statsData);
+  } catch(e){
+    console.error('loadData error:', e);
+    render([],[],[], { totalScans: 0, completedScans: 0, totalFindings: 0, criticalFindings: 0, avgScore: 0, totalDomains: 0, verifiedDomains: 0 });
+  }
+}
+
+function render(scans, doms, finds, stats){
+  // Stats
+  document.getElementById('stScans').textContent = stats.totalScans || '0';
+  document.getElementById('stScansS').textContent = (stats.completedScans || 0) + ' completed';
+  document.getElementById('stDoms').textContent = stats.totalDomains || '0';
+  document.getElementById('stDomsS').textContent = (stats.verifiedDomains || 0) + ' verified';
+  document.getElementById('stFinds').textContent = stats.totalFindings || '0';
+  const crits = stats.criticalFindings || 0;
+  const findsEl = document.getElementById('stFindsS');
+  findsEl.textContent = crits > 0 ? crits + ' critical' : 'No critical';
+  findsEl.className = 'sc-sub ' + (crits > 0 ? 'trend-down' : 'trend-up');
+  
+  const avg = stats.avgScore || 0;
+  document.getElementById('stAvg').textContent = avg > 0 ? avg.toFixed(1) : '—';
+  document.getElementById('stAvgS').textContent = avg > 0 ? '↑ Improving' : 'Run first scan';
+
+  // Score ring
+  const latest = scans.filter(s => s.status === 'completed')[0];
+  const s = latest ? latest.security_score : 0;
+  if(s){
+    const c = s >= 8 ? 'var(--green)' : s >= 6 ? 'var(--yellow)' : 'var(--red)';
+    const arc = document.getElementById('scoreArc');
+    const offset = 251 - (s / 10) * 251;
+    arc.style.strokeDashoffset = offset;
+    arc.style.stroke = c;
+    document.getElementById('scoreN').textContent = s.toFixed(1);
+    document.getElementById('scoreN').style.color = c;
+    
+    const crit = latest.critical_count || 0;
+    const high = latest.high_count || 0;
+    const med = latest.medium_count || 0;
+    const low = latest.low_count || 0;
+    const tot = Math.max(crit + high + med + low, 1);
+    
+    document.getElementById('nCrit').textContent = crit;
+    document.getElementById('nHigh').textContent = high;
+    document.getElementById('nMed').textContent = med;
+    document.getElementById('nLow').textContent = low;
+    
+    document.getElementById('bdCrit').style.width = ((crit / tot) * 100) + '%';
+    document.getElementById('bdHigh').style.width = ((high / tot) * 100) + '%';
+    document.getElementById('bdMed').style.width = ((med / tot) * 100) + '%';
+    document.getElementById('bdLow').style.width = ((low / tot) * 100) + '%';
+    
+    document.getElementById('scoreSub').textContent = 'Last scan: ' + (latest.completed_at ? new Date(latest.completed_at).toLocaleDateString() : new Date(latest.created_at).toLocaleDateString());
+    document.getElementById('scoreHint').innerHTML = `<a href="dashboard-report.html?id=${latest.id}" style="color:var(--cyan)">View full report →</a>`;
+  } else {
+    document.getElementById('scoreArc').style.strokeDashoffset = 251;
+    document.getElementById('scoreN').textContent = '—';
+    document.getElementById('scoreN').style.color = 'var(--muted)';
+    document.getElementById('nCrit').textContent = '0';
+    document.getElementById('nHigh').textContent = '0';
+    document.getElementById('nMed').textContent = '0';
+    document.getElementById('nLow').textContent = '0';
+    document.getElementById('bdCrit').style.width = '0%';
+    document.getElementById('bdHigh').style.width = '0%';
+    document.getElementById('bdMed').style.width = '0%';
+    document.getElementById('bdLow').style.width = '0%';
+    document.getElementById('scoreSub').textContent = 'No scans completed';
+    document.getElementById('scoreHint').innerHTML = `<a href="dashboard-scan.html" style="color:var(--cyan)">Run your first scan →</a>`;
+  }
+
+  // Recent scans
+  const rl = document.getElementById('recentList');
+  if(scans.length){
+    rl.innerHTML = scans.slice(0, 8).map(sc => {
+      const scoreVal = sc.security_score;
+      const sc_cls = scoreVal >= 8 ? 'score-g' : scoreVal >= 6 ? 'score-y' : scoreVal > 0 ? 'score-r' : 'score-muted';
+      const dot_cls = sc.status === 'completed' ? 'done' : sc.status === 'running' ? 'run' : 'fail';
+      return `<div class="scan-row" onclick="nav('dashboard-report.html?id=${sc.id}')">
+        <div class="sr-dot ${dot_cls}"></div>
+        <div>
+          <div class="sr-dom">${sc.target_url || '—'}</div>
+          <div class="sr-meta">${new Date(sc.created_at).toLocaleDateString()} · ${(sc.scan_type || 'Standard').toUpperCase()}</div>
+        </div>
+        <div class="sr-score ${sc_cls}">${scoreVal !== null && scoreVal !== undefined ? scoreVal.toFixed(1) : '—'}</div>
+        <div class="sr-arr">›</div>
+      </div>`;
+    }).join('');
+  } else {
+    rl.innerHTML = `<div class="empty-state"><div class="empty-icon"></div>No scans yet.<br/><a href="dashboard-scan.html" style="color:var(--cyan)">Run your first scan →</a></div>`;
+  }
+
+  // Findings
+  const fb = document.getElementById('findingsBody');
+  if(finds.length){
+    fb.innerHTML = finds.slice(0, 6).map(f => `<tr>
+      <td><div class="finding-name" onclick="nav('dashboard-report.html?id=${f.scan_id}')">${f.title || 'Unknown'}</div></td>
+      <td><span class="sev sev-${f.severity || 'info'}">${(f.severity || 'info').toUpperCase()}</span></td>
+      <td style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted2)">${(f.affected_url || f.target_domain || '').substring(0, 30)}</td>
+    </tr>`).join('');
+  } else {
+    fb.innerHTML = `<tr><td colspan="3" style="padding:24px;text-align:center;color:var(--muted2);font-size:0.82rem;"> No open findings! <a href="dashboard-scan.html" style="color:var(--cyan)">Run a scan</a></td></tr>`;
+  }
+
+  // Monitored domains
+  const ml = document.getElementById('monList');
+  if(doms.length){
+    ml.innerHTML = doms.slice(0, 5).map(d => `<div class="mon-row">
+      <div class="mon-dot ${d.monitoring_enabled ? 'mon-up' : 'mon-dn'}"></div>
+      <div>
+        <div class="mon-dom">${d.domain}</div>
+        <div class="mon-meta">${d.is_verified ? 'Verified' : 'Unverified'} · ${d.monitoring_enabled ? 'Monitoring ' + d.monitoring_frequency : 'Monitoring disabled'}</div>
+      </div>
+      <div class="mon-score"></div>
+      <div class="tog ${d.monitoring_enabled ? 'on' : ''}" onclick="toggleMon('${d.id}',this)"><div class="tog-k"></div></div>
+    </div>`).join('');
+  } else {
+    ml.innerHTML = `<div style="padding:24px;text-align:center;color:var(--muted2);font-size:0.82rem;"><a href="dashboard-domains.html" style="color:var(--cyan)">Add your first domain →</a></div>`;
+  }
+}
+
+async function toggleMon(id, el){
+  const on = el.classList.contains('on');
+  el.classList.toggle('on');
+  try{
+    await PC.updateDomain(id, { monitoring_enabled: !on });
+  } catch(e) {
+    el.classList.toggle('on');
+  }
+}
+
+loadData();
+loadNotifications();
+</script>
+</body>
+</html>

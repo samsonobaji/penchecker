@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Create Account — PenChecker</title>
+<meta name="description" content="Create your free PenChecker account. Start scanning your website for real vulnerabilities in minutes." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --black:   #060608;
+  --black2:  #0d0d12;
+  --black3:  #13131a;
+  --surface: #1a1a24;
+  --surface2:#22222f;
+  --border:  rgba(255,255,255,0.07);
+  --border2: rgba(0,229,255,0.2);
+  --cyan:    #00e5ff;
+  --cyan2:   #00b4cc;
+  --green:   #00ff87;
+  --red:     #ff3b5c;
+  --orange:  #ff8c42;
+  --yellow:  #ffd60a;
+  --purple:  #a855f7;
+  --white:   #f0f0f8;
+  --muted:   #6b6b85;
+  --muted2:  #9090a8;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body:    'Plus Jakarta Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --glow-cyan:  0 0 40px rgba(0,229,255,0.25);
+  --glow-green: 0 0 40px rgba(0,255,135,0.25);
+  --radius:  12px;
+  --radius2: 20px;
+}
+body { transition: background 0.25s, color 0.25s; }
+.light-theme {
+  --black:   #f8f9fc;
+  --black2:  #e8eaf2;
+  --black3:  #ffffff;
+  --surface: #ffffff;
+  --surface2:#f2f4f9;
+  --border:  rgba(13,23,44,0.12);
+  --border2: rgba(0,149,212,0.25);
+  --cyan:    #007fbc;
+  --cyan2:   #005f91;
+  --green:   #0f9d58;
+  --red:     #d93025;
+  --orange:  #e37400;
+  --yellow:  #f1c232;
+  --purple:  #6a1b9a;
+  --white:   #0b0d13;
+  --muted:   #4b5d79;
+  --muted2:  #6b7790;
+}
+.light-theme #navbar { background: rgba(248,249,252,0.96); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+.light-theme .signup-panel { box-shadow: 0 24px 80px rgba(0,0,0,0.08); }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; border: none; outline: none; }
+
+/* Animated grid background */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.025) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  pointer-events: none; z-index: 0;
+}
+/* Glow orb */
+body::before {
+  content: '';
+  position: fixed; top: -150px; left: 50%; transform: translateX(-50%);
+  width: 800px; height: 600px;
+  background: radial-gradient(ellipse, rgba(0,229,255,0.06) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+.light-theme body::before { background: radial-gradient(ellipse, rgba(0,127,188,0.05) 0%, transparent 70%); }
+.light-theme body::after { opacity: 0.5; }
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+#navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 0 24px;
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; }
+.nav-logo-icon {
+  width: 34px; height: 34px; background: var(--cyan); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-weight: 500; font-size: 0.82rem; color: var(--black);
+}
+.nav-logo-text { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em; }
+.nav-logo-text span { color: var(--cyan); }
+.nav-right { display: flex; align-items: center; gap: 12px; font-size: 0.88rem; }
+.nav-right a { color: var(--muted2); transition: color 0.2s; }
+.nav-right a:hover { color: var(--white); }
+.nav-right a.accent { color: var(--cyan); font-weight: 600; }
+
+/* ============================================================
+   MAIN LAYOUT
+   ============================================================ */
+.signup-layout {
+  display: grid;
+  grid-template-columns: 1fr 520px;
+  min-height: 100vh;
+  position: relative; z-index: 1;
+}
+
+/* ============================================================
+   LEFT PANEL — brand/marketing
+   ============================================================ */
+.signup-brand {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 100px 56px 56px;
+  position: relative;
+}
+.brand-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 60px; }
+.brand-logo-icon {
+  width: 40px; height: 40px; background: var(--cyan); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-weight: 600; font-size: 0.9rem; color: var(--black);
+}
+.brand-logo-text { font-size: 1.3rem; font-weight: 700; }
+.brand-logo-text span { color: var(--cyan); }
+.brand-headline {
+  font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 18px;
+}
+.brand-headline .accent {
+  background: linear-gradient(135deg, var(--cyan), var(--green));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.brand-desc { font-size: 1rem; color: var(--muted2); line-height: 1.75; margin-bottom: 40px; max-width: 420px; }
+.brand-features { display: flex; flex-direction: column; gap: 14px; margin-bottom: 48px; }
+.brand-feat { display: flex; align-items: center; gap: 12px; }
+.brand-feat-icon {
+  width: 34px; height: 34px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0;
+}
+.bfi-cyan   { background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.2); }
+.bfi-green  { background: rgba(0,255,135,0.1); border: 1px solid rgba(0,255,135,0.2); }
+.bfi-orange { background: rgba(255,140,66,0.1); border: 1px solid rgba(255,140,66,0.2); }
+.bfi-purple { background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.2); }
+.brand-feat-text { font-size: 0.88rem; color: var(--muted2); line-height: 1.4; }
+.brand-feat-text strong { color: var(--white); display: block; font-size: 0.9rem; }
+.brand-testimonial {
+  background: var(--black3); border: 1px solid var(--border);
+  border-radius: var(--radius2); padding: 20px 22px; max-width: 420px;
+}
+.bt-quote { font-size: 0.9rem; color: var(--muted2); line-height: 1.7; margin-bottom: 14px; font-style: italic; }
+.bt-quote strong { color: var(--white); font-style: normal; }
+.bt-author { display: flex; align-items: center; gap: 10px; }
+.bt-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.78rem; font-weight: 700; flex-shrink: 0;
+}
+.bt-name { font-size: 0.82rem; font-weight: 600; }
+.bt-role { font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); }
+
+/* Plan badge on brand panel */
+.plan-badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+.plan-badge {
+  padding: 5px 12px; border-radius: 100px; font-size: 0.75rem; font-weight: 600;
+  border: 1px solid var(--border); background: var(--surface); color: var(--muted2);
+  font-family: var(--font-mono); transition: all 0.2s;
+}
+.plan-badge.active { background: var(--cyan); color: var(--black); border-color: var(--cyan); }
+
+/* ============================================================
+   RIGHT PANEL — signup form
+   ============================================================ */
+.signup-panel {
+  background: var(--black2); border-left: 1px solid var(--border);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 80px 48px;
+  position: relative; z-index: 2;
+  min-height: 100vh;
+}
+.sp-header { margin-bottom: 28px; }
+.sp-eyebrow {
+  font-family: var(--font-mono); font-size: 0.7rem; color: var(--cyan);
+  text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px;
+}
+.sp-title { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; }
+.sp-subtitle { font-size: 0.88rem; color: var(--muted2); }
+
+/* Plan selector tabs */
+.plan-tabs { display: flex; gap: 6px; margin-bottom: 24px; background: var(--surface); border-radius: var(--radius); padding: 4px; }
+.plan-tab {
+  flex: 1; padding: 9px 8px; border-radius: 9px; font-size: 0.78rem; font-weight: 600;
+  background: none; color: var(--muted2); cursor: pointer; transition: all 0.2s; text-align: center;
+}
+.plan-tab:hover { color: var(--white); }
+.plan-tab.active { background: var(--black3); color: var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+.plan-tab-badge { display: block; font-family: var(--font-mono); font-size: 0.6rem; color: var(--cyan); margin-top:2px; }
+
+/* Social login */
+.social-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.social-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 11px 16px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; color: var(--white);
+}
+.social-btn:hover { border-color: var(--border2); background: var(--surface2); }
+.social-btn svg { flex-shrink: 0; }
+.divider { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.divider-line { flex: 1; height: 1px; background: var(--border); }
+.divider-text { font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+
+/* Form fields */
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.form-group:last-of-type { margin-bottom: 0; }
+.form-label { font-size: 0.82rem; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+.form-label .req { color: var(--red); }
+.form-input {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 11px 13px;
+  font-family: var(--font-body); font-size: 0.88rem; color: var(--white);
+  outline: none; transition: border-color 0.2s, box-shadow 0.2s; width: 100%;
+}
+.form-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0,229,255,0.08); }
+.form-input::placeholder { color: var(--muted); }
+.form-input.error { border-color: var(--red); }
+.form-input.success { border-color: var(--green); }
+.field-error { font-family: var(--font-mono); font-size: 0.7rem; color: var(--red); display: none; margin-top: 2px; }
+.field-error.show { display: block; }
+.field-hint { font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); margin-top: 3px; }
+
+/* Password input wrapper */
+.pw-wrap { position: relative; }
+.pw-wrap .form-input { padding-right: 44px; }
+.pw-toggle {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; color: var(--muted); cursor: pointer;
+  font-size: 0.9rem; padding: 4px; transition: color 0.2s;
+}
+.pw-toggle:hover { color: var(--muted2); }
+
+/* Password strength */
+.pw-strength { margin-top: 6px; }
+.pw-strength-bar { display: flex; gap: 3px; margin-bottom: 4px; }
+.pw-seg { flex: 1; height: 3px; background: var(--surface2); border-radius: 2px; transition: background 0.3s; }
+.pw-seg.weak   { background: var(--red); }
+.pw-seg.fair   { background: var(--orange); }
+.pw-seg.good   { background: var(--yellow); }
+.pw-seg.strong { background: var(--green); }
+.pw-strength-label { font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); }
+
+/* Company email hint */
+.company-email-hint {
+  display: none; padding: 10px 13px; background: rgba(0,229,255,0.06);
+  border: 1px solid rgba(0,229,255,0.15); border-radius: var(--radius);
+  font-family: var(--font-mono); font-size: 0.7rem; color: var(--cyan);
+  margin-top: 6px; line-height: 1.5;
+}
+.company-email-hint.show { display: block; }
+
+/* Consent checkbox */
+.consent-row { display: flex; align-items: flex-start; gap: 10px; margin: 16px 0; }
+.consent-check {
+  width: 16px; height: 16px; border: 1.5px solid var(--border);
+  border-radius: 4px; cursor: pointer; flex-shrink: 0; margin-top: 2px;
+  appearance: none; -webkit-appearance: none; background: var(--surface);
+  transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.consent-check:checked { background: var(--cyan); border-color: var(--cyan); }
+.consent-check:checked::after { content: ''; position: absolute; color: var(--black); font-size: 0.65rem; font-weight: 700; }
+.consent-check.error { border-color: var(--red); }
+.consent-text { font-size: 0.78rem; color: var(--muted2); line-height: 1.55; }
+.consent-text a { color: var(--cyan); }
+.consent-text strong { color: var(--white); }
+
+/* Submit button */
+.submit-btn {
+  width: 100%; padding: 14px; background: var(--cyan); color: var(--black);
+  border: none; border-radius: var(--radius); font-family: var(--font-display);
+  font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.25s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-top: 6px;
+}
+.submit-btn:hover { box-shadow: var(--glow-cyan); transform: translateY(-1px); }
+.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+.submit-btn .spinner {
+  display: none; width: 16px; height: 16px; border: 2px solid rgba(0,0,0,0.25);
+  border-top-color: var(--black); border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Bottom links */
+.form-footer { text-align: center; margin-top: 18px; font-size: 0.82rem; color: var(--muted2); }
+.form-footer a { color: var(--cyan); font-weight: 600; }
+
+/* ============================================================
+   STEP 2 — Email Verification message
+   ============================================================ */
+.verify-step {
+  display: none; text-align: center; padding: 20px 0;
+}
+.verify-icon { font-size: 3.5rem; margin-bottom: 16px; }
+.verify-title { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 10px; }
+.verify-msg { font-size: 0.9rem; color: var(--muted2); line-height: 1.7; margin-bottom: 24px; }
+.verify-email-display {
+  display: inline-block; font-family: var(--font-mono); font-size: 0.82rem;
+  color: var(--cyan); background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.2);
+  padding: 8px 16px; border-radius: 8px; margin-bottom: 24px;
+}
+.verify-actions { display: flex; flex-direction: column; gap: 10px; }
+.verify-btn {
+  padding: 12px 20px; border-radius: var(--radius); font-weight: 600; font-size: 0.9rem;
+  cursor: pointer; transition: all 0.2s; font-family: var(--font-display);
+}
+.verify-btn-primary { background: var(--cyan); color: var(--black); border: none; }
+.verify-btn-primary:hover { box-shadow: var(--glow-cyan); }
+.verify-btn-ghost { background: none; color: var(--muted2); border: 1px solid var(--border); }
+.verify-btn-ghost:hover { border-color: var(--border2); color: var(--white); }
+.verify-timer { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); margin-top: 8px; }
+
+/* ============================================================
+   PLAN-SPECIFIC EXTRAS
+   ============================================================ */
+.team-domain-note {
+  display: none; padding: 10px 13px;
+  background: rgba(0,229,255,0.04); border: 1px solid rgba(0,229,255,0.15);
+  border-radius: var(--radius); font-size: 0.78rem; color: var(--muted2);
+  margin-bottom: 14px; line-height: 1.55;
+}
+.team-domain-note strong { color: var(--cyan); }
+.team-domain-note.show { display: block; }
+.enterprise-note {
+  display: none; padding: 12px 14px;
+  background: rgba(168,85,247,0.06); border: 1px solid rgba(168,85,247,0.2);
+  border-radius: var(--radius); font-size: 0.78rem; color: var(--muted2);
+  margin-bottom: 14px; line-height: 1.55;
+}
+.enterprise-note strong { color: var(--purple); }
+.enterprise-note.show { display: block; }
+
+/* Trust indicators */
+.trust-strip {
+  display: flex; gap: 16px; margin-top: 20px; flex-wrap: wrap;
+  padding-top: 16px; border-top: 1px solid var(--border);
+}
+.trust-item { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); }
+.trust-dot { width: 5px; height: 5px; background: var(--green); border-radius: 50%; flex-shrink: 0; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .signup-layout { grid-template-columns: 1fr; }
+  .signup-brand { display: none; }
+  .signup-panel { border-left: none; padding: 100px 28px 48px; }
+  .sp-title { font-size: 1.4rem; }
+}
+@media (max-width: 480px) {
+  .signup-panel { padding: 90px 18px 40px; }
+  .form-row { grid-template-columns: 1fr; }
+  .social-row { grid-template-columns: 1fr; }
+  .plan-tabs { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">PC</div>
+      <div class="nav-logo-text">Pen<span>Checker</span></div>
+    </a>
+    <div class="nav-right">
+      <button id="themeToggle" style="background:none;border:1px solid var(--border);color:var(--muted2);padding:7px 14px;border-radius:8px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px;" aria-label="Toggle theme"></button>
+      <span>Already have an account?</span>
+      <a href="login.html" class="accent">Sign in →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="signup-layout">
+
+  <!-- ============================================================
+       LEFT BRAND PANEL
+       ============================================================ -->
+  <div class="signup-brand">
+    <div class="brand-logo">
+      <div class="brand-logo-icon">PC</div>
+      <div class="brand-logo-text">Pen<span>Checker</span></div>
+    </div>
+
+    <div class="plan-badge-row" id="planBadgeRow">
+      <span class="plan-badge active" data-plan="free">Free</span>
+      <span class="plan-badge" data-plan="individual">Individual</span>
+      <span class="plan-badge" data-plan="team">Team</span>
+      <span class="plan-badge" data-plan="enterprise">Enterprise</span>
+    </div>
+
+    <h2 class="brand-headline">
+      Find real<br/>vulnerabilities.<br/><span class="accent">Not guesses.</span>
+    </h2>
+    <p class="brand-desc" id="brandDesc">
+      Join thousands of developers who use PenChecker to find, understand,
+      and fix real security vulnerabilities — with AI-powered guidance and
+      zero template results.
+    </p>
+
+    <div class="brand-features">
+      <div class="brand-feat">
+        <div class="brand-feat-icon bfi-cyan">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+            <rect x="9" y="9" width="6" height="6"></rect>
+            <line x1="9" y1="1" x2="9" y2="4"></line>
+            <line x1="15" y1="1" x2="15" y2="4"></line>
+            <line x1="9" y1="20" x2="9" y2="23"></line>
+            <line x1="15" y1="20" x2="15" y2="23"></line>
+            <line x1="20" y1="9" x2="23" y2="9"></line>
+            <line x1="20" y1="15" x2="23" y2="15"></line>
+            <line x1="1" y1="9" x2="4" y2="9"></line>
+            <line x1="1" y1="15" x2="4" y2="15"></line>
+          </svg>
+        </div>
+        <div class="brand-feat-text">
+          <strong>Technology-aware scanning</strong>
+          Detects your stack first — no SQL injection on Node.js apps
+        </div>
+      </div>
+      <div class="brand-feat">
+        <div class="brand-feat-icon bfi-green">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <polyline points="9 11 11 13 15 9"></polyline>
+          </svg>
+        </div>
+        <div class="brand-feat-text">
+          <strong>Every finding verified</strong>
+          Double-checked with evidence before reaching your report
+        </div>
+      </div>
+      <div class="brand-feat">
+        <div class="brand-feat-icon bfi-orange">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+            <line x1="14" y1="4" x2="10" y2="20"></line>
+          </svg>
+        </div>
+        <div class="brand-feat-text">
+          <strong>AI writes the fix code</strong>
+          Ask the AI assistant to generate the exact fix in your stack
+        </div>
+      </div>
+      <div class="brand-feat">
+        <div class="brand-feat-icon bfi-purple">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+        </div>
+        <div class="brand-feat-text">
+          <strong>Priced for your market</strong>
+          Local currency pricing for 190+ countries worldwide
+        </div>
+      </div>
+    </div>
+
+    <div class="brand-testimonial">
+      <p class="bt-quote">
+        "Every other scanner reported SQL injection on my Node.js app.
+        <strong>PenChecker actually checked my stack first</strong> and gave me
+        4 real findings I could actually fix. First scan, 8 minutes."
+      </p>
+      <div class="bt-author">
+        <div class="bt-avatar" style="background:rgba(0,229,255,0.15);color:var(--cyan);">AO</div>
+        <div>
+          <div class="bt-name">Adeola Okonkwo</div>
+          <div class="bt-role">Fullstack Developer · Austin, TX</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       RIGHT SIGNUP PANEL
+       ============================================================ -->
+  <div class="signup-panel">
+    <!-- Form step -->
+    <div id="signupForm">
+      <div class="sp-header">
+        <div class="sp-eyebrow" id="spEyebrow">Create your free account</div>
+        <div class="sp-title" id="spTitle">Get started — it's free</div>
+        <div class="sp-subtitle">No credit card required. Start scanning in 2 minutes.</div>
+      </div>
+
+      <!-- Plan tabs -->
+      <div class="plan-tabs" id="planTabs">
+        <button class="plan-tab active" data-plan="free" onclick="selectPlan('free',this)">
+          Free
+          <span class="plan-tab-badge">$0/mo</span>
+        </button>
+        <button class="plan-tab" data-plan="individual" onclick="selectPlan('individual',this)">
+          Individual
+          <span class="plan-tab-badge">$9.99/mo</span>
+        </button>
+        <button class="plan-tab" data-plan="team" onclick="selectPlan('team',this)">
+          Team
+          <span class="plan-tab-badge">$29.99/mo</span>
+        </button>
+        <button class="plan-tab" data-plan="enterprise" onclick="selectPlan('enterprise',this)">
+          Enterprise
+          <span class="plan-tab-badge">$99.99/mo</span>
+        </button>
+      </div>
+
+      <!-- Plan-specific notes -->
+      <div class="team-domain-note" id="teamNote">
+        <strong>Team plan:</strong> You must register with your <strong>company email domain</strong> (e.g. yourcompany.com). Team members you invite can use any email address.
+      </div>
+      <div class="enterprise-note" id="enterpriseNote">
+        <strong>Enterprise plan:</strong> Register with your <strong>company email domain</strong>. You'll be the account owner and can add up to 3 sub-admins and unlimited members after setup.
+      </div>
+
+      <!-- Social auth -->
+      <div class="social-row">
+        <button class="social-btn" onclick="socialSignup('google')">
+          <svg width="16" height="16" viewBox="0 0 16 16"><path d="M15.68 8.18c0-.57-.05-1.11-.14-1.64H8v3.1h4.3a3.68 3.68 0 01-1.6 2.42v2h2.58c1.51-1.39 2.4-3.44 2.4-5.88z" fill="#4285F4"/><path d="M8 16c2.16 0 3.97-.72 5.3-1.94l-2.59-2a4.8 4.8 0 01-7.18-2.52H.89v2.07A8 8 0 008 16z" fill="#34A853"/><path d="M3.53 9.54A4.83 4.83 0 013.28 8c0-.54.09-1.06.25-1.54V4.39H.89A8.01 8.01 0 000 8c0 1.29.31 2.51.89 3.61l2.64-2.07z" fill="#FBBC05"/><path d="M8 3.18c1.22 0 2.31.42 3.17 1.24l2.37-2.37A8 8 0 00.89 4.39l2.64 2.07A4.77 4.77 0 018 3.18z" fill="#EA4335"/></svg>
+          Continue with Google
+        </button>
+        <button class="social-btn" onclick="socialSignup('github')">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          Continue with GitHub
+        </button>
+      </div>
+
+      <div class="divider">
+        <div class="divider-line"></div>
+        <span class="divider-text">or sign up with email</span>
+        <div class="divider-line"></div>
+      </div>
+
+      <!-- Form -->
+      <form id="registerForm" novalidate>
+        <input type="hidden" id="selectedPlan" value="free" />
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="firstName">First name <span class="req">*</span></label>
+            <input type="text" id="firstName" class="form-input" placeholder="John" autocomplete="given-name" />
+            <span class="field-error" id="firstNameErr">Required</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="lastName">Last name <span class="req">*</span></label>
+            <input type="text" id="lastName" class="form-input" placeholder="Smith" autocomplete="family-name" />
+            <span class="field-error" id="lastNameErr">Required</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email address <span class="req">*</span></label>
+          <input type="email" id="email" class="form-input" placeholder="john@yourcompany.com" autocomplete="email" />
+          <span class="field-error" id="emailErr">Enter a valid email address</span>
+          <div class="company-email-hint" id="companyEmailHint">
+             Team & Enterprise plans require a <strong>company domain email</strong> (e.g. john@acmecorp.com). Free email providers like Gmail, Yahoo, or Hotmail are not accepted for these plans.
+          </div>
+        </div>
+
+        <div class="form-group" id="companyGroup" style="display:none;">
+          <label class="form-label" for="company">Company name <span class="req">*</span></label>
+          <input type="text" id="company" class="form-input" placeholder="Acme Corporation" autocomplete="organization" />
+          <span class="field-error" id="companyErr">Required for Team/Enterprise plans</span>
+          <div class="field-hint">This will be used as your team/organization name</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password <span class="req">*</span></label>
+          <div class="pw-wrap">
+            <input type="password" id="password" class="form-input" placeholder="Min. 8 characters" autocomplete="new-password" />
+            <button type="button" class="pw-toggle" onclick="togglePassword('password','pwToggle1')" id="pwToggle1"></button>
+          </div>
+          <div class="pw-strength" id="pwStrength" style="display:none;">
+            <div class="pw-strength-bar">
+              <div class="pw-seg" id="pwSeg1"></div>
+              <div class="pw-seg" id="pwSeg2"></div>
+              <div class="pw-seg" id="pwSeg3"></div>
+              <div class="pw-seg" id="pwSeg4"></div>
+            </div>
+            <span class="pw-strength-label" id="pwStrengthLabel">Enter a password</span>
+          </div>
+          <span class="field-error" id="passwordErr">At least 8 characters required</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirmPassword">Confirm password <span class="req">*</span></label>
+          <div class="pw-wrap">
+            <input type="password" id="confirmPassword" class="form-input" placeholder="Repeat your password" autocomplete="new-password" />
+            <button type="button" class="pw-toggle" onclick="togglePassword('confirmPassword','pwToggle2')" id="pwToggle2"></button>
+          </div>
+          <span class="field-error" id="confirmPasswordErr">Passwords do not match</span>
+        </div>
+
+        <!-- Scan consent (required) -->
+        <label class="consent-row" for="scanConsent">
+          <input type="checkbox" id="scanConsent" class="consent-check" />
+          <span class="consent-text">
+            <strong>I confirm I will only scan domains I own or have explicit written permission to test.</strong>
+            I understand that unauthorized scanning may be illegal and violates the
+            <a href="legal/acceptable-use.html" target="_blank">Acceptable Use Policy</a>.
+          </span>
+        </label>
+        <span class="field-error" id="scanConsentErr" style="margin-top:-8px; margin-bottom:10px;">You must confirm this to continue</span>
+
+        <!-- Terms consent -->
+        <label class="consent-row" for="termsConsent">
+          <input type="checkbox" id="termsConsent" class="consent-check" />
+          <span class="consent-text">
+            I agree to PenChecker's <a href="legal/terms.html" target="_blank">Terms of Service</a>
+            and <a href="legal/privacy.html" target="_blank">Privacy Policy</a>.
+          </span>
+        </label>
+        <span class="field-error" id="termsConsentErr" style="margin-top:-8px; margin-bottom:10px;">You must agree to continue</span>
+
+        <!-- Marketing (optional) -->
+        <label class="consent-row" for="marketingConsent" style="margin-bottom:4px;">
+          <input type="checkbox" id="marketingConsent" class="consent-check" checked />
+          <span class="consent-text">Send me security tips and product updates (optional)</span>
+        </label>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <span id="submitText">Create Free Account →</span>
+          <div class="spinner" id="submitSpinner"></div>
+        </button>
+
+        <div class="trust-strip">
+          <div class="trust-item"><div class="trust-dot"></div>No credit card required</div>
+          <div class="trust-item"><div class="trust-dot"></div>Free forever plan</div>
+          <div class="trust-item"><div class="trust-dot"></div>Cancel anytime</div>
+          <div class="trust-item"><div class="trust-dot"></div>Secure signup</div>
+        </div>
+      </form>
+
+      <div class="form-footer">
+        Already have an account? <a href="login.html">Sign in</a>
+      </div>
+    </div>
+
+    <!-- Verify step -->
+    <div class="verify-step" id="verifyStep">
+      <div class="verify-icon"></div>
+      <div class="verify-title">Check your inbox</div>
+      <p class="verify-msg">
+        We've sent a confirmation email to verify your address.
+        Click the link in the email to activate your account and start scanning.
+      </p>
+      <div class="verify-email-display" id="verifyEmailDisplay">—</div>
+      <div class="verify-actions">
+        <button class="verify-btn verify-btn-primary" onclick="resendEmail()">Resend verification email</button>
+        <button class="verify-btn verify-btn-ghost" onclick="changeEmail()">Use a different email</button>
+      </div>
+      <div class="verify-timer" id="verifyTimer">You can resend in 60s</div>
+      <div class="form-footer" style="margin-top:24px;">
+        Already verified? <a href="login.html">Sign in to your account →</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="/js/api.js"></script>
+<script>
+'use strict';
+
+// ============================================================
+// THEME SWITCHER
+// ============================================================
+const themeToggle = document.getElementById('themeToggle');
+const sunIconSVG = `<svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+const moonIconSVG = `<svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+function updateThemeBtn() {
+  if (!themeToggle) return;
+  const isLight = document.body.classList.contains('light-theme');
+  themeToggle.innerHTML = (isLight ? sunIconSVG : moonIconSVG) + '&nbsp;' + (isLight ? 'Light' : 'Dark');
+}
+function setTheme(light) {
+  document.body.classList.toggle('light-theme', light);
+  localStorage.setItem('pencheckerTheme', light ? 'light' : 'dark');
+  updateThemeBtn();
+}
+if (themeToggle) themeToggle.addEventListener('click', () => setTheme(!document.body.classList.contains('light-theme')));
+(function restoreTheme() {
+  const s = localStorage.getItem('pencheckerTheme');
+  const p = window.matchMedia('(prefers-color-scheme: light)').matches;
+  setTheme(s === 'light' || (!s && p));
+})();
+
+// ============================================================
+// PRE-SELECT PLAN FROM URL PARAM
+// ============================================================
+const urlPlan = new URLSearchParams(window.location.search).get('plan') || 'free';
+window.addEventListener('DOMContentLoaded', () => {
+  const tab = document.querySelector(`.plan-tab[data-plan="${urlPlan}"]`);
+  if (tab) selectPlan(urlPlan, tab);
+});
+
+// ============================================================
+// PLAN SELECTION
+// ============================================================
+const FREE_EMAIL_PROVIDERS = ['gmail.com','yahoo.com','hotmail.com','outlook.com','icloud.com','aol.com','proton.me','protonmail.com','live.com','msn.com'];
+
+function selectPlan(plan, btn) {
+  // Update tabs
+  document.querySelectorAll('.plan-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.getElementById('selectedPlan').value = plan;
+
+  // Update plan badges on left panel
+  document.querySelectorAll('.plan-badge').forEach(b => b.classList.toggle('active', b.dataset.plan === plan));
+
+  // Show/hide notes
+  document.getElementById('teamNote').classList.toggle('show', plan === 'team');
+  document.getElementById('enterpriseNote').classList.toggle('show', plan === 'enterprise');
+  document.getElementById('companyGroup').style.display = (plan === 'team' || plan === 'enterprise') ? '' : 'none';
+
+  // Company email hint
+  const needsCompanyEmail = plan === 'team' || plan === 'enterprise';
+  document.getElementById('companyEmailHint').classList.toggle('show', needsCompanyEmail);
+
+  // Update submit button text
+  const texts = { free: 'Create Free Account →', individual: 'Start Individual Plan →', team: 'Create Team Account →', enterprise: 'Create Enterprise Account →' };
+  document.getElementById('submitText').textContent = texts[plan] || 'Create Account →';
+
+  // Update header
+  const eyebrows = { free: 'Create your free account', individual: 'Start your Individual plan', team: 'Set up your Team', enterprise: 'Set up your Enterprise account' };
+  document.getElementById('spEyebrow').textContent = eyebrows[plan];
+  const titles = { free: 'Get started — it\'s free', individual: 'Unlimited scanning awaits', team: 'Secure your whole team', enterprise: 'Enterprise-grade security' };
+  document.getElementById('spTitle').textContent = titles[plan];
+}
+
+// ============================================================
+// SOCIAL SIGNUP — OAuth popup flow
+// ============================================================
+function socialSignup(provider) {
+  const width = 500;
+  const height = 620;
+  const left = (window.screen.width - width) / 2;
+  const top = (window.screen.height - height) / 2;
+  const popup = window.open(
+    `/social-login.html?provider=${provider}`,
+    `PC_Social_${provider}`,
+    `width=${width},height=${height},left=${left},top=${top},status=no,resizable=yes,scrollbars=yes`
+  );
+  
+  const pollTimer = setInterval(() => {
+    if (!popup || popup.closed) {
+      clearInterval(pollTimer);
+      if (PC.isLoggedIn()) {
+        const user = PC.getUser();
+        window.location.href = user?.onboarding_completed ? '/dashboard.html' : '/onboarding.html';
+      }
+    }
+  }, 500);
+
+  window.addEventListener('message', function(event) {
+    if (event.origin !== window.location.origin) return;
+    if (event.data && event.data.type === 'social-login-success') {
+      clearInterval(pollTimer);
+      PC.setSession(event.data.token, event.data.user);
+      window.location.href = event.data.user?.onboarding_completed ? '/dashboard.html' : '/onboarding.html';
+    }
+  });
+}
+
+// ============================================================
+// PASSWORD TOGGLE
+// ============================================================
+function togglePassword(inputId, btnId) {
+  const input = document.getElementById(inputId);
+  const btn = document.getElementById(btnId);
+  if (!input) return;
+  const isHidden = input.type === 'password';
+  input.type = isHidden ? 'text' : 'password';
+  if (btn) btn.textContent = isHidden ? '' : '';
+}
+
+// ============================================================
+// PASSWORD STRENGTH
+// ============================================================
+const pwInput = document.getElementById('password');
+pwInput.addEventListener('input', () => {
+  const val = pwInput.value;
+  const strength = document.getElementById('pwStrength');
+  const label = document.getElementById('pwStrengthLabel');
+  if (!val) { strength.style.display = 'none'; return; }
+  strength.style.display = 'block';
+
+  let score = 0;
+  if (val.length >= 8)  score++;
+  if (val.length >= 12) score++;
+  if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+
+  const levels = ['','weak','fair','good','strong'];
+  const labelTexts = ['','Weak','Fair','Good','Strong'];
+  const colors = { weak: 'var(--red)', fair: 'var(--orange)', good: 'var(--yellow)', strong: 'var(--green)' };
+  const level = score <= 1 ? 1 : score <= 2 ? 2 : score <= 3 ? 3 : 4;
+
+  for (let i = 1; i <= 4; i++) {
+    const seg = document.getElementById('pwSeg' + i);
+    seg.className = 'pw-seg ' + (i <= level ? levels[level] : '');
+  }
+  label.textContent = labelTexts[level];
+  label.style.color = colors[levels[level]] || 'var(--muted)';
+});
+
+// ============================================================
+// VALIDATION
+// ============================================================
+function showErr(fieldId, errId, show) {
+  const f = document.getElementById(fieldId);
+  const e = document.getElementById(errId);
+  if (f) f.classList.toggle('error', show);
+  if (e) e.classList.toggle('show', show);
+  return show;
+}
+
+function isCompanyEmail(email) {
+  const domain = email.split('@')[1] || '';
+  return !FREE_EMAIL_PROVIDERS.includes(domain.toLowerCase());
+}
+
+function validateForm() {
+  let valid = true;
+  const plan = document.getElementById('selectedPlan').value;
+  const fn = document.getElementById('firstName').value.trim();
+  const ln = document.getElementById('lastName').value.trim();
+  const em = document.getElementById('email').value.trim();
+  const pw = document.getElementById('password').value;
+  const cpw = document.getElementById('confirmPassword').value;
+  const scan = document.getElementById('scanConsent').checked;
+  const terms = document.getElementById('termsConsent').checked;
+  const company = document.getElementById('company')?.value.trim();
+
+  if (showErr('firstName','firstNameErr', !fn)) valid = false;
+  if (showErr('lastName','lastNameErr', !ln)) valid = false;
+
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
+  if (!emailOk) { showErr('email','emailErr', true); valid = false; }
+  else if ((plan === 'team' || plan === 'enterprise') && !isCompanyEmail(em)) {
+    document.getElementById('emailErr').textContent = 'Team/Enterprise plans require a company email address';
+    showErr('email','emailErr', true); valid = false;
+  } else { showErr('email','emailErr', false); }
+
+  if ((plan === 'team' || plan === 'enterprise') && !company) {
+    showErr('company','companyErr', true); valid = false;
+  } else { showErr('company','companyErr', false); }
+
+  if (showErr('password','passwordErr', pw.length < 8)) valid = false;
+  if (showErr('confirmPassword','confirmPasswordErr', pw !== cpw)) valid = false;
+  if (showErr('scanConsent','scanConsentErr', !scan)) valid = false;
+  if (showErr('termsConsent','termsConsentErr', !terms)) valid = false;
+
+  return valid;
+}
+
+// Clear errors on input
+['firstName','lastName','email','password','confirmPassword','company'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', () => {
+    el.classList.remove('error');
+    const err = document.getElementById(id + 'Err');
+    if (err) err.classList.remove('show');
+  });
+});
+
+// ============================================================
+// FORM SUBMIT — connects to local backend
+// ============================================================
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!validateForm()) return;
+
+  const btn = document.getElementById('submitBtn');
+  const txt = document.getElementById('submitText');
+  const spinner = document.getElementById('submitSpinner');
+  btn.disabled = true;
+  txt.style.display = 'none';
+  spinner.style.display = 'block';
+
+  const plan    = document.getElementById('selectedPlan').value;
+  const email   = document.getElementById('email').value.trim();
+  const password= document.getElementById('password').value;
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName  = document.getElementById('lastName').value.trim();
+  const company   = document.getElementById('company')?.value.trim() || '';
+  const marketing = document.getElementById('marketingConsent').checked;
+
+  try {
+    const fullName = `${firstName} ${lastName}`;
+    const data = await PC.signup(email, password, fullName);
+
+    // Save plan and email in localStorage
+    localStorage.setItem('pc_signup_plan', plan);
+    localStorage.setItem('pc_signup_email', email);
+
+    // If company exists, update profile
+    if (company) {
+      await PC.updateMe({ full_name: fullName });
+    }
+
+    showToast('Account created successfully! Redirecting...');
+    setTimeout(() => {
+      window.location.href = '/onboarding.html';
+    }, 1500);
+
+  } catch (err) {
+    showToast(' ' + (err.message || 'Registration failed. Please try again.'));
+    btn.disabled = false;
+    txt.style.display = '';
+    spinner.style.display = 'none';
+  }
+});
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg) {
+  let toast = document.getElementById('toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'toast';
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);color:var(--white);padding:12px 22px;border-radius:10px;font-size:0.85rem;z-index:10000;font-family:var(--font-body);box-shadow:0 8px 32px rgba(0,0,0,0.4);transition:opacity 0.3s;min-width:280px;text-align:center;';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => { toast.style.opacity = '0'; }, 3000);
+}
+</script>
+</body>
+</html>

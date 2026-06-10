@@ -1,0 +1,692 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Welcome to PenChecker — Let's Get Started</title>
+<meta name="description" content="Set up your PenChecker account. Add your domain, choose your plan settings, and run your first security scan." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --black:#060608;--black2:#0d0d12;--black3:#13131a;
+  --surface:#1a1a24;--surface2:#22222f;
+  --border:rgba(255,255,255,0.07);--border2:rgba(0,229,255,0.2);
+  --cyan:#00e5ff;--cyan2:#00b4cc;--green:#00ff87;
+  --red:#ff3b5c;--orange:#ff8c42;--yellow:#ffd60a;--purple:#a855f7;
+  --white:#f0f0f8;--muted:#6b6b85;--muted2:#9090a8;
+  --font-display:'Plus Jakarta Sans',sans-serif;
+  --font-body:'Plus Jakarta Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --glow-cyan:0 0 40px rgba(0,229,255,0.25);
+  --radius:12px;--radius2:20px;
+}
+body{transition:background 0.25s,color 0.25s;}
+.light-theme{--black:#f8f9fc;--black2:#e8eaf2;--black3:#ffffff;--surface:#ffffff;--surface2:#f2f4f9;--border:rgba(13,23,44,0.12);--border2:rgba(0,149,212,0.25);--cyan:#007fbc;--cyan2:#005f91;--green:#0f9d58;--red:#d93025;--orange:#e37400;--yellow:#f1c232;--purple:#6a1b9a;--white:#0b0d13;--muted:#4b5d79;--muted2:#6b7790;}
+.light-theme body::before{opacity:0.12;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:16px;line-height:1.6;overflow-x:hidden;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.025) 1px,transparent 1px);background-size:50px 50px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);pointer-events:none;z-index:0;}
+body::before{content:'';position:fixed;top:-150px;left:50%;transform:translateX(-50%);width:900px;height:600px;background:radial-gradient(ellipse,rgba(0,229,255,0.06) 0%,transparent 70%);pointer-events:none;z-index:0;}
+.light-theme body::before{background:radial-gradient(ellipse,rgba(0,127,188,0.04) 0%,transparent 70%);}
+
+/* Nav */
+#navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 24px;background:rgba(6,6,8,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.light-theme #navbar{background:rgba(248,249,252,0.92);}
+.nav-inner{max-width:1100px;margin:0 auto;height:64px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-logo-icon{width:34px;height:34px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:500;font-size:0.82rem;color:var(--black);}
+.nav-logo-text{font-size:1.1rem;font-weight:700;letter-spacing:-0.02em;}
+.nav-logo-text span{color:var(--cyan);}
+.nav-right{display:flex;align-items:center;gap:14px;}
+.theme-btn{background:none;border:1px solid var(--border);color:var(--muted2);padding:7px 14px;border-radius:8px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;}
+.theme-btn:hover{border-color:var(--border2);color:var(--white);}
+.nav-user{display:flex;align-items:center;gap:8px;font-size:0.82rem;color:var(--muted2);}
+.nav-avatar{width:28px;height:28px;border-radius:50%;background:rgba(0,229,255,0.15);border:1px solid rgba(0,229,255,0.3);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:var(--cyan);}
+
+/* Progress bar — top of page */
+.onboard-progress-bar{position:fixed;top:64px;left:0;right:0;z-index:999;background:var(--black2);border-bottom:1px solid var(--border);}
+.opb-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:40px;display:flex;align-items:center;gap:20px;}
+.opb-steps{display:flex;gap:0;flex:1;}
+.opb-step{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:0.68rem;color:var(--muted);padding:0 12px;position:relative;cursor:pointer;transition:color 0.2s;}
+.opb-step::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:transparent;transition:background 0.3s;}
+.opb-step.active{color:var(--cyan);}
+.opb-step.active::after{background:var(--cyan);}
+.opb-step.done{color:var(--green);}
+.opb-step.done::after{background:var(--green);}
+.opb-step-num{width:18px;height:18px;border-radius:50%;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;flex-shrink:0;}
+.opb-step.done .opb-step-num{background:var(--green);border-color:var(--green);color:var(--black);}
+.opb-pct{font-family:var(--font-mono);font-size:0.7rem;color:var(--muted2);white-space:nowrap;}
+
+/* Page layout */
+.page-wrap{padding:128px 24px 80px;position:relative;z-index:1;}
+.page-inner{max-width:820px;margin:0 auto;}
+
+/* Step panels */
+.ob-step{display:none;}
+.ob-step.active{display:block;}
+
+/* Welcome step */
+.welcome-header{text-align:center;margin-bottom:48px;}
+.wh-eyebrow{font-family:var(--font-mono);font-size:0.72rem;color:var(--green);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:14px;}
+.wh-title{font-size:clamp(2.2rem,5vw,3.5rem);font-weight:800;letter-spacing:-0.03em;line-height:1.1;margin-bottom:14px;}
+.wh-title .accent{background:linear-gradient(135deg,var(--cyan),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.wh-name{color:var(--cyan);}
+.wh-desc{font-size:1rem;color:var(--muted2);line-height:1.75;max-width:500px;margin:0 auto;}
+.welcome-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px;}
+.wc-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);padding:22px;transition:all 0.3s;cursor:default;}
+.wc-card:hover{border-color:rgba(0,229,255,0.15);transform:translateY(-2px);}
+.wc-icon{font-size:1.8rem;margin-bottom:12px;}
+.wc-title{font-weight:700;font-size:0.9rem;margin-bottom:5px;}
+.wc-desc{font-size:0.78rem;color:var(--muted2);line-height:1.55;}
+.welcome-cta{text-align:center;}
+
+/* Domain step */
+.ob-card{background:var(--black3);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;margin-bottom:24px;}
+.ob-card-header{padding:18px 24px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.och-icon{font-size:1.1rem;}
+.och-title{font-weight:700;font-size:0.92rem;}
+.och-sub{font-size:0.75rem;color:var(--muted2);margin-top:1px;}
+.ob-card-body{padding:24px;}
+
+/* Form elements */
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:18px;}
+.form-label{font-size:0.82rem;font-weight:600;display:flex;align-items:center;gap:6px;}
+.form-label .opt{font-weight:400;color:var(--muted);font-size:0.75rem;}
+.form-input,.form-select{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-family:var(--font-body);font-size:0.88rem;color:var(--white);outline:none;transition:border-color 0.2s,box-shadow 0.2s;width:100%;}
+.form-input:focus,.form-select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,229,255,0.08);}
+.form-input::placeholder{color:var(--muted);}
+.form-input.error{border-color:var(--red);}
+.form-select{appearance:none;cursor:pointer;}
+.form-select option{background:var(--black3);}
+.field-error{font-family:var(--font-mono);font-size:0.7rem;color:var(--red);display:none;margin-top:2px;}
+.field-error.show{display:block;}
+.field-hint{font-family:var(--font-mono);font-size:0.68rem;color:var(--muted);margin-top:3px;}
+
+/* Domain input with verify button */
+.domain-input-row{display:flex;gap:10px;}
+.domain-input-row .form-input{flex:1;}
+.verify-domain-btn{padding:12px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:0.82rem;font-weight:600;color:var(--muted2);cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.verify-domain-btn:hover{border-color:var(--border2);color:var(--white);}
+.verify-domain-btn.verified{background:rgba(0,255,135,0.1);border-color:rgba(0,255,135,0.3);color:var(--green);}
+
+/* Verification methods */
+.verify-methods{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+.vm-item{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all 0.2s;}
+.vm-item:hover,.vm-item.selected{border-color:rgba(0,229,255,0.2);background:rgba(0,229,255,0.04);}
+.vm-radio{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;margin-top:2px;position:relative;transition:all 0.2s;}
+.vm-item.selected .vm-radio{border-color:var(--cyan);}
+.vm-item.selected .vm-radio::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:var(--cyan);}
+.vm-content strong{display:block;font-size:0.85rem;font-weight:700;margin-bottom:2px;}
+.vm-content span{font-size:0.75rem;color:var(--muted2);}
+.vm-badge{font-family:var(--font-mono);font-size:0.6rem;color:var(--green);background:rgba(0,255,135,0.1);border:1px solid rgba(0,255,135,0.2);border-radius:4px;padding:1px 6px;margin-left:6px;}
+
+/* Notification toggles */
+.notif-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.notif-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);}
+.ni-left{display:flex;align-items:center;gap:9px;}
+.ni-icon{font-size:1rem;}
+.ni-label{font-size:0.82rem;font-weight:600;}
+.ni-desc{font-size:0.72rem;color:var(--muted2);}
+.toggle-switch{width:42px;height:24px;background:var(--surface2);border-radius:12px;cursor:pointer;border:1px solid var(--border);transition:background 0.3s;position:relative;flex-shrink:0;}
+.toggle-switch.on{background:var(--cyan2);border-color:var(--cyan2);}
+.toggle-knob{position:absolute;top:2px;left:2px;width:18px;height:18px;background:var(--white);border-radius:50%;transition:transform 0.3s;box-shadow:0 1px 4px rgba(0,0,0,0.3);}
+.toggle-switch.on .toggle-knob{transform:translateX(18px);}
+
+/* Industry + goal selection */
+.option-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.option-card{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:14px 12px;text-align:center;cursor:pointer;transition:all 0.2s;}
+.option-card:hover{border-color:rgba(0,229,255,0.2);}
+.option-card.selected{border-color:var(--cyan);background:rgba(0,229,255,0.05);}
+.option-card.selected::after{content:'';position:absolute;top:8px;right:10px;color:var(--cyan);font-size:0.7rem;font-weight:700;font-family:var(--font-mono);}
+.option-card{position:relative;}
+.oc-icon{font-size:1.5rem;margin-bottom:7px;}
+.oc-label{font-size:0.8rem;font-weight:600;}
+
+/* Navigation buttons */
+.step-nav{display:flex;gap:12px;margin-top:24px;}
+.btn-primary{flex:1;padding:14px;background:var(--cyan);color:var(--black);border:none;border-radius:var(--radius);font-family:var(--font-display);font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.25s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-primary:hover{box-shadow:var(--glow-cyan);transform:translateY(-1px);}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn-back{padding:14px 22px;background:transparent;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font-display);font-weight:600;font-size:0.9rem;color:var(--muted2);cursor:pointer;transition:all 0.2s;}
+.btn-back:hover{border-color:var(--border2);color:var(--white);}
+.skip-step{text-align:center;margin-top:12px;font-size:0.8rem;color:var(--muted);}
+.skip-step a{color:var(--cyan);cursor:pointer;}
+
+/* Final step — ready to scan */
+.final-hero{text-align:center;padding:20px 0 32px;}
+.fh-animation{font-size:4rem;margin-bottom:20px;animation:bounce 0.7s ease;}
+@keyframes bounce{0%{transform:scale(0);}60%{transform:scale(1.15);}100%{transform:scale(1);}}
+.fh-title{font-size:2rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:12px;}
+.fh-desc{font-size:0.95rem;color:var(--muted2);line-height:1.7;max-width:480px;margin:0 auto 32px;}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px;text-align:left;}
+.sg-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;}
+.sg-label{font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:5px;}
+.sg-value{font-size:0.88rem;font-weight:600;color:var(--white);display:flex;align-items:center;gap:6px;}
+.sg-value.green{color:var(--green);}
+.action-btns{display:flex;flex-direction:column;gap:10px;}
+
+/* Spinner */
+.spinner{display:none;width:16px;height:16px;border:2px solid rgba(0,0,0,0.25);border-top-color:var(--black);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+@media(max-width:768px){
+  .welcome-cards{grid-template-columns:1fr;}
+  .option-grid{grid-template-columns:repeat(2,1fr);}
+  .notif-grid{grid-template-columns:1fr;}
+  .summary-grid{grid-template-columns:1fr;}
+  .domain-input-row{flex-direction:column;}
+}
+@media(max-width:480px){.page-wrap{padding:116px 16px 60px;}.opb-step span{display:none;}}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="nav-logo-icon">PC</div>
+      <div class="nav-logo-text">Pen<span>Checker</span></div>
+    </div>
+    <div class="nav-right">
+      <button class="theme-btn" id="themeToggle"></button>
+      <div class="nav-user">
+        <div class="nav-avatar" id="navAvatar">?</div>
+        <span id="navEmail">Loading...</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Step progress bar -->
+<div class="onboard-progress-bar">
+  <div class="opb-inner">
+    <div class="opb-steps">
+      <div class="opb-step active" id="ob-ind-1" onclick="goToStep(1)"><div class="opb-step-num">1</div><span>Welcome</span></div>
+      <div class="opb-step" id="ob-ind-2" onclick="goToStep(2)"><div class="opb-step-num">2</div><span>Your domain</span></div>
+      <div class="opb-step" id="ob-ind-3" onclick="goToStep(3)"><div class="opb-step-num">3</div><span>About you</span></div>
+      <div class="opb-step" id="ob-ind-4" onclick="goToStep(4)"><div class="opb-step-num">4</div><span>Notifications</span></div>
+      <div class="opb-step" id="ob-ind-5" onclick="goToStep(5)"><div class="opb-step-num">5</div><span>Ready!</span></div>
+    </div>
+    <div class="opb-pct" id="obPercent">Step 1 of 5</div>
+  </div>
+</div>
+
+<!-- Page content -->
+<div class="page-wrap">
+  <div class="page-inner">
+
+    <!-- ─── STEP 1: Welcome ─── -->
+    <div class="ob-step active" id="obStep1">
+      <div class="welcome-header">
+        <div class="wh-eyebrow"> Account created successfully</div>
+        <h1 class="wh-title">Welcome, <span class="wh-name" id="welcomeName">there</span>!<br/><span class="accent">Let's secure your web.</span></h1>
+        <p class="wh-desc">You're 3 minutes away from knowing exactly how secure your website is. Let's set up your account properly.</p>
+      </div>
+
+      <div class="welcome-cards">
+        <div class="wc-card">
+          <div class="wc-icon"></div>
+          <div class="wc-title">Add your domain</div>
+          <div class="wc-desc">Tell us which website you want to protect. We'll verify ownership and start monitoring.</div>
+        </div>
+        <div class="wc-card">
+          <div class="wc-icon"></div>
+          <div class="wc-title">Run your first scan</div>
+          <div class="wc-desc">A full security scan takes under 10 minutes. You'll get a score, findings, and fix instructions.</div>
+        </div>
+        <div class="wc-card">
+          <div class="wc-icon"></div>
+          <div class="wc-title">Get AI-powered fixes</div>
+          <div class="wc-desc">Ask our AI assistant to explain any finding and generate fix code for your exact tech stack.</div>
+        </div>
+      </div>
+
+      <div class="welcome-cta">
+        <button class="btn-primary" style="max-width:320px;margin:0 auto;" onclick="goToStep(2)">
+          Let's set up my account →
+        </button>
+        <div class="skip-step"><a href="dashboard.html">Skip setup and go straight to dashboard</a></div>
+      </div>
+    </div>
+
+    <!-- ─── STEP 2: Domain ─── -->
+    <div class="ob-step" id="obStep2">
+      <div class="ob-card">
+        <div class="ob-card-header">
+          <div class="och-icon"></div>
+          <div>
+            <div class="och-title">Add your first domain</div>
+            <div class="och-sub">Enter the website you want to scan and monitor</div>
+          </div>
+        </div>
+        <div class="ob-card-body">
+          <div class="form-group">
+            <label class="form-label" for="domainInput">Your website domain</label>
+            <div class="domain-input-row">
+              <input type="text" id="domainInput" class="form-input" placeholder="yourwebsite.com" autocomplete="off" />
+              <button class="verify-domain-btn" id="verifyDomainBtn" onclick="checkDomain()">Check domain</button>
+            </div>
+            <div class="field-hint">Enter the domain without https:// — e.g. myapp.com or subdomain.myapp.com</div>
+            <span class="field-error" id="domainErr">Please enter a valid domain name</span>
+          </div>
+
+          <div id="verifyMethodsWrap" style="display:none;">
+            <div class="form-group">
+              <label class="form-label">Ownership verification method</label>
+              <div class="verify-methods">
+                <div class="vm-item selected" onclick="selectVerifyMethod(this,'dns')">
+                  <div class="vm-radio"></div>
+                  <div class="vm-content">
+                    <strong>DNS TXT record <span class="vm-badge">Recommended</span></strong>
+                    <span>Add a TXT record to your domain's DNS settings. Verified in minutes.</span>
+                  </div>
+                </div>
+                <div class="vm-item" onclick="selectVerifyMethod(this,'file')">
+                  <div class="vm-radio"></div>
+                  <div class="vm-content">
+                    <strong>File upload</strong>
+                    <span>Upload a verification file to your website's root directory.</span>
+                  </div>
+                </div>
+                <div class="vm-item" onclick="selectVerifyMethod(this,'meta')">
+                  <div class="vm-radio"></div>
+                  <div class="vm-content">
+                    <strong>HTML meta tag</strong>
+                    <span>Add a meta tag to your homepage &lt;head&gt;.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="verifyInstructions" class="ob-card" style="background:var(--surface);border-color:var(--border2);">
+              <div class="ob-card-body" style="padding:16px;">
+                <div id="verifyInstructionText" style="font-family:var(--font-mono);font-size:0.78rem;color:var(--muted2);line-height:1.7;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn-back" onclick="goToStep(1)">← Back</button>
+        <button class="btn-primary" id="domainNextBtn" onclick="proceedFromDomain()">
+          <span>Continue →</span>
+        </button>
+      </div>
+      <div class="skip-step"><a onclick="goToStep(3)">Skip — I'll add a domain later</a></div>
+    </div>
+
+    <!-- ─── STEP 3: About you ─── -->
+    <div class="ob-step" id="obStep3">
+      <div class="ob-card">
+        <div class="ob-card-header">
+          <div class="och-icon"></div>
+          <div>
+            <div class="och-title">Tell us about your project</div>
+            <div class="och-sub">We'll tailor scan settings to what matters most for you</div>
+          </div>
+        </div>
+        <div class="ob-card-body">
+          <div class="form-group">
+            <label class="form-label">What best describes your project?</label>
+            <div class="option-grid" id="industryGrid">
+              <div class="option-card selected" onclick="selectOption(this,'industry','saas')"><div class="oc-icon"></div><div class="oc-label">SaaS / App</div></div>
+              <div class="option-card" onclick="selectOption(this,'industry','ecommerce')"><div class="oc-icon"></div><div class="oc-label">E-commerce</div></div>
+              <div class="option-card" onclick="selectOption(this,'industry','fintech')"><div class="oc-icon"></div><div class="oc-label">Fintech</div></div>
+              <div class="option-card" onclick="selectOption(this,'industry','healthcare')"><div class="oc-icon"></div><div class="oc-label">Healthcare</div></div>
+              <div class="option-card" onclick="selectOption(this,'industry','agency')"><div class="oc-icon"></div><div class="oc-label">Agency / Dev</div></div>
+              <div class="option-card" onclick="selectOption(this,'industry','other')"><div class="oc-icon"></div><div class="oc-label">Other</div></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">What's your main security goal?</label>
+            <div class="option-grid" id="goalGrid">
+              <div class="option-card selected" onclick="selectOption(this,'goal','fix')"><div class="oc-icon"></div><div class="oc-label">Fix vulnerabilities</div></div>
+              <div class="option-card" onclick="selectOption(this,'goal','compliance')"><div class="oc-icon"></div><div class="oc-label">Compliance</div></div>
+              <div class="option-card" onclick="selectOption(this,'goal','monitor')"><div class="oc-icon"></div><div class="oc-label">Ongoing monitoring</div></div>
+              <div class="option-card" onclick="selectOption(this,'goal','client')"><div class="oc-icon"></div><div class="oc-label">Client reports</div></div>
+              <div class="option-card" onclick="selectOption(this,'goal','learn')"><div class="oc-icon"></div><div class="oc-label">Learning</div></div>
+              <div class="option-card" onclick="selectOption(this,'goal','other')"><div class="oc-icon"></div><div class="oc-label">Something else</div></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="roleSelect">Your role</label>
+            <select id="roleSelect" class="form-select">
+              <option value="">Select your role</option>
+              <option value="dev">Developer / Engineer</option>
+              <option value="security">Security Engineer / Analyst</option>
+              <option value="devops">DevOps / SRE</option>
+              <option value="cto">CTO / Technical Lead</option>
+              <option value="founder">Founder / CEO</option>
+              <option value="pm">Product Manager</option>
+              <option value="consultant">Security Consultant</option>
+              <option value="student">Student / Learning</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn-back" onclick="goToStep(2)">← Back</button>
+        <button class="btn-primary" onclick="goToStep(4)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ─── STEP 4: Notifications ─── -->
+    <div class="ob-step" id="obStep4">
+      <div class="ob-card">
+        <div class="ob-card-header">
+          <div class="och-icon"></div>
+          <div>
+            <div class="och-title">Notification preferences</div>
+            <div class="och-sub">Choose when and how you want to be alerted about security issues</div>
+          </div>
+        </div>
+        <div class="ob-card-body">
+          <div class="form-group" style="margin-bottom:20px;">
+            <label class="form-label">Alert me when:</label>
+            <div class="notif-grid">
+              <div class="notif-item">
+                <div class="ni-left">
+                  <div class="ni-icon"></div>
+                  <div><div class="ni-label">Critical finding</div><div class="ni-desc">New critical vulnerability</div></div>
+                </div>
+                <div class="toggle-switch on" onclick="toggleNotif(this)" data-key="critical"><div class="toggle-knob"></div></div>
+              </div>
+              <div class="notif-item">
+                <div class="ni-left">
+                  <div class="ni-icon"></div>
+                  <div><div class="ni-label">High finding</div><div class="ni-desc">New high severity issue</div></div>
+                </div>
+                <div class="toggle-switch on" onclick="toggleNotif(this)" data-key="high"><div class="toggle-knob"></div></div>
+              </div>
+              <div class="notif-item">
+                <div class="ni-left">
+                  <div class="ni-icon"></div>
+                  <div><div class="ni-label">Scan complete</div><div class="ni-desc">Every scan finishes</div></div>
+                </div>
+                <div class="toggle-switch on" onclick="toggleNotif(this)" data-key="scan_complete"><div class="toggle-knob"></div></div>
+              </div>
+              <div class="notif-item">
+                <div class="ni-left">
+                  <div class="ni-icon"></div>
+                  <div><div class="ni-label">Score drops</div><div class="ni-desc">Security score decreases</div></div>
+                </div>
+                <div class="toggle-switch on" onclick="toggleNotif(this)" data-key="score_drop"><div class="toggle-knob"></div></div>
+              </div>
+              <div class="notif-item">
+                <div class="ni-left">
+                  <div class="ni-icon"></div>
+                  <div><div class="ni-label">Weekly digest</div><div class="ni-desc">Weekly security summary</div></div>
+                </div>
+                <div class="toggle-switch on" onclick="toggleNotif(this)" data-key="weekly"><div class="toggle-knob"></div></div>
+              </div>
+              <div class="notif-item">
+                <div class="ni-left">
+                  <div class="ni-icon"></div>
+                  <div><div class="ni-label">Product news</div><div class="ni-desc">New features & updates</div></div>
+                </div>
+                <div class="toggle-switch" onclick="toggleNotif(this)" data-key="news"><div class="toggle-knob"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="alertEmail">Alert email address</label>
+            <input type="email" id="alertEmail" class="form-input" placeholder="Defaults to your account email" />
+            <div class="field-hint">Alerts will go here. Leave blank to use your account email.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn-back" onclick="goToStep(3)">← Back</button>
+        <button class="btn-primary" id="finishBtn" onclick="finishOnboarding()">
+          <span id="finishText">Finish setup →</span>
+          <div class="spinner" id="finishSpinner"></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- ─── STEP 5: Ready ─── -->
+    <div class="ob-step" id="obStep5">
+      <div class="final-hero">
+        <div class="fh-animation"></div>
+        <div class="fh-title">You're all set!</div>
+        <p class="fh-desc">Your PenChecker account is configured and ready to go. Run your first scan and get your security score in under 10 minutes.</p>
+      </div>
+
+      <div class="summary-grid" id="summaryGrid">
+        <div class="sg-item">
+          <div class="sg-label">Account</div>
+          <div class="sg-value" id="summaryEmail">—</div>
+        </div>
+        <div class="sg-item">
+          <div class="sg-label">Plan</div>
+          <div class="sg-value" id="summaryPlan">—</div>
+        </div>
+        <div class="sg-item">
+          <div class="sg-label">Domain added</div>
+          <div class="sg-value" id="summaryDomain">—</div>
+        </div>
+        <div class="sg-item">
+          <div class="sg-label">2FA status</div>
+          <div class="sg-value" id="summary2FA">—</div>
+        </div>
+      </div>
+
+      <div class="action-btns">
+        <a href="dashboard.html">
+          <button class="btn-primary">Go to my dashboard →</button>
+        </a>
+        <a href="setup-2fa.html">
+          <button class="btn-primary" style="background:rgba(168,85,247,0.15);color:var(--purple);border:1px solid rgba(168,85,247,0.3);">
+             Enable two-factor authentication (recommended)
+          </button>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script>
+'use strict';
+
+// Theme
+const themeToggle=document.getElementById('themeToggle');
+function updateThemeBtn(){if(!themeToggle)return;const isLight=document.body.classList.contains('light-theme');themeToggle.innerHTML=(isLight?'<svg viewBox='0 0 24 24' width='14' height='14' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round' style='display:inline-block;vertical-align:middle;'><circle cx='12' cy='12' r='5'/><line x1='12' y1='1' x2='12' y2='3'/><line x1='12' y1='21' x2='12' y2='23'/><line x1='4.22' y1='4.22' x2='5.64' y2='5.64'/><line x1='18.36' y1='18.36' x2='19.78' y2='19.78'/><line x1='1' y1='12' x2='3' y2='12'/><line x1='21' y1='12' x2='23' y2='12'/><line x1='4.22' y1='19.78' x2='5.64' y2='18.36'/><line x1='18.36' y1='5.64' x2='19.78' y2='4.22'/></svg>':'<svg viewBox='0 0 24 24' width='14' height='14' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round' style='display:inline-block;vertical-align:middle;'><path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/></svg>')+'&nbsp;'+(isLight?'Light':'Dark');}
+function setTheme(light){document.body.classList.toggle('light-theme',light);localStorage.setItem('pencheckerTheme',light?'light':'dark');updateThemeBtn();}
+if(themeToggle)themeToggle.addEventListener('click',()=>setTheme(!document.body.classList.contains('light-theme')));
+(function(){const s=localStorage.getItem('pencheckerTheme');const p=window.matchMedia('(prefers-color-scheme: light)').matches;setTheme(s==='light'||(!s&&p));})();
+
+// State
+let currentStep=1;
+let onboardData={ domain:'',verifyMethod:'dns',industry:'saas',goal:'fix',role:'',notifications:{critical:true,high:true,scan_complete:true,score_drop:true,weekly:true,news:false},alertEmail:'' };
+
+// Load user info
+(function loadUser(){
+  const user = PC.getUser();
+  const email = user?.email || localStorage.getItem('pc_user_email') || '';
+  if(email){
+    const name = user?.full_name || email.split('@')[0];
+    document.getElementById('welcomeName').textContent = name.split(' ')[0];
+    document.getElementById('navEmail').textContent = email;
+    document.getElementById('navAvatar').textContent = name.charAt(0).toUpperCase();
+    document.getElementById('alertEmail').placeholder = `Default: ${email}`;
+  }
+  // Check plan
+  const plan = (user?.plan || localStorage.getItem('pc_signup_plan') || 'free').charAt(0).toUpperCase() +
+    (user?.plan || localStorage.getItem('pc_signup_plan') || 'free').slice(1);
+  onboardData.plan = plan;
+})();
+
+// Step navigation
+function goToStep(num){
+  if(num<1||num>5) return;
+  currentStep=num;
+  document.querySelectorAll('.ob-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('obStep'+num).classList.add('active');
+  // Update progress bar
+  for(let i=1;i<=5;i++){
+    const el=document.getElementById('ob-ind-'+i);
+    if(!el) continue;
+    el.classList.remove('active','done');
+    if(i<num) el.classList.add('done');
+    else if(i===num) el.classList.add('active');
+  }
+  document.getElementById('obPercent').textContent=`Step ${num} of 5`;
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(num===5) populateSummary();
+}
+
+// Domain step
+function checkDomain(){
+  const domain=document.getElementById('domainInput').value.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\//,'');
+  if(!domain||!domain.includes('.')){
+    document.getElementById('domainInput').classList.add('error');
+    document.getElementById('domainErr').classList.add('show');
+    return;
+  }
+  document.getElementById('domainInput').classList.remove('error');
+  document.getElementById('domainErr').classList.remove('show');
+  onboardData.domain=domain;
+  
+  PC.addDomain(domain).then(res => {
+    onboardData.domainId = res.domain.id;
+    onboardData.verificationToken = res.domain.verification_token;
+    document.getElementById('verifyMethodsWrap').style.display='block';
+    document.getElementById('verifyDomainBtn').classList.add('verified');
+    document.getElementById('verifyDomainBtn').textContent=' Domain set';
+    updateVerifyInstructions();
+  }).catch(err => {
+    if (err.message && err.message.includes('already')) {
+      PC.listDomains().then(dList => {
+        const found = dList.domains.find(d => d.domain === domain);
+        if (found) {
+          onboardData.domainId = found.id;
+          onboardData.verificationToken = found.verification_token;
+          document.getElementById('verifyMethodsWrap').style.display='block';
+          document.getElementById('verifyDomainBtn').classList.add('verified');
+          document.getElementById('verifyDomainBtn').textContent=' Domain set';
+          updateVerifyInstructions();
+        }
+      });
+    } else {
+      showToast(err.message || 'Failed to add domain');
+    }
+  });
+}
+document.getElementById('domainInput').addEventListener('keydown',e=>{ if(e.key==='Enter') checkDomain(); });
+
+function selectVerifyMethod(el,method){
+  document.querySelectorAll('.vm-item').forEach(v=>v.classList.remove('selected'));
+  el.classList.add('selected');
+  onboardData.verifyMethod=method;
+  updateVerifyInstructions();
+}
+
+function updateVerifyInstructions(){
+  const domain=onboardData.domain||'yoursite.com';
+  const m=onboardData.verifyMethod;
+  const token = onboardData.verificationToken || 'pc-verify-pending';
+  const instructions={
+    dns:`<strong style="color:var(--white)">1.</strong> Log in to your domain registrar or DNS provider (Namecheap, GoDaddy, Cloudflare, etc.)<br/><strong style="color:var(--white)">2.</strong> Add a new TXT record:<br/><br/><span style="color:var(--cyan)">Name/Host: @ (or ${domain})</span><br/><span style="color:var(--green)">Value: ${token}</span><br/><br/><strong style="color:var(--white)">3.</strong> DNS changes take 1–30 minutes to propagate.`,
+    file:`<strong style="color:var(--white)">1.</strong> Create a file named <span style="color:var(--cyan)">penchecker-verify.txt</span><br/><strong style="color:var(--white)">2.</strong> Put this content inside it: <span style="color:var(--green)">${token}</span><br/><strong style="color:var(--white)">3.</strong> Upload it to: <span style="color:var(--cyan)">https://${domain}/.well-known/penchecker-verify.txt</span>`,
+    meta:`<strong style="color:var(--white)">1.</strong> Open your website's main HTML file<br/><strong style="color:var(--white)">2.</strong> Add this tag inside your &lt;head&gt; section:<br/><br/><span style="color:var(--green)">&lt;meta name="penchecker-verify" content="${token}"&gt;</span>`
+  };
+  document.getElementById('verifyInstructionText').innerHTML=instructions[m]||'';
+  document.getElementById('verifyInstructions').style.display='block';
+}
+
+function proceedFromDomain(){
+  if(!onboardData.domain){ showToast('Please enter a domain or click Skip'); return; }
+  goToStep(3);
+}
+
+// Options
+function selectOption(el,type,value){
+  const grid=document.getElementById(type+'Grid');
+  if(grid) grid.querySelectorAll('.option-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  onboardData[type]=value;
+}
+
+// Notification toggles
+function toggleNotif(el){
+  el.classList.toggle('on');
+  const key=el.dataset.key;
+  if(key) onboardData.notifications[key]=el.classList.contains('on');
+}
+
+// Finish onboarding — save to backend
+async function finishOnboarding(){
+  const btn=document.getElementById('finishBtn');
+  const txt=document.getElementById('finishText');
+  const spin=document.getElementById('finishSpinner');
+  btn.disabled=true;txt.style.display='none';spin.style.display='block';
+
+  onboardData.alertEmail=document.getElementById('alertEmail').value.trim();
+  onboardData.role=document.getElementById('roleSelect').value;
+
+  try {
+    await PC.updateMe({
+      onboarding_completed: 1,
+      full_name: PC.getUser()?.full_name || ''
+    });
+    
+    // Update local user state
+    const user = PC.getUser();
+    if (user) {
+      user.onboarding_completed = 1;
+      localStorage.setItem('pc_user', JSON.stringify(user));
+    }
+  } catch (err) {
+    console.error('Failed to update onboarding status:', err);
+  }
+
+  localStorage.setItem('pc_onboarding_complete','true');
+  localStorage.setItem('pc_onboard_data',JSON.stringify(onboardData));
+
+  setTimeout(()=>{ btn.disabled=false;txt.style.display='';spin.style.display='none'; goToStep(5); }, 800);
+}
+
+function populateSummary(){
+  const email=localStorage.getItem('pc_user_email')||'—';
+  const plan=onboardData.plan||'Free';
+  const domain=onboardData.domain||'Not added';
+  const session=getSession();
+  const has2FA=session?.user?.user_metadata?.two_factor_enabled===true;
+
+  document.getElementById('summaryEmail').textContent=email;
+  document.getElementById('summaryPlan').textContent=plan+' Plan';
+  document.getElementById('summaryDomain').innerHTML=onboardData.domain
+    ?`<span style="color:var(--cyan)">${onboardData.domain}</span>`
+    :`<span style="color:var(--muted)">Not added yet</span>`;
+  document.getElementById('summary2FA').innerHTML=has2FA
+    ?`<span class="green"> Enabled</span>`
+    :`<span style="color:var(--yellow)"> Not enabled</span>`;
+}
+
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);color:var(--white);padding:12px 22px;border-radius:10px;font-size:0.85rem;z-index:10000;box-shadow:0 8px 32px rgba(0,0,0,0.4);transition:opacity 0.3s;min-width:240px;text-align:center;font-family:var(--font-body);';document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity='1';
+  clearTimeout(window._tt);window._tt=setTimeout(()=>{t.style.opacity='0';},3200);
+}
+</script>
+<!-- index ref --><a href="index.html" style="display:none">Home</a>
+</body>
+</html>
+
+
